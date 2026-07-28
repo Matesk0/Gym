@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
-import { View, Text, StyleSheet, ScrollView, Image, TouchableOpacity } from 'react-native';
+import React from 'react';
+import { View, Text, StyleSheet, ScrollView, Image } from 'react-native';
 import { useAuth } from '../../context/AuthContext';
 import { RankTier } from '../../types/database';
-import { Trophy, Award, Zap, ChevronUp, Globe } from 'lucide-react-native';
+import { Trophy, Globe } from 'lucide-react-native';
 
 interface LeaderboardUser {
   id: string;
@@ -44,7 +44,7 @@ const GLOBAL_LEADERBOARD: LeaderboardUser[] = [
   },
   {
     id: 'u3',
-    username: 'Alex_LiftMaster', // Current user
+    username: 'Alex_LiftMaster',
     avatar_url: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150',
     is_online: true,
     rank: 'Gold',
@@ -85,27 +85,25 @@ export default function RanksScreen() {
 
   const getRankBadgeColor = (rank: RankTier) => {
     switch (rank) {
-      case 'Grandmaster': return '#EC4899';
-      case 'Master': return '#A855F7';
-      case 'Diamond': return '#3B82F6';
-      case 'Platinum': return '#06B6D4';
-      case 'Gold': return '#F59E0B';
-      case 'Silver': return '#94A3B8';
-      default: return '#D97706'; // Bronze
+      case 'Grandmaster': return '#FF375F';
+      case 'Master': return '#BF5AF2';
+      case 'Diamond': return '#0A84FF';
+      case 'Platinum': return '#64D2FF';
+      case 'Gold': return '#FFD60A';
+      case 'Silver': return '#8E8E93';
+      default: return '#FF9F0C';
     }
   };
 
   return (
     <ScrollView style={styles.container} contentContainerStyle={styles.content}>
-      {/* Header */}
       <View style={styles.header}>
-        <Text style={styles.title}>Global Strength Leaderboard</Text>
+        <Text style={styles.title}>Global Strength Ranks</Text>
         <Text style={styles.subtitle}>
           Gaming rank system based on world strength percentiles
         </Text>
       </View>
 
-      {/* User Personal Rank Card */}
       <View style={styles.myRankCard}>
         <View style={styles.myRankHeader}>
           <View style={styles.pfpWrapper}>
@@ -122,12 +120,11 @@ export default function RanksScreen() {
           </View>
 
           <View style={[styles.tierBadge, { backgroundColor: getRankBadgeColor(profile?.overall_rank || 'Gold') }]}>
-            <Trophy color="#0B0F17" size={14} />
+            <Trophy color="#000000" size={14} />
             <Text style={styles.tierText}>{profile?.overall_rank || 'Gold'}</Text>
           </View>
         </View>
 
-        {/* 1RM Strength Lifts Breakdown */}
         <View style={styles.liftGrid}>
           <View style={styles.liftBox}>
             <Text style={styles.liftName}>BENCH 1RM</Text>
@@ -149,13 +146,11 @@ export default function RanksScreen() {
         </View>
       </View>
 
-      {/* Global Leaderboard Table Header */}
       <View style={styles.tableHeaderRow}>
-        <Globe color="#10B981" size={18} />
+        <Globe color="#30D158" size={18} />
         <Text style={styles.tableHeaderTitle}>World Athletes (Global Rank)</Text>
       </View>
 
-      {/* Leaderboard Table List */}
       <View style={styles.leaderboardList}>
         {GLOBAL_LEADERBOARD.map((item, index) => {
           const isMe = item.id === 'u3';
@@ -169,13 +164,12 @@ export default function RanksScreen() {
 
               <View style={styles.pfpWrapperSmall}>
                 <Image source={{ uri: item.avatar_url }} style={styles.pfpSmall} />
-                {/* Green Dot Online Indicator */}
                 {item.is_online && <View style={styles.onlineDotSmall} />}
               </View>
 
               <View style={{ flex: 1, marginLeft: 10 }}>
                 <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6 }}>
-                  <Text style={[styles.playerUsername, isMe && { color: '#10B981' }]}>
+                  <Text style={[styles.playerUsername, isMe && { color: '#30D158' }]}>
                     {item.username}
                   </Text>
 
@@ -204,7 +198,7 @@ export default function RanksScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#0B0F17',
+    backgroundColor: '#000000',
   },
   content: {
     paddingHorizontal: 20,
@@ -215,21 +209,22 @@ const styles = StyleSheet.create({
     marginBottom: 18,
   },
   title: {
-    fontSize: 24,
+    fontSize: 28,
     fontWeight: '800',
-    color: '#F8FAFC',
+    color: '#FFFFFF',
+    letterSpacing: -0.5,
   },
   subtitle: {
     fontSize: 13,
-    color: '#94A3B8',
+    color: '#8E8E93',
     marginTop: 4,
   },
   myRankCard: {
-    backgroundColor: '#1E293B',
-    borderRadius: 20,
+    backgroundColor: '#1C1C1E',
+    borderRadius: 22,
     padding: 16,
     borderWidth: 1,
-    borderColor: '#334155',
+    borderColor: '#2C2C2E',
     marginBottom: 24,
   },
   myRankHeader: {
@@ -246,7 +241,7 @@ const styles = StyleSheet.create({
     height: 52,
     borderRadius: 26,
     borderWidth: 2,
-    borderColor: '#334155',
+    borderColor: '#2C2C2E',
   },
   onlineDot: {
     position: 'absolute',
@@ -255,18 +250,18 @@ const styles = StyleSheet.create({
     width: 13,
     height: 13,
     borderRadius: 6.5,
-    backgroundColor: '#10B981',
+    backgroundColor: '#30D158',
     borderWidth: 2,
-    borderColor: '#1E293B',
+    borderColor: '#1C1C1E',
   },
   myUsername: {
     fontSize: 18,
     fontWeight: '800',
-    color: '#F8FAFC',
+    color: '#FFFFFF',
   },
   myPercentile: {
     fontSize: 13,
-    color: '#10B981',
+    color: '#30D158',
     fontWeight: '600',
     marginTop: 2,
   },
@@ -279,7 +274,7 @@ const styles = StyleSheet.create({
     borderRadius: 16,
   },
   tierText: {
-    color: '#0B0F17',
+    color: '#000000',
     fontWeight: '900',
     fontSize: 13,
   },
@@ -289,25 +284,25 @@ const styles = StyleSheet.create({
   },
   liftBox: {
     flex: 1,
-    backgroundColor: '#0B0F17',
-    borderRadius: 12,
+    backgroundColor: '#2C2C2E',
+    borderRadius: 14,
     padding: 10,
     alignItems: 'center',
   },
   liftName: {
     fontSize: 10,
     fontWeight: '800',
-    color: '#64748B',
+    color: '#8E8E93',
   },
   liftVal: {
     fontSize: 15,
     fontWeight: '800',
-    color: '#F8FAFC',
+    color: '#FFFFFF',
     marginTop: 2,
   },
   liftSub: {
     fontSize: 10,
-    color: '#10B981',
+    color: '#30D158',
     marginTop: 2,
   },
   tableHeaderRow: {
@@ -319,7 +314,7 @@ const styles = StyleSheet.create({
   tableHeaderTitle: {
     fontSize: 16,
     fontWeight: '700',
-    color: '#F8FAFC',
+    color: '#FFFFFF',
   },
   leaderboardList: {
     gap: 10,
@@ -327,25 +322,25 @@ const styles = StyleSheet.create({
   playerRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#1E293B',
-    borderRadius: 16,
+    backgroundColor: '#1C1C1E',
+    borderRadius: 18,
     padding: 12,
     borderWidth: 1,
-    borderColor: '#334155',
+    borderColor: '#2C2C2E',
   },
   playerRowMe: {
-    borderColor: '#10B981',
-    backgroundColor: '#132328',
+    borderColor: '#30D158',
+    backgroundColor: 'rgba(48, 209, 88, 0.08)',
   },
   rankNumber: {
     width: 28,
     fontSize: 15,
     fontWeight: '800',
-    color: '#64748B',
+    color: '#8E8E93',
     textAlign: 'center',
   },
   rankTopThree: {
-    color: '#F59E0B',
+    color: '#FF9F0C',
   },
   pfpWrapperSmall: {
     position: 'relative',
@@ -362,14 +357,14 @@ const styles = StyleSheet.create({
     width: 10,
     height: 10,
     borderRadius: 5,
-    backgroundColor: '#10B981',
+    backgroundColor: '#30D158',
     borderWidth: 1.5,
-    borderColor: '#1E293B',
+    borderColor: '#1C1C1E',
   },
   playerUsername: {
     fontSize: 14,
     fontWeight: '700',
-    color: '#F8FAFC',
+    color: '#FFFFFF',
   },
   tierTag: {
     borderWidth: 1,
@@ -383,17 +378,17 @@ const styles = StyleSheet.create({
   },
   playerMetaText: {
     fontSize: 12,
-    color: '#94A3B8',
+    color: '#8E8E93',
     marginTop: 2,
   },
   scoreVal: {
     fontSize: 15,
     fontWeight: '800',
-    color: '#F8FAFC',
+    color: '#FFFFFF',
   },
   percentileTag: {
     fontSize: 11,
-    color: '#10B981',
+    color: '#30D158',
     fontWeight: '700',
     marginTop: 2,
   },

@@ -2,7 +2,7 @@ import React from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Image } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useAuth } from '../../context/AuthContext';
-import { Dumbbell, Flame, Trophy, ChevronRight, Zap, Award, Calendar } from 'lucide-react-native';
+import { Dumbbell, Flame, Trophy, ChevronRight, Zap, Award, Calendar, Sparkles } from 'lucide-react-native';
 
 export default function HomeScreen() {
   const router = useRouter();
@@ -18,7 +18,7 @@ export default function HomeScreen() {
               source={{ uri: profile?.avatar_url || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150' }}
               style={styles.avatar}
             />
-            {/* Online Green Dot Indicator */}
+            {/* iOS Green Dot Online Indicator */}
             {profile?.is_online && <View style={styles.onlineDot} />}
           </View>
           <View>
@@ -28,19 +28,19 @@ export default function HomeScreen() {
         </View>
 
         <TouchableOpacity style={styles.rankBadge} onPress={() => router.push('/(tabs)/ranks')}>
-          <Trophy color="#F59E0B" size={16} />
+          <Trophy color="#FF9F0C" size={15} />
           <Text style={styles.rankText}>{profile?.overall_rank || 'Gold'}</Text>
         </TouchableOpacity>
       </View>
 
-      {/* Quick Start Action Card */}
+      {/* Quick Start Action Card - iOS Accent */}
       <TouchableOpacity style={styles.startCard} onPress={() => router.push('/(tabs)/workout')}>
         <View style={styles.startCardTextCol}>
           <Text style={styles.startCardTitle}>Log Today's Workout</Text>
-          <Text style={styles.startCardSubtitle}>Track sets, weight, reps & trigger fatigue recovery</Text>
+          <Text style={styles.startCardSubtitle}>Track sets, weight, reps & update muscle recovery</Text>
         </View>
         <View style={styles.startCardIcon}>
-          <Dumbbell color="#0B0F17" size={28} />
+          <Dumbbell color="#000000" size={26} />
         </View>
       </TouchableOpacity>
 
@@ -48,20 +48,20 @@ export default function HomeScreen() {
       <View style={styles.sectionHeader}>
         <Text style={styles.sectionTitle}>Muscle Recovery Overview</Text>
         <TouchableOpacity onPress={() => router.push('/(tabs)/fatigue')}>
-          <Text style={styles.seeAllText}>Open Heatmap</Text>
+          <Text style={styles.seeAllText}>Open MuscleWiki Map</Text>
         </TouchableOpacity>
       </View>
 
       <TouchableOpacity style={styles.fatigueCard} onPress={() => router.push('/(tabs)/fatigue')}>
         <View style={styles.fatigueCardHeader}>
           <View style={styles.fatigueIconBadge}>
-            <Flame color="#EF4444" size={22} />
+            <Flame color="#e51f1f" size={22} />
           </View>
           <View style={{ flex: 1 }}>
-            <Text style={styles.fatigueCardTitle}>Active Recovery State</Text>
+            <Text style={styles.fatigueCardTitle}>Active Muscle Breakdown</Text>
             <Text style={styles.fatigueCardSubtitle}>2 muscle heads in deep repair</Text>
           </View>
-          <ChevronRight color="#64748B" size={20} />
+          <ChevronRight color="#8E8E93" size={20} />
         </View>
 
         <View style={styles.fatiguePillRow}>
@@ -92,19 +92,19 @@ export default function HomeScreen() {
 
       <View style={styles.statsGrid}>
         <View style={styles.statCard}>
-          <Zap color="#10B981" size={20} />
+          <Zap color="#30D158" size={20} />
           <Text style={styles.statVal}>12,450 kg</Text>
           <Text style={styles.statLbl}>Total Volume</Text>
         </View>
 
         <View style={styles.statCard}>
-          <Calendar color="#3B82F6" size={20} />
+          <Calendar color="#0A84FF" size={20} />
           <Text style={styles.statVal}>4 Sessions</Text>
           <Text style={styles.statLbl}>Workouts Logged</Text>
         </View>
 
         <View style={styles.statCard}>
-          <Award color="#F59E0B" size={20} />
+          <Award color="#FF9F0C" size={20} />
           <Text style={styles.statVal}>Top 18%</Text>
           <Text style={styles.statLbl}>World Strength Rank</Text>
         </View>
@@ -116,7 +116,7 @@ export default function HomeScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#0B0F17',
+    backgroundColor: '#000000', // iOS OLED True Dark
   },
   content: {
     paddingHorizontal: 20,
@@ -127,7 +127,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    marginBottom: 24,
+    marginBottom: 22,
   },
   userMeta: {
     flexDirection: 'row',
@@ -142,7 +142,7 @@ const styles = StyleSheet.create({
     height: 48,
     borderRadius: 24,
     borderWidth: 2,
-    borderColor: '#334155',
+    borderColor: '#2C2C2E',
   },
   onlineDot: {
     position: 'absolute',
@@ -151,47 +151,44 @@ const styles = StyleSheet.create({
     width: 12,
     height: 12,
     borderRadius: 6,
-    backgroundColor: '#10B981',
+    backgroundColor: '#30D158',
     borderWidth: 2,
-    borderColor: '#0B0F17',
+    borderColor: '#000000',
   },
   welcomeText: {
     fontSize: 13,
-    color: '#94A3B8',
+    color: '#8E8E93',
   },
   usernameText: {
     fontSize: 18,
     fontWeight: '800',
-    color: '#F8FAFC',
+    color: '#FFFFFF',
+    letterSpacing: -0.3,
   },
   rankBadge: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: 6,
-    backgroundColor: 'rgba(245, 158, 11, 0.15)',
+    backgroundColor: 'rgba(255, 159, 12, 0.15)',
     borderWidth: 1,
-    borderColor: 'rgba(245, 158, 11, 0.4)',
+    borderColor: 'rgba(255, 159, 12, 0.3)',
     paddingHorizontal: 12,
     paddingVertical: 6,
     borderRadius: 20,
   },
   rankText: {
-    color: '#F59E0B',
+    color: '#FF9F0C',
     fontWeight: '700',
     fontSize: 13,
   },
   startCard: {
-    backgroundColor: '#10B981',
-    borderRadius: 20,
+    backgroundColor: '#30D158', // Vivid iOS Green
+    borderRadius: 22,
     padding: 20,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
     marginBottom: 24,
-    shadowColor: '#10B981',
-    shadowOpacity: 0.3,
-    shadowRadius: 10,
-    elevation: 4,
   },
   startCardTextCol: {
     flex: 1,
@@ -200,7 +197,8 @@ const styles = StyleSheet.create({
   startCardTitle: {
     fontSize: 18,
     fontWeight: '800',
-    color: '#0B0F17',
+    color: '#000000',
+    letterSpacing: -0.3,
   },
   startCardSubtitle: {
     fontSize: 13,
@@ -208,10 +206,10 @@ const styles = StyleSheet.create({
     marginTop: 4,
   },
   startCardIcon: {
-    width: 52,
-    height: 52,
+    width: 50,
+    height: 50,
     borderRadius: 16,
-    backgroundColor: 'rgba(11, 15, 23, 0.15)',
+    backgroundColor: 'rgba(0, 0, 0, 0.15)',
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -224,19 +222,20 @@ const styles = StyleSheet.create({
   sectionTitle: {
     fontSize: 18,
     fontWeight: '700',
-    color: '#F8FAFC',
+    color: '#FFFFFF',
+    letterSpacing: -0.3,
   },
   seeAllText: {
     fontSize: 13,
-    color: '#10B981',
+    color: '#30D158',
     fontWeight: '600',
   },
   fatigueCard: {
-    backgroundColor: '#1E293B',
-    borderRadius: 18,
+    backgroundColor: '#1C1C1E',
+    borderRadius: 20,
     padding: 16,
     borderWidth: 1,
-    borderColor: '#334155',
+    borderColor: '#2C2C2E',
   },
   fatigueCardHeader: {
     flexDirection: 'row',
@@ -248,18 +247,18 @@ const styles = StyleSheet.create({
     width: 42,
     height: 42,
     borderRadius: 12,
-    backgroundColor: 'rgba(239, 68, 68, 0.15)',
+    backgroundColor: 'rgba(229, 31, 31, 0.15)',
     alignItems: 'center',
     justifyContent: 'center',
   },
   fatigueCardTitle: {
     fontSize: 15,
     fontWeight: '700',
-    color: '#F8FAFC',
+    color: '#FFFFFF',
   },
   fatigueCardSubtitle: {
     fontSize: 13,
-    color: '#94A3B8',
+    color: '#8E8E93',
     marginTop: 2,
   },
   fatiguePillRow: {
@@ -272,7 +271,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     paddingHorizontal: 12,
     paddingVertical: 8,
-    borderRadius: 10,
+    borderRadius: 12,
   },
   pillDot: {
     width: 8,
@@ -285,25 +284,25 @@ const styles = StyleSheet.create({
   },
   statsGrid: {
     flexDirection: 'row',
-    gap: 12,
+    gap: 10,
     marginTop: 12,
   },
   statCard: {
     flex: 1,
-    backgroundColor: '#1E293B',
-    borderRadius: 16,
+    backgroundColor: '#1C1C1E',
+    borderRadius: 18,
     padding: 14,
     borderWidth: 1,
-    borderColor: '#334155',
+    borderColor: '#2C2C2E',
     gap: 6,
   },
   statVal: {
     fontSize: 16,
     fontWeight: '800',
-    color: '#F8FAFC',
+    color: '#FFFFFF',
   },
   statLbl: {
     fontSize: 12,
-    color: '#94A3B8',
+    color: '#8E8E93',
   },
 });

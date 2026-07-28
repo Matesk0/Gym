@@ -12,7 +12,7 @@ import {
 } from 'react-native';
 import { useAuth } from '../../context/AuthContext';
 import { useRouter } from 'expo-router';
-import { User, Shield, Lock, Eye, LogOut, Save, Scale, Sparkles } from 'lucide-react-native';
+import { User, Lock, Eye, LogOut, Save, Scale, Sparkles } from 'lucide-react-native';
 
 export default function ProfileScreen() {
   const router = useRouter();
@@ -45,37 +45,34 @@ export default function ProfileScreen() {
 
   return (
     <ScrollView style={styles.container} contentContainerStyle={styles.content}>
-      {/* Header Profile Hero */}
       <View style={styles.heroSection}>
         <View style={styles.avatarWrapper}>
           <Image
             source={{ uri: profile?.avatar_url || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=200' }}
             style={styles.avatar}
           />
-          {/* Live Online Green Dot Indicator */}
           {isOnlineStatus && <View style={styles.onlineDot} />}
         </View>
 
         <Text style={styles.heroName}>{username}</Text>
         <View style={styles.rankPill}>
-          <Sparkles color="#F59E0B" size={14} />
+          <Sparkles color="#FF9F0C" size={14} />
           <Text style={styles.rankPillText}>{profile?.overall_rank || 'Gold Tier Athlete'}</Text>
         </View>
       </View>
 
-      {/* Profile Settings Card */}
       <View style={styles.sectionCard}>
         <Text style={styles.sectionHeaderTitle}>Profile & Bodyweight Stats</Text>
 
         <View style={styles.inputGroup}>
           <Text style={styles.inputLabel}>Username</Text>
           <View style={styles.inputWrapper}>
-            <User color="#94A3B8" size={18} />
+            <User color="#8E8E93" size={18} />
             <TextInput
               style={styles.input}
               value={username}
               onChangeText={setUsername}
-              placeholderTextColor="#64748B"
+              placeholderTextColor="#8E8E93"
             />
           </View>
         </View>
@@ -83,26 +80,24 @@ export default function ProfileScreen() {
         <View style={styles.inputGroup}>
           <Text style={styles.inputLabel}>Bodyweight (KG) - Used for Strength Percentile</Text>
           <View style={styles.inputWrapper}>
-            <Scale color="#94A3B8" size={18} />
+            <Scale color="#8E8E93" size={18} />
             <TextInput
               style={styles.input}
               value={bodyweight}
               onChangeText={setBodyweight}
               keyboardType="numeric"
-              placeholderTextColor="#64748B"
+              placeholderTextColor="#8E8E93"
             />
           </View>
         </View>
       </View>
 
-      {/* Privacy Control Card */}
       <View style={styles.sectionCard}>
         <Text style={styles.sectionHeaderTitle}>Privacy & Workout Security</Text>
 
-        {/* Workout Log Default Privacy */}
         <View style={styles.switchRow}>
           <View style={styles.switchLeft}>
-            {isPublicLogs ? <Eye color="#10B981" size={20} /> : <Lock color="#F97316" size={20} />}
+            {isPublicLogs ? <Eye color="#30D158" size={20} /> : <Lock color="#FF9F0C" size={20} />}
             <View style={{ flex: 1 }}>
               <Text style={styles.switchTitle}>Allow Others to See Workout Logs</Text>
               <Text style={styles.switchSub}>
@@ -115,15 +110,14 @@ export default function ProfileScreen() {
           <Switch
             value={isPublicLogs}
             onValueChange={setIsPublicLogs}
-            trackColor={{ false: '#334155', true: '#10B981' }}
-            thumbColor="#F8FAFC"
+            trackColor={{ false: '#2C2C2E', true: '#30D158' }}
+            thumbColor="#FFFFFF"
           />
         </View>
 
-        {/* Live Online Green Dot Status Toggle */}
         <View style={[styles.switchRow, { marginTop: 12 }]}>
           <View style={styles.switchLeft}>
-            <View style={[styles.dotPreview, { backgroundColor: isOnlineStatus ? '#10B981' : '#64748B' }]} />
+            <View style={[styles.dotPreview, { backgroundColor: isOnlineStatus ? '#30D158' : '#8E8E93' }]} />
             <View style={{ flex: 1 }}>
               <Text style={styles.switchTitle}>Online Status Indicator</Text>
               <Text style={styles.switchSub}>
@@ -134,20 +128,19 @@ export default function ProfileScreen() {
           <Switch
             value={isOnlineStatus}
             onValueChange={setIsOnlineStatus}
-            trackColor={{ false: '#334155', true: '#10B981' }}
-            thumbColor="#F8FAFC"
+            trackColor={{ false: '#2C2C2E', true: '#30D158' }}
+            thumbColor="#FFFFFF"
           />
         </View>
       </View>
 
-      {/* Action Buttons */}
       <TouchableOpacity style={styles.saveBtn} onPress={handleSaveProfile}>
-        <Save color="#0B0F17" size={20} />
+        <Save color="#000000" size={20} />
         <Text style={styles.saveBtnText}>Save Profile Settings</Text>
       </TouchableOpacity>
 
       <TouchableOpacity style={styles.logoutBtn} onPress={handleSignOut}>
-        <LogOut color="#EF4444" size={20} />
+        <LogOut color="#FF453A" size={20} />
         <Text style={styles.logoutBtnText}>Sign Out Account</Text>
       </TouchableOpacity>
     </ScrollView>
@@ -157,7 +150,7 @@ export default function ProfileScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#0B0F17',
+    backgroundColor: '#000000',
   },
   content: {
     paddingHorizontal: 20,
@@ -177,7 +170,7 @@ const styles = StyleSheet.create({
     height: 84,
     borderRadius: 42,
     borderWidth: 3,
-    borderColor: '#334155',
+    borderColor: '#2C2C2E',
   },
   onlineDot: {
     position: 'absolute',
@@ -186,44 +179,45 @@ const styles = StyleSheet.create({
     width: 18,
     height: 18,
     borderRadius: 9,
-    backgroundColor: '#10B981',
+    backgroundColor: '#30D158',
     borderWidth: 3,
-    borderColor: '#0B0F17',
+    borderColor: '#000000',
   },
   heroName: {
-    fontSize: 22,
+    fontSize: 24,
     fontWeight: '800',
-    color: '#F8FAFC',
+    color: '#FFFFFF',
+    letterSpacing: -0.5,
   },
   rankPill: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: 6,
-    backgroundColor: 'rgba(245, 158, 11, 0.15)',
+    backgroundColor: 'rgba(255, 159, 12, 0.15)',
     paddingHorizontal: 12,
     paddingVertical: 6,
     borderRadius: 16,
     marginTop: 6,
     borderWidth: 1,
-    borderColor: 'rgba(245, 158, 11, 0.3)',
+    borderColor: 'rgba(255, 159, 12, 0.3)',
   },
   rankPillText: {
-    color: '#F59E0B',
+    color: '#FF9F0C',
     fontWeight: '700',
     fontSize: 13,
   },
   sectionCard: {
-    backgroundColor: '#1E293B',
-    borderRadius: 18,
+    backgroundColor: '#1C1C1E',
+    borderRadius: 22,
     padding: 16,
     borderWidth: 1,
-    borderColor: '#334155',
+    borderColor: '#2C2C2E',
     gap: 14,
   },
   sectionHeaderTitle: {
     fontSize: 16,
     fontWeight: '700',
-    color: '#F8FAFC',
+    color: '#FFFFFF',
   },
   inputGroup: {
     gap: 6,
@@ -231,22 +225,22 @@ const styles = StyleSheet.create({
   inputLabel: {
     fontSize: 12,
     fontWeight: '600',
-    color: '#94A3B8',
+    color: '#8E8E93',
   },
   inputWrapper: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#0B0F17',
-    borderRadius: 12,
+    backgroundColor: '#2C2C2E',
+    borderRadius: 14,
     paddingHorizontal: 12,
     height: 48,
     gap: 10,
     borderWidth: 1,
-    borderColor: '#334155',
+    borderColor: '#3A3A3C',
   },
   input: {
     flex: 1,
-    color: '#F8FAFC',
+    color: '#FFFFFF',
     fontSize: 15,
     fontWeight: '600',
   },
@@ -270,11 +264,11 @@ const styles = StyleSheet.create({
   switchTitle: {
     fontSize: 14,
     fontWeight: '700',
-    color: '#F8FAFC',
+    color: '#FFFFFF',
   },
   switchSub: {
     fontSize: 12,
-    color: '#94A3B8',
+    color: '#8E8E93',
     marginTop: 2,
   },
   saveBtn: {
@@ -282,12 +276,12 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     gap: 8,
-    backgroundColor: '#10B981',
+    backgroundColor: '#30D158',
     height: 52,
-    borderRadius: 16,
+    borderRadius: 18,
   },
   saveBtnText: {
-    color: '#0B0F17',
+    color: '#000000',
     fontSize: 16,
     fontWeight: '800',
   },
@@ -296,14 +290,14 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     gap: 8,
-    backgroundColor: 'rgba(239, 68, 68, 0.1)',
+    backgroundColor: 'rgba(255, 69, 58, 0.12)',
     height: 50,
-    borderRadius: 16,
+    borderRadius: 18,
     borderWidth: 1,
-    borderColor: 'rgba(239, 68, 68, 0.3)',
+    borderColor: 'rgba(255, 69, 58, 0.3)',
   },
   logoutBtnText: {
-    color: '#EF4444',
+    color: '#FF453A',
     fontSize: 15,
     fontWeight: '700',
   },

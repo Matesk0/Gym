@@ -1,19 +1,46 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
 import { MuscleMapSvg } from '../../components/MuscleMapSvg';
-import { FATIGUE_STAGES, MUSCLE_DEFINITIONS } from '../../constants/muscles';
+import { FATIGUE_STAGES } from '../../constants/muscles';
 import { FatigueState, FatigueStage } from '../../types/database';
-import { Flame, RefreshCw, Info, ShieldAlert, CheckCircle2 } from 'lucide-react-native';
+import { Flame, RefreshCw, Dumbbell, ShieldAlert, CheckCircle2, ChevronRight, Sparkles } from 'lucide-react-native';
+
+// MuscleWiki-style targeted exercises index
+const MUSCLEWIKI_EXERCISES: Record<string, string[]> = {
+  upper_chest: ['Incline Dumbbell Press', 'Incline Cable Fly', 'Low-to-High Cable Crossover'],
+  middle_chest: ['Barbell Bench Press', 'Flat Dumbbell Fly', 'Chest Press Machine'],
+  lower_chest: ['Decline Dumbbell Press', 'Weighted Chest Dips', 'High-to-Low Cable Fly'],
+  anterior_delt: ['Overhead Military Press', 'Dumbbell Shoulder Press', 'Front Cable Raise'],
+  lateral_delt: ['Dumbbell Lateral Raise', 'Cable Lateral Raise', 'Egyptian Lateral Raise'],
+  posterior_delt: ['Rear Delt Cable Fly', 'Reverse Pec Deck', 'Face Pulls'],
+  traps: ['Barbell Shrugs', 'Dumbbell Shrugs', 'Cable Upright Row'],
+  lats: ['Lat Pulldown', 'Wide-Grip Pull-ups', 'Single-Arm Dumbbell Row'],
+  rhomboids: ['Seated Cable Row', 'T-Bar Row', 'Bent-Over Barbell Row'],
+  lower_back: ['Conventional Deadlift', 'Hyperextensions', 'Good Mornings'],
+  biceps_long: ['Incline Dumbbell Curl', 'Drag Curls', 'Bayesian Cable Curl'],
+  biceps_short: ['Preacher Barbell Curl', 'Concentration Curl', 'Spider Curl'],
+  brachialis: ['Dumbbell Hammer Curl', 'Reverse Barbell Curl', 'Rope Cable Curl'],
+  triceps_long: ['Overhead Tricep Extension', 'Skullcrushers', 'French Press'],
+  triceps_lateral: ['Rope Cable Pushdown', 'V-Bar Pushdown', 'Dumbbell Kickbacks'],
+  triceps_medial: ['Close-Grip Bench Press', 'Reverse Grip Pushdown', 'Parallel Bar Dips'],
+  forearms: ['Wrist Curls', 'Reverse Wrist Curls', 'Farmers Walk'],
+  quads: ['Barbell Back Squat', 'Leg Press', 'Bulgarian Split Squat', 'Leg Extension'],
+  hamstrings: ['Romanian Deadlift', 'Lying Leg Curl', 'Seated Leg Curl'],
+  glutes: ['Barbell Hip Thrust', 'Cable Kickbacks', 'Sumo Deadlift'],
+  calves: ['Standing Calf Raise', 'Seated Calf Raise', 'Donkey Calf Raise'],
+  upper_abs: ['Cable Ab Crunch', 'Decline Crunch', 'Machine Crunch'],
+  lower_abs: ['Hanging Leg Raise', 'Reverse Crunch', 'Captains Chair Leg Raise'],
+  obliques: ['Russian Twists', 'Cable Woodchopper', 'Side Plank'],
+};
 
 export default function FatigueScreen() {
   const [viewMode, setViewMode] = useState<'front' | 'back'>('front');
 
-  // Dynamic state for each granular muscle head with sample logged recovery percentages
   const [fatigueData, setFatigueData] = useState<Record<string, FatigueState>>({
     upper_chest: {
       muscle_id: 'upper_chest',
       name: 'Upper Chest',
-      sub_head: 'Clavicular Head',
+      sub_head: 'Clavicular Head (Pectoralis Major)',
       main_category: 'Chest',
       last_trained_hours_ago: 14,
       fatigue_percentage: 35,
@@ -68,7 +95,7 @@ export default function FatigueScreen() {
     quads: {
       muscle_id: 'quads',
       name: 'Quads',
-      sub_head: 'Rectus Femoris & Vastus',
+      sub_head: 'Rectus Femoris & Vastus Lateralis',
       main_category: 'Legs',
       last_trained_hours_ago: 6,
       fatigue_percentage: 15,
@@ -113,121 +140,133 @@ export default function FatigueScreen() {
 
   const [selectedMuscle, setSelectedMuscle] = useState<FatigueState>(fatigueData.upper_chest);
 
+  const muscleWikiExercises = selectedMuscle
+    ? MUSCLEWIKI_EXERCISES[selectedMuscle.muscle_id] || ['Barbell Compound Movement', 'Dumbbell Isolation']
+    : [];
+
   return (
     <ScrollView style={styles.container} contentContainerStyle={styles.content}>
-      {/* Header */}
+      {/* iOS Prestige Header */}
       <View style={styles.header}>
-        <Text style={styles.title}>Muscle Fatigue Heatmap</Text>
+        <Text style={styles.title}>Muscle Fatigue Map</Text>
         <Text style={styles.subtitle}>
-          Scientific rest windows based on workout frequency & volume
+          MuscleWiki-style interactive physique breakdown & rest windows
         </Text>
       </View>
 
-      {/* Front / Back Toggle */}
-      <View style={styles.toggleRow}>
+      {/* Segmented iOS View Switcher (Anterior vs Posterior) */}
+      <View style={styles.segmentedControl}>
         <TouchableOpacity
-          style={[styles.toggleBtn, viewMode === 'front' && styles.toggleBtnActive]}
+          style={[styles.segmentBtn, viewMode === 'front' && styles.segmentBtnActive]}
           onPress={() => setViewMode('front')}
         >
-          <Text style={[styles.toggleText, viewMode === 'front' && styles.toggleTextActive]}>
+          <Text style={[styles.segmentText, viewMode === 'front' && styles.segmentTextActive]}>
             Anterior (Front)
           </Text>
         </TouchableOpacity>
         <TouchableOpacity
-          style={[styles.toggleBtn, viewMode === 'back' && styles.toggleBtnActive]}
+          style={[styles.segmentBtn, viewMode === 'back' && styles.segmentBtnActive]}
           onPress={() => setViewMode('back')}
         >
-          <Text style={[styles.toggleText, viewMode === 'back' && styles.toggleTextActive]}>
+          <Text style={[styles.segmentText, viewMode === 'back' && styles.segmentTextActive]}>
             Posterior (Back)
           </Text>
         </TouchableOpacity>
       </View>
 
-      {/* 5-Stage Color Gradient Legend */}
-      <View style={styles.legendContainer}>
-        <Text style={styles.legendTitle}>5-Stage Color Recovery Scale</Text>
+      {/* Hex Color Scale Legend Card */}
+      <View style={styles.legendCard}>
+        <View style={styles.legendHeader}>
+          <Sparkles color="#30D158" size={16} />
+          <Text style={styles.legendTitle}>Muscle Recovery Scale</Text>
+        </View>
+
         <View style={styles.legendBar}>
           {([1, 2, 3, 4, 5] as FatigueStage[]).map((stg) => {
             const info = FATIGUE_STAGES[stg];
             return (
-              <View key={stg} style={[styles.legendItem, { backgroundColor: info.color }]}>
-                <Text style={styles.legendStageText}>S{stg}</Text>
+              <View key={stg} style={[styles.legendSegment, { backgroundColor: info.color }]}>
+                <Text style={styles.legendStageNum}>S{stg}</Text>
               </View>
             );
           })}
         </View>
+
         <View style={styles.legendLabels}>
-          <Text style={[styles.labelMinMax, { color: '#EF4444' }]}>0% Exhausted</Text>
-          <Text style={[styles.labelMinMax, { color: '#10B981' }]}>100% Prime</Text>
+          <Text style={[styles.labelLegendText, { color: '#e51f1f' }]}>#e51f1f (0% Exhausted)</Text>
+          <Text style={[styles.labelLegendText, { color: '#44ce1b' }]}>#44ce1b (100% Prime)</Text>
         </View>
       </View>
 
-      {/* Interactive Muscle SVG Physique */}
-      <View style={styles.svgContainer}>
+      {/* MuscleWiki Interactive Body Map Container */}
+      <View style={styles.mapCard}>
         <MuscleMapSvg
           viewMode={viewMode}
           fatigueData={fatigueData}
           onSelectMuscle={(m) => setSelectedMuscle(m)}
           selectedMuscleId={selectedMuscle?.muscle_id}
         />
-        <Text style={styles.tapTipText}>Tap any muscle head to inspect rest breakdown</Text>
+        <Text style={styles.mapHintText}>Tap any muscle head to inspect MuscleWiki exercises</Text>
       </View>
 
-      {/* Selected Muscle Recovery Details Card */}
+      {/* MuscleWiki Muscle Inspector Card */}
       {selectedMuscle && (
-        <View style={styles.detailCard}>
-          <View style={styles.detailHeader}>
+        <View style={styles.inspectorCard}>
+          <View style={styles.inspectorHeader}>
             <View>
-              <Text style={styles.detailName}>{selectedMuscle.name}</Text>
-              <Text style={styles.detailSub}>{selectedMuscle.sub_head}</Text>
+              <Text style={styles.inspectorTitle}>{selectedMuscle.name}</Text>
+              <Text style={styles.inspectorSub}>{selectedMuscle.sub_head}</Text>
             </View>
-            <View style={[styles.stageBadge, { backgroundColor: FATIGUE_STAGES[selectedMuscle.stage].bg, borderColor: selectedMuscle.color }]}>
-              <Text style={[styles.stageBadgeText, { color: selectedMuscle.color }]}>
+
+            <View style={[styles.badgePill, { backgroundColor: FATIGUE_STAGES[selectedMuscle.stage].bg, borderColor: selectedMuscle.color }]}>
+              <Text style={[styles.badgePillText, { color: selectedMuscle.color }]}>
                 {FATIGUE_STAGES[selectedMuscle.stage].label} ({selectedMuscle.fatigue_percentage}%)
               </Text>
             </View>
           </View>
 
-          {/* Recovery Meter Bar */}
-          <View style={styles.meterTrack}>
+          {/* Progress Bar */}
+          <View style={styles.progressTrack}>
             <View
               style={[
-                styles.meterFill,
+                styles.progressFill,
                 { width: `${selectedMuscle.fatigue_percentage}%`, backgroundColor: selectedMuscle.color },
               ]}
             />
           </View>
 
-          <View style={styles.metricGrid}>
-            <View style={styles.metricBox}>
-              <RefreshCw color="#3B82F6" size={18} />
-              <Text style={styles.metricVal}>{selectedMuscle.last_trained_hours_ago} hrs ago</Text>
-              <Text style={styles.metricLbl}>Last Trained</Text>
+          <View style={styles.statsRow}>
+            <View style={styles.statBox}>
+              <RefreshCw color="#0A84FF" size={16} />
+              <Text style={styles.statVal}>{selectedMuscle.last_trained_hours_ago}h ago</Text>
+              <Text style={styles.statLbl}>Last Trained</Text>
             </View>
 
-            <View style={styles.metricBox}>
-              <Flame color={selectedMuscle.color} size={18} />
-              <Text style={styles.metricVal}>
+            <View style={styles.statBox}>
+              <Flame color={selectedMuscle.color} size={16} />
+              <Text style={styles.statVal}>
                 {selectedMuscle.recovery_hours_needed > 0
-                  ? `${selectedMuscle.recovery_hours_needed} hrs`
-                  : 'Ready!'}
+                  ? `${selectedMuscle.recovery_hours_needed}h left`
+                  : '100% Prime'}
               </Text>
-              <Text style={styles.metricLbl}>Est. Rest Remaining</Text>
+              <Text style={styles.statLbl}>Est. Rest Window</Text>
             </View>
           </View>
 
-          {/* Scientific Advice */}
-          <View style={styles.adviceRow}>
-            {selectedMuscle.stage <= 2 ? (
-              <ShieldAlert color="#EF4444" size={20} />
-            ) : (
-              <CheckCircle2 color="#10B981" size={20} />
-            )}
-            <Text style={styles.adviceText}>
-              {selectedMuscle.stage <= 2
-                ? 'High muscle breakdown detected. Avoid heavy compound strain on this head today.'
-                : 'Muscle fibers have synthesized. Prime condition for progressive overload!'}
-            </Text>
+          {/* MuscleWiki Recommended Targeted Exercises */}
+          <View style={styles.exerciseSection}>
+            <View style={styles.exSectionTitleRow}>
+              <Dumbbell color="#30D158" size={16} />
+              <Text style={styles.exSectionTitle}>MuscleWiki Target Exercises</Text>
+            </View>
+
+            {muscleWikiExercises.map((exName, idx) => (
+              <View key={idx} style={styles.exerciseItem}>
+                <View style={styles.exDot} />
+                <Text style={styles.exerciseNameText}>{exName}</Text>
+                <ChevronRight color="#8E8E93" size={16} />
+              </View>
+            ))}
           </View>
         </View>
       )}
@@ -238,178 +277,206 @@ export default function FatigueScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#0B0F17',
+    backgroundColor: '#000000', // iOS Pitch Black OLED
   },
   content: {
     paddingHorizontal: 20,
     paddingTop: 54,
     paddingBottom: 40,
+    gap: 16,
   },
   header: {
-    marginBottom: 16,
+    marginBottom: 4,
   },
   title: {
-    fontSize: 24,
+    fontSize: 28,
     fontWeight: '800',
-    color: '#F8FAFC',
+    color: '#FFFFFF',
+    letterSpacing: -0.5,
   },
   subtitle: {
     fontSize: 13,
-    color: '#94A3B8',
+    color: '#8E8E93',
     marginTop: 4,
   },
-  toggleRow: {
+  segmentedControl: {
     flexDirection: 'row',
-    backgroundColor: '#1E293B',
+    backgroundColor: '#1C1C1E',
     borderRadius: 14,
-    padding: 4,
-    marginBottom: 16,
+    padding: 3,
+    borderWidth: 1,
+    borderColor: '#2C2C2E',
   },
-  toggleBtn: {
+  segmentBtn: {
     flex: 1,
     paddingVertical: 10,
     alignItems: 'center',
-    borderRadius: 10,
+    borderRadius: 11,
   },
-  toggleBtnActive: {
-    backgroundColor: '#10B981',
+  segmentBtnActive: {
+    backgroundColor: '#2C2C2E',
   },
-  toggleText: {
-    color: '#94A3B8',
-    fontSize: 14,
+  segmentText: {
+    color: '#8E8E93',
+    fontSize: 13,
     fontWeight: '700',
   },
-  toggleTextActive: {
-    color: '#0B0F17',
+  segmentTextActive: {
+    color: '#FFFFFF',
   },
-  legendContainer: {
-    backgroundColor: '#161F2E',
-    borderRadius: 14,
+  legendCard: {
+    backgroundColor: '#1C1C1E',
+    borderRadius: 18,
     padding: 14,
-    marginBottom: 16,
     borderWidth: 1,
-    borderColor: '#1E293B',
+    borderColor: '#2C2C2E',
+    gap: 8,
+  },
+  legendHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
   },
   legendTitle: {
     fontSize: 13,
     fontWeight: '700',
-    color: '#94A3B8',
-    marginBottom: 8,
+    color: '#8E8E93',
   },
   legendBar: {
     flexDirection: 'row',
-    height: 18,
-    borderRadius: 9,
+    height: 14,
+    borderRadius: 7,
     overflow: 'hidden',
   },
-  legendItem: {
+  legendSegment: {
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
   },
-  legendStageText: {
-    fontSize: 10,
+  legendStageNum: {
+    fontSize: 9,
     fontWeight: '900',
-    color: '#0B0F17',
+    color: '#000000',
   },
   legendLabels: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginTop: 6,
   },
-  labelMinMax: {
+  labelLegendText: {
     fontSize: 11,
     fontWeight: '700',
   },
-  svgContainer: {
-    backgroundColor: '#1E293B',
-    borderRadius: 20,
-    paddingVertical: 10,
+  mapCard: {
+    backgroundColor: '#1C1C1E',
+    borderRadius: 24,
+    paddingVertical: 14,
     alignItems: 'center',
     borderWidth: 1,
-    borderColor: '#334155',
-    marginBottom: 16,
+    borderColor: '#2C2C2E',
   },
-  tapTipText: {
-    color: '#64748B',
+  mapHintText: {
+    color: '#8E8E93',
     fontSize: 12,
-    marginTop: 4,
+    marginTop: 2,
   },
-  detailCard: {
-    backgroundColor: '#1E293B',
-    borderRadius: 18,
-    padding: 16,
+  inspectorCard: {
+    backgroundColor: '#1C1C1E',
+    borderRadius: 22,
+    padding: 18,
     borderWidth: 1,
-    borderColor: '#334155',
+    borderColor: '#2C2C2E',
     gap: 14,
   },
-  detailHeader: {
+  inspectorHeader: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
   },
-  detailName: {
-    fontSize: 18,
+  inspectorTitle: {
+    fontSize: 20,
     fontWeight: '800',
-    color: '#F8FAFC',
+    color: '#FFFFFF',
   },
-  detailSub: {
+  inspectorSub: {
     fontSize: 13,
-    color: '#94A3B8',
+    color: '#8E8E93',
+    marginTop: 2,
   },
-  stageBadge: {
-    paddingHorizontal: 10,
-    paddingVertical: 4,
-    borderRadius: 12,
+  badgePill: {
+    paddingHorizontal: 12,
+    paddingVertical: 5,
+    borderRadius: 14,
     borderWidth: 1,
   },
-  stageBadgeText: {
+  badgePillText: {
     fontSize: 12,
     fontWeight: '700',
   },
-  meterTrack: {
-    height: 10,
-    backgroundColor: '#0B0F17',
-    borderRadius: 5,
+  progressTrack: {
+    height: 8,
+    backgroundColor: '#2C2C2E',
+    borderRadius: 4,
     overflow: 'hidden',
   },
-  meterFill: {
+  progressFill: {
     height: '100%',
-    borderRadius: 5,
+    borderRadius: 4,
   },
-  metricGrid: {
+  statsRow: {
     flexDirection: 'row',
-    gap: 12,
+    gap: 10,
   },
-  metricBox: {
+  statBox: {
     flex: 1,
-    backgroundColor: '#0B0F17',
-    borderRadius: 12,
+    backgroundColor: '#2C2C2E',
+    borderRadius: 14,
     padding: 12,
     alignItems: 'center',
     gap: 4,
   },
-  metricVal: {
+  statVal: {
     fontSize: 15,
     fontWeight: '800',
-    color: '#F8FAFC',
+    color: '#FFFFFF',
   },
-  metricLbl: {
+  statLbl: {
     fontSize: 11,
-    color: '#94A3B8',
+    color: '#8E8E93',
   },
-  adviceRow: {
+  exerciseSection: {
+    gap: 8,
+    marginTop: 4,
+  },
+  exSectionTitleRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 10,
-    backgroundColor: '#0B0F17',
-    padding: 12,
-    borderRadius: 12,
+    gap: 8,
+    marginBottom: 4,
   },
-  adviceText: {
+  exSectionTitle: {
+    fontSize: 14,
+    fontWeight: '700',
+    color: '#FFFFFF',
+  },
+  exerciseItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    backgroundColor: '#2C2C2E',
+    padding: 12,
+    borderRadius: 14,
+  },
+  exDot: {
+    width: 6,
+    height: 6,
+    borderRadius: 3,
+    backgroundColor: '#30D158',
+  },
+  exerciseNameText: {
     flex: 1,
-    color: '#CBD5E1',
-    fontSize: 13,
-    lineHeight: 18,
+    color: '#FFFFFF',
+    fontSize: 14,
+    fontWeight: '600',
+    marginLeft: 10,
   },
 });

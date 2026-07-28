@@ -31,10 +31,9 @@ interface LocalExerciseLog {
 export default function WorkoutScreen() {
   const router = useRouter();
   const [workoutTitle, setWorkoutTitle] = useState('Upper Body Power Session');
-  const [isPublic, setIsPublic] = useState(false); // Default private log per specification
+  const [isPublic, setIsPublic] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState<MainMuscleCategory>('Chest');
 
-  // Active exercises being logged in this session
   const [loggedExercises, setLoggedExercises] = useState<LocalExerciseLog[]>([
     {
       exerciseId: 'upper_chest_1',
@@ -48,7 +47,6 @@ export default function WorkoutScreen() {
     },
   ]);
 
-  // Handle adding a new exercise to session
   const handleAddExercise = (name: string, subCategory: string) => {
     const newEx: LocalExerciseLog = {
       exerciseId: Date.now().toString(),
@@ -59,7 +57,6 @@ export default function WorkoutScreen() {
     setLoggedExercises([...loggedExercises, newEx]);
   };
 
-  // Add set to specific exercise
   const handleAddSet = (exerciseIndex: number) => {
     const updated = [...loggedExercises];
     const targetEx = updated[exerciseIndex];
@@ -75,7 +72,6 @@ export default function WorkoutScreen() {
     setLoggedExercises(updated);
   };
 
-  // Update set details (weight or reps)
   const handleUpdateSet = (
     exerciseIndex: number,
     setIndex: number,
@@ -87,31 +83,28 @@ export default function WorkoutScreen() {
     setLoggedExercises(updated);
   };
 
-  // Remove set
   const handleRemoveSet = (exerciseIndex: number, setIndex: number) => {
     const updated = [...loggedExercises];
     updated[exerciseIndex].sets.splice(setIndex, 1);
     if (updated[exerciseIndex].sets.length === 0) {
       updated.splice(exerciseIndex, 1);
     } else {
-      // re-number sets
       updated[exerciseIndex].sets.forEach((s, idx) => (s.setNumber = idx + 1));
     }
     setLoggedExercises(updated);
   };
 
-  // Save Workout Session
   const handleFinishWorkout = () => {
     if (loggedExercises.length === 0) {
       Alert.alert('Empty Workout', 'Please add at least one exercise set.');
       return;
     }
     Alert.alert(
-      'Workout Saved! 🔥',
-      `Logged ${loggedExercises.length} exercises. Your muscle fatigue heatmap has been updated. Privacy: ${
+      'Workout Logged! 🔥',
+      `Saved ${loggedExercises.length} exercises. Your muscle fatigue map has been updated. Privacy: ${
         isPublic ? 'Public Profile Viewable' : 'Private (Members Only)'
       }`,
-      [{ text: 'Awesome', onPress: () => router.push('/(tabs)/fatigue') }]
+      [{ text: 'Great', onPress: () => router.push('/(tabs)/fatigue') }]
     );
   };
 
@@ -120,7 +113,6 @@ export default function WorkoutScreen() {
 
   return (
     <ScrollView style={styles.container} contentContainerStyle={styles.content}>
-      {/* Title & Privacy Header */}
       <View style={styles.header}>
         <Text style={styles.headerTitle}>Workout Logger</Text>
         <TextInput
@@ -128,13 +120,12 @@ export default function WorkoutScreen() {
           value={workoutTitle}
           onChangeText={setWorkoutTitle}
           placeholder="Workout Title"
-          placeholderTextColor="#64748B"
+          placeholderTextColor="#8E8E93"
         />
 
-        {/* Privacy Switch Card */}
         <View style={styles.privacyCard}>
           <View style={styles.privacyLeft}>
-            {isPublic ? <Eye color="#10B981" size={20} /> : <Lock color="#F97316" size={20} />}
+            {isPublic ? <Eye color="#30D158" size={20} /> : <Lock color="#FF9F0C" size={20} />}
             <View>
               <Text style={styles.privacyTitle}>
                 {isPublic ? 'Public Workout Log' : 'Private Workout Log (Default)'}
@@ -147,14 +138,13 @@ export default function WorkoutScreen() {
           <Switch
             value={isPublic}
             onValueChange={setIsPublic}
-            trackColor={{ false: '#334155', true: '#10B981' }}
-            thumbColor="#F8FAFC"
+            trackColor={{ false: '#2C2C2E', true: '#30D158' }}
+            thumbColor="#FFFFFF"
           />
         </View>
       </View>
 
-      {/* Category Selector */}
-      <Text style={styles.sectionLabel}>Select Muscle Group to Add Exercise</Text>
+      <Text style={styles.sectionLabel}>Select Target Muscle Group</Text>
       <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.catScroll}>
         {categories.map((cat) => (
           <TouchableOpacity
@@ -169,7 +159,6 @@ export default function WorkoutScreen() {
         ))}
       </ScrollView>
 
-      {/* Exercise Picker Buttons */}
       <View style={styles.pickerGrid}>
         {filteredMuscles.map((m) => (
           <TouchableOpacity
@@ -177,7 +166,7 @@ export default function WorkoutScreen() {
             style={styles.pickerItem}
             onPress={() => handleAddExercise(m.name, m.subHead)}
           >
-            <Plus color="#10B981" size={16} />
+            <Plus color="#30D158" size={18} />
             <View>
               <Text style={styles.pickerName}>{m.name}</Text>
               <Text style={styles.pickerSub}>{m.subHead}</Text>
@@ -186,8 +175,7 @@ export default function WorkoutScreen() {
         ))}
       </View>
 
-      {/* Logged Exercises & Sets */}
-      <Text style={[styles.sectionLabel, { marginTop: 24 }]}>Active Session Exercises</Text>
+      <Text style={[styles.sectionLabel, { marginTop: 24 }]}>Logged Session Exercises</Text>
 
       {loggedExercises.map((ex, exIndex) => (
         <View key={ex.exerciseId} style={styles.exerciseCard}>
@@ -196,18 +184,16 @@ export default function WorkoutScreen() {
               <Text style={styles.exCardTitle}>{ex.name}</Text>
               <Text style={styles.exCardSub}>{ex.subCategory}</Text>
             </View>
-            <Dumbbell color="#10B981" size={20} />
+            <Dumbbell color="#30D158" size={20} />
           </View>
 
-          {/* Set Rows Header */}
           <View style={styles.setTableHeader}>
-            <Text style={[styles.thText, { width: 50 }]}>SET</Text>
+            <Text style={[styles.thText, { width: 44 }]}>SET</Text>
             <Text style={[styles.thText, { flex: 1 }]}>WEIGHT (KG)</Text>
             <Text style={[styles.thText, { flex: 1 }]}>REPS</Text>
-            <Text style={[styles.thText, { width: 40 }]}>DEL</Text>
+            <Text style={[styles.thText, { width: 36 }]}>DEL</Text>
           </View>
 
-          {/* Set Rows */}
           {ex.sets.map((st, setIndex) => (
             <View key={st.id} style={styles.setRow}>
               <Text style={styles.setNumBadge}>{st.setNumber}</Text>
@@ -227,22 +213,20 @@ export default function WorkoutScreen() {
                 style={styles.delBtn}
                 onPress={() => handleRemoveSet(exIndex, setIndex)}
               >
-                <Trash2 color="#EF4444" size={16} />
+                <Trash2 color="#FF453A" size={16} />
               </TouchableOpacity>
             </View>
           ))}
 
-          {/* Add Set Button */}
           <TouchableOpacity style={styles.addSetBtn} onPress={() => handleAddSet(exIndex)}>
-            <Plus color="#10B981" size={16} />
+            <Plus color="#30D158" size={16} />
             <Text style={styles.addSetBtnText}>Add Set</Text>
           </TouchableOpacity>
         </View>
       ))}
 
-      {/* Save Workout Complete Button */}
       <TouchableOpacity style={styles.finishBtn} onPress={handleFinishWorkout}>
-        <CheckCircle2 color="#0B0F17" size={22} />
+        <CheckCircle2 color="#000000" size={22} />
         <Text style={styles.finishBtnText}>Finish & Record Workout</Text>
       </TouchableOpacity>
     </ScrollView>
@@ -252,7 +236,7 @@ export default function WorkoutScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#0B0F17',
+    backgroundColor: '#000000',
   },
   content: {
     paddingHorizontal: 20,
@@ -263,32 +247,33 @@ const styles = StyleSheet.create({
     marginBottom: 16,
   },
   headerTitle: {
-    fontSize: 24,
+    fontSize: 28,
     fontWeight: '800',
-    color: '#F8FAFC',
+    color: '#FFFFFF',
+    letterSpacing: -0.5,
   },
   titleInput: {
-    fontSize: 18,
+    fontSize: 17,
     fontWeight: '700',
-    color: '#10B981',
-    backgroundColor: '#1E293B',
-    borderRadius: 12,
+    color: '#30D158',
+    backgroundColor: '#1C1C1E',
+    borderRadius: 14,
     paddingHorizontal: 14,
-    paddingVertical: 10,
+    paddingVertical: 12,
     marginTop: 10,
     borderWidth: 1,
-    borderColor: '#334155',
+    borderColor: '#2C2C2E',
   },
   privacyCard: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    backgroundColor: '#1E293B',
+    backgroundColor: '#1C1C1E',
     padding: 14,
-    borderRadius: 14,
+    borderRadius: 16,
     marginTop: 12,
     borderWidth: 1,
-    borderColor: '#334155',
+    borderColor: '#2C2C2E',
   },
   privacyLeft: {
     flexDirection: 'row',
@@ -299,16 +284,16 @@ const styles = StyleSheet.create({
   privacyTitle: {
     fontSize: 14,
     fontWeight: '700',
-    color: '#F8FAFC',
+    color: '#FFFFFF',
   },
   privacySubtitle: {
     fontSize: 12,
-    color: '#94A3B8',
+    color: '#8E8E93',
   },
   sectionLabel: {
-    fontSize: 15,
+    fontSize: 14,
     fontWeight: '700',
-    color: '#94A3B8',
+    color: '#8E8E93',
     marginBottom: 10,
   },
   catScroll: {
@@ -316,25 +301,25 @@ const styles = StyleSheet.create({
     marginBottom: 14,
   },
   catChip: {
-    backgroundColor: '#1E293B',
+    backgroundColor: '#1C1C1E',
     paddingHorizontal: 16,
     paddingVertical: 10,
-    borderRadius: 20,
+    borderRadius: 18,
     marginRight: 8,
     borderWidth: 1,
-    borderColor: '#334155',
+    borderColor: '#2C2C2E',
   },
   catChipActive: {
-    backgroundColor: '#10B981',
-    borderColor: '#10B981',
+    backgroundColor: '#30D158',
+    borderColor: '#30D158',
   },
   catChipText: {
-    color: '#94A3B8',
+    color: '#8E8E93',
     fontWeight: '600',
     fontSize: 13,
   },
   catChipTextActive: {
-    color: '#0B0F17',
+    color: '#000000',
     fontWeight: '800',
   },
   pickerGrid: {
@@ -344,28 +329,28 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: 12,
-    backgroundColor: '#161F2E',
-    borderRadius: 12,
+    backgroundColor: '#1C1C1E',
+    borderRadius: 14,
     padding: 12,
     borderWidth: 1,
-    borderColor: '#1E293B',
+    borderColor: '#2C2C2E',
   },
   pickerName: {
     fontSize: 14,
     fontWeight: '700',
-    color: '#F8FAFC',
+    color: '#FFFFFF',
   },
   pickerSub: {
     fontSize: 12,
-    color: '#94A3B8',
+    color: '#8E8E93',
   },
   exerciseCard: {
-    backgroundColor: '#1E293B',
-    borderRadius: 16,
+    backgroundColor: '#1C1C1E',
+    borderRadius: 18,
     padding: 16,
     marginBottom: 16,
     borderWidth: 1,
-    borderColor: '#334155',
+    borderColor: '#2C2C2E',
   },
   exCardHeader: {
     flexDirection: 'row',
@@ -376,11 +361,11 @@ const styles = StyleSheet.create({
   exCardTitle: {
     fontSize: 16,
     fontWeight: '800',
-    color: '#F8FAFC',
+    color: '#FFFFFF',
   },
   exCardSub: {
     fontSize: 13,
-    color: '#10B981',
+    color: '#30D158',
   },
   setTableHeader: {
     flexDirection: 'row',
@@ -390,7 +375,7 @@ const styles = StyleSheet.create({
   thText: {
     fontSize: 11,
     fontWeight: '700',
-    color: '#64748B',
+    color: '#8E8E93',
   },
   setRow: {
     flexDirection: 'row',
@@ -402,24 +387,24 @@ const styles = StyleSheet.create({
     width: 32,
     height: 32,
     borderRadius: 8,
-    backgroundColor: '#0B0F17',
-    color: '#F8FAFC',
+    backgroundColor: '#2C2C2E',
+    color: '#FFFFFF',
     fontWeight: '700',
     textAlign: 'center',
     lineHeight: 32,
   },
   setValInput: {
     flex: 1,
-    backgroundColor: '#0B0F17',
-    borderRadius: 8,
-    color: '#10B981',
+    backgroundColor: '#2C2C2E',
+    borderRadius: 10,
+    color: '#30D158',
     fontWeight: '700',
     fontSize: 15,
     paddingHorizontal: 12,
     height: 38,
     textAlign: 'center',
     borderWidth: 1,
-    borderColor: '#334155',
+    borderColor: '#3A3A3C',
   },
   delBtn: {
     width: 32,
@@ -431,12 +416,12 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     gap: 6,
     paddingVertical: 10,
-    backgroundColor: 'rgba(16, 185, 129, 0.1)',
-    borderRadius: 10,
+    backgroundColor: 'rgba(48, 209, 88, 0.12)',
+    borderRadius: 12,
     marginTop: 8,
   },
   addSetBtnText: {
-    color: '#10B981',
+    color: '#30D158',
     fontSize: 13,
     fontWeight: '700',
   },
@@ -445,13 +430,13 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     gap: 10,
-    backgroundColor: '#10B981',
+    backgroundColor: '#30D158',
     paddingVertical: 16,
-    borderRadius: 16,
+    borderRadius: 18,
     marginTop: 10,
   },
   finishBtnText: {
-    color: '#0B0F17',
+    color: '#000000',
     fontSize: 17,
     fontWeight: '800',
   },
