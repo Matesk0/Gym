@@ -75,6 +75,11 @@ export default function HomeScreen() {
             <Text style={[styles.pillText, { color: '#F97316' }]}>Upper Chest (35% - Heavy Fatigue)</Text>
           </View>
 
+          <View style={[styles.fatiguePill, { borderColor: '#3B82F6', backgroundColor: 'rgba(59,130,246,0.1)' }]}>
+            <View style={[styles.pillDot, { backgroundColor: '#3B82F6' }]} />
+            <Text style={[styles.pillText, { color: '#3B82F6' }]}>Lower Back (75% - Mostly Recovered)</Text>
+          </View>
+
           <View style={[styles.fatiguePill, { borderColor: '#10B981', backgroundColor: 'rgba(16,185,129,0.1)' }]}>
             <View style={[styles.pillDot, { backgroundColor: '#10B981' }]} />
             <Text style={[styles.pillText, { color: '#10B981' }]}>Lats (95% - Prime State)</Text>

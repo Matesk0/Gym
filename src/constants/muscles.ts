@@ -13,7 +13,7 @@ export const FATIGUE_STAGES: Record<FatigueStage, { label: string; range: string
   1: { label: 'Exhausted', range: '0 - 20%', color: '#EF4444', bg: 'rgba(239, 68, 68, 0.15)' },
   2: { label: 'Heavy Fatigue', range: '21 - 40%', color: '#F97316', bg: 'rgba(249, 115, 22, 0.15)' },
   3: { label: 'Moderate Recovery', range: '41 - 60%', color: '#EAB308', bg: 'rgba(234, 179, 8, 0.15)' },
-  4: { label: 'Mostly Recovered', range: '61 - 80%', color: '#84CC16', bg: 'rgba(132, 204, 22, 0.15)' },
+  4: { label: 'Mostly Recovered', range: '61 - 80%', color: '#3B82F6', bg: 'rgba(59, 130, 246, 0.15)' },
   5: { label: 'Fully Recovered', range: '81 - 100%', color: '#10B981', bg: 'rgba(16, 185, 129, 0.15)' },
 };
 
