@@ -1,6 +1,7 @@
 module.exports = {
-  preset: 'ts-jest',
   testEnvironment: 'node',
   testMatch: ['**/__tests__/**/*.test.ts'],
-  moduleFileExtensions: ['ts', 'js', 'json'],
+  transform: {
+    '^.+\\.tsx?$': ['babel-jest', { presets: ['babel-preset-expo'] }],
+  },
 };
