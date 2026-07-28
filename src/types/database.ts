@@ -1,0 +1,73 @@
+export type RankTier = 'Bronze' | 'Silver' | 'Gold' | 'Platinum' | 'Diamond' | 'Master' | 'Grandmaster';
+
+export interface Profile {
+  id: string;
+  username: string;
+  avatar_url: string;
+  is_online: boolean;
+  is_public_logs: boolean;
+  gender: 'male' | 'female';
+  bodyweight_kg: number;
+  overall_rank: RankTier;
+  created_at?: string;
+}
+
+export type MainMuscleCategory = 'Chest' | 'Back' | 'Shoulders' | 'Arms' | 'Legs' | 'Core';
+
+export interface Exercise {
+  id: string;
+  name: string;
+  main_category: MainMuscleCategory;
+  sub_category: string;
+  target_muscles: string[];
+  equipment: string;
+  is_compound: boolean;
+}
+
+export interface WorkoutLog {
+  id: string;
+  user_id: string;
+  title: string;
+  is_public: boolean;
+  created_at: string;
+  sets?: SetLog[];
+}
+
+export interface SetLog {
+  id: string;
+  workout_log_id: string;
+  exercise_id: string;
+  exercise_name?: string;
+  set_number: number;
+  weight_kg: number;
+  reps: number;
+  created_at?: string;
+}
+
+export type FatigueStage = 1 | 2 | 3 | 4 | 5;
+
+export interface FatigueState {
+  muscle_id: string;
+  name: string;
+  sub_head: string;
+  main_category: MainMuscleCategory;
+  last_trained_hours_ago: number;
+  fatigue_percentage: number; // 0 (exhausted) to 100 (fully recovered)
+  stage: FatigueStage;
+  color: string;
+  recovery_hours_needed: number;
+}
+
+export interface LeaderboardEntry {
+  user_id: string;
+  username: string;
+  avatar_url: string;
+  is_online: boolean;
+  rank: RankTier;
+  total_score: number;
+  bench_1rm: number;
+  squat_1rm: number;
+  deadlift_1rm: number;
+  bodyweight_kg: number;
+  ratio: number; // strength-to-weight ratio
+}
