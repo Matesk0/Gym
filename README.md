@@ -9,11 +9,11 @@
 ### 1. 🧬 5-Stage Muscle Fatigue Visual Heatmap (`(tabs)/fatigue.tsx`)
 - **Interactive Anatomical Physique SVG**: Front (Anterior) and Back (Posterior) vector muscle map displaying live recovery heatmaps per muscle head.
 - **5-Stage Color Gradient**:
-  - 🔴 **Stage 1 (0–20%)**: Deep Red — Exhausted (Heavy breakdown)
-  - 🟠 **Stage 2 (21–40%)**: Deep Orange — Heavy Fatigue (Active repair)
-  - 🟡 **Stage 3 (41–60%)**: Yellow — Moderate Recovery (Midway recovered)
-  - 🔵 **Stage 4 (61–80%)**: Electric Blue — Mostly Recovered (Distinct high-contrast hue)
-  - ❇️ **Stage 5 (81–100%)**: Bright Emerald Green — Fully Recovered (Prime state for max overload)
+  - 🔴 **Stage 1 (0–20%)**: `#e51f1f` — Exhausted (Heavy breakdown)
+  - 🟠 **Stage 2 (21–40%)**: `#f2a134` — Heavy Fatigue (Active repair)
+  - 🟡 **Stage 3 (41–60%)**: `#f7e379` — Moderate Recovery (Midway recovered)
+  - 🟢 **Stage 4 (61–80%)**: `#bbdb44` — Mostly Recovered (Yellow-Green)
+  - ❇️ **Stage 5 (81–100%)**: `#44ce1b` — Fully Recovered (Bright Lime Green)
 - **Scientific Recovery Engine**: Rest windows based on muscle group size (48–72h for legs/back, 36–48h for chest/shoulders, 24–36h for arms/abs).
 
 ### 2. 🏆 Gaming Strength Ranks & Global Leaderboard (`(tabs)/ranks.tsx`)
