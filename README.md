@@ -12,8 +12,8 @@
   - 🔴 **Stage 1 (0–20%)**: Deep Red — Exhausted (Heavy breakdown)
   - 🟠 **Stage 2 (21–40%)**: Deep Orange — Heavy Fatigue (Active repair)
   - 🟡 **Stage 3 (41–60%)**: Yellow — Moderate Recovery (Midway recovered)
-  - 🟢 **Stage 4 (61–80%)**: Light Green — Mostly Recovered (Ready for light work)
-  - ❇️ **Stage 5 (81–100%)**: Bright Green — Fully Recovered (Prime state for max overload)
+  - 🔵 **Stage 4 (61–80%)**: Electric Blue — Mostly Recovered (Distinct high-contrast hue)
+  - ❇️ **Stage 5 (81–100%)**: Bright Emerald Green — Fully Recovered (Prime state for max overload)
 - **Scientific Recovery Engine**: Rest windows based on muscle group size (48–72h for legs/back, 36–48h for chest/shoulders, 24–36h for arms/abs).
 
 ### 2. 🏆 Gaming Strength Ranks & Global Leaderboard (`(tabs)/ranks.tsx`)
