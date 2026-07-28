@@ -1,12 +1,51 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Image } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useAuth } from '../../context/AuthContext';
+import { isSupabaseConfigured, supabase } from '../../lib/supabase';
 import { Dumbbell, Flame, Trophy, ChevronRight, Zap, Award, Calendar, Sparkles } from 'lucide-react-native';
 
 export default function HomeScreen() {
   const router = useRouter();
-  const { profile } = useAuth();
+  const { profile, user } = useAuth();
+  const [totalVolume, setTotalVolume] = useState<number>(12450);
+  const [sessionCount, setSessionCount] = useState<number>(4);
+
+  useEffect(() => {
+    if (!isSupabaseConfigured || !user?.id) return;
+
+    let isMounted = true;
+    const fetchUserStats = async () => {
+      try {
+        const { data: logs, error } = await supabase
+          .from('workout_logs')
+          .select('id, set_logs(weight_kg, reps)')
+          .eq('user_id', user.id);
+
+        if (logs && !error && isMounted) {
+          setSessionCount(logs.length);
+          let sumVolume = 0;
+          logs.forEach((log: any) => {
+            if (Array.isArray(log.set_logs)) {
+              log.set_logs.forEach((st: any) => {
+                sumVolume += (st.weight_kg || 0) * (st.reps || 0);
+              });
+            }
+          });
+          if (sumVolume > 0) {
+            setTotalVolume(sumVolume);
+          }
+        }
+      } catch (e) {
+        console.warn('Supabase stats fetch notice:', e);
+      }
+    };
+
+    fetchUserStats();
+    return () => {
+      isMounted = false;
+    };
+  }, [user]);
 
   return (
     <ScrollView style={styles.container} contentContainerStyle={styles.content}>
@@ -93,19 +132,25 @@ export default function HomeScreen() {
       <View style={styles.statsGrid}>
         <View style={styles.statCard}>
           <Zap color="#30D158" size={20} />
-          <Text style={styles.statVal}>12,450 kg</Text>
+          <Text style={styles.statVal}>{totalVolume.toLocaleString()} kg</Text>
           <Text style={styles.statLbl}>Total Volume</Text>
         </View>
 
         <View style={styles.statCard}>
           <Calendar color="#0A84FF" size={20} />
-          <Text style={styles.statVal}>4 Sessions</Text>
+          <Text style={styles.statVal}>{sessionCount} Sessions</Text>
           <Text style={styles.statLbl}>Workouts Logged</Text>
         </View>
 
         <View style={styles.statCard}>
           <Award color="#FF9F0C" size={20} />
-          <Text style={styles.statVal}>Top 18%</Text>
+          <Text style={styles.statVal}>
+            {profile?.overall_rank === 'Grandmaster'
+              ? 'Top 0.1%'
+              : profile?.overall_rank === 'Master'
+              ? 'Top 0.8%'
+              : 'Top 18%'}
+          </Text>
           <Text style={styles.statLbl}>World Strength Rank</Text>
         </View>
       </View>

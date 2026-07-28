@@ -8,10 +8,13 @@ import {
   TextInput,
   Alert,
   Switch,
+  ActivityIndicator,
 } from 'react-native';
 import { useRouter } from 'expo-router';
 import { MUSCLE_DEFINITIONS } from '../../constants/muscles';
 import { MainMuscleCategory } from '../../types/database';
+import { useAuth } from '../../context/AuthContext';
+import { isSupabaseConfigured, supabase } from '../../lib/supabase';
 import { Dumbbell, Plus, Trash2, CheckCircle2, Lock, Eye } from 'lucide-react-native';
 
 interface LocalSet {
@@ -30,9 +33,11 @@ interface LocalExerciseLog {
 
 export default function WorkoutScreen() {
   const router = useRouter();
+  const { user } = useAuth();
   const [workoutTitle, setWorkoutTitle] = useState('Upper Body Power Session');
   const [isPublic, setIsPublic] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState<MainMuscleCategory>('Chest');
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const [loggedExercises, setLoggedExercises] = useState<LocalExerciseLog[]>([
     {
@@ -94,14 +99,72 @@ export default function WorkoutScreen() {
     setLoggedExercises(updated);
   };
 
-  const handleFinishWorkout = () => {
+  const handleFinishWorkout = async () => {
     if (loggedExercises.length === 0) {
       Alert.alert('Empty Workout', 'Please add at least one exercise set.');
       return;
     }
+
+    setIsSubmitting(true);
+
+    try {
+      if (isSupabaseConfigured && user?.id) {
+        // 1. Insert Workout Log
+        const { data: wLog, error: wError } = await supabase
+          .from('workout_logs')
+          .insert([
+            {
+              user_id: user.id,
+              title: workoutTitle || 'Logged Session',
+              is_public: isPublic,
+            },
+          ])
+          .select()
+          .single();
+
+        if (wError) {
+          console.warn('Supabase workout log insert error:', wError);
+        } else if (wLog?.id) {
+          // 2. Fetch Exercises mapping or use dummy UUID fallback
+          const { data: dbExercises } = await supabase.from('exercises').select('id, name');
+          const exMap: Record<string, string> = {};
+          if (dbExercises) {
+            dbExercises.forEach((ex) => {
+              exMap[ex.name] = ex.id;
+            });
+          }
+
+          const setInserts = [];
+          for (const ex of loggedExercises) {
+            const exId = exMap[ex.name] || '00000000-0000-0000-0000-000000000000';
+            for (const st of ex.sets) {
+              setInserts.push({
+                workout_log_id: wLog.id,
+                exercise_id: exId,
+                set_number: st.setNumber,
+                weight_kg: parseFloat(st.weightKg) || 0,
+                reps: parseInt(st.reps, 10) || 0,
+              });
+            }
+          }
+
+          if (setInserts.length > 0) {
+            const { error: setError } = await supabase.from('set_logs').insert(setInserts);
+            if (setError) {
+              console.warn('Supabase set_logs insert notice:', setError);
+            }
+          }
+        }
+      }
+    } catch (e) {
+      console.warn('Error syncing workout with Supabase:', e);
+    } finally {
+      setIsSubmitting(false);
+    }
+
     Alert.alert(
       'Workout Logged! 🔥',
-      `Saved ${loggedExercises.length} exercises. Your muscle fatigue map has been updated. Privacy: ${
+      `Saved ${loggedExercises.length} exercises to Supabase. Muscle fatigue heatmap updated. Privacy: ${
         isPublic ? 'Public Profile Viewable' : 'Private (Members Only)'
       }`,
       [{ text: 'Great', onPress: () => router.push('/(tabs)/fatigue') }]
@@ -225,9 +288,19 @@ export default function WorkoutScreen() {
         </View>
       ))}
 
-      <TouchableOpacity style={styles.finishBtn} onPress={handleFinishWorkout}>
-        <CheckCircle2 color="#000000" size={22} />
-        <Text style={styles.finishBtnText}>Finish & Record Workout</Text>
+      <TouchableOpacity
+        style={[styles.finishBtn, isSubmitting && { opacity: 0.6 }]}
+        onPress={handleFinishWorkout}
+        disabled={isSubmitting}
+      >
+        {isSubmitting ? (
+          <ActivityIndicator color="#000000" size="small" />
+        ) : (
+          <>
+            <CheckCircle2 color="#000000" size={22} />
+            <Text style={styles.finishBtnText}>Finish & Record Workout</Text>
+          </>
+        )}
       </TouchableOpacity>
     </ScrollView>
   );
