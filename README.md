@@ -1,56 +1,116 @@
-# Welcome to your Expo app 👋
+# GymPulse 🏋️‍♂️🔥
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+**GymPulse** is a modern, feature-rich **Workout & Gym Tracking** mobile application built with **React Native (Expo Router + TypeScript)** backed by **Supabase** (PostgreSQL, Auth with Secure Token Storage, Row Level Security).
 
-## Get started
+---
 
-1. Install dependencies
+## 🌟 Key Features
 
-   ```bash
-   npm install
-   ```
+### 1. 🧬 5-Stage Muscle Fatigue Visual Heatmap (`(tabs)/fatigue.tsx`)
+- **Interactive Anatomical Physique SVG**: Front (Anterior) and Back (Posterior) vector muscle map displaying live recovery heatmaps per muscle head.
+- **5-Stage Color Gradient**:
+  - 🔴 **Stage 1 (0–20%)**: Deep Red — Exhausted (Heavy breakdown)
+  - 🟠 **Stage 2 (21–40%)**: Deep Orange — Heavy Fatigue (Active repair)
+  - 🟡 **Stage 3 (41–60%)**: Yellow — Moderate Recovery (Midway recovered)
+  - 🟢 **Stage 4 (61–80%)**: Light Green — Mostly Recovered (Ready for light work)
+  - ❇️ **Stage 5 (81–100%)**: Bright Green — Fully Recovered (Prime state for max overload)
+- **Scientific Recovery Engine**: Rest windows based on muscle group size (48–72h for legs/back, 36–48h for chest/shoulders, 24–36h for arms/abs).
 
-2. Start the app
+### 2. 🏆 Gaming Strength Ranks & Global Leaderboard (`(tabs)/ranks.tsx`)
+- **World Percentile Calculation**: Epley 1-Rep Max formula ($\text{1RM} = \text{weight} \times (1 + \frac{\text{reps}}{30})$) relative to bodyweight.
+- **Tier Ranks**: 🥉 Bronze $\rightarrow$ 🥈 Silver $\rightarrow$ 🥇 Gold $\rightarrow$ 💎 Platinum $\rightarrow$ 🔮 Diamond $\rightarrow$ 🏆 Master $\rightarrow$ 👑 Grandmaster.
+- **Live Online Status**: Green dot indicator next to profile pictures.
+- **Unified Global Leaderboard**: Worldwide athlete strength rankings.
 
-   ```bash
-   npx expo start
-   ```
+### 3. 📝 Workout Logger (`(tabs)/workout.tsx`)
+- **Granular Exercise Catalog**: Categorized by main muscle groups (Chest, Back, Shoulders, Arms, Legs, Core) and specific muscle heads (Upper/Middle/Lower Chest, Front/Side/Rear Delts, Biceps Long/Short Head, Brachialis, etc.).
+- **Set & Rep Tracking**: Log weight (kg) and per-set rep counts.
+- **Secret Workout Logs**: Private by default (`is_public = false`); users can toggle to share logs on their profile.
 
-In the output, you'll find options to open the app in a
+### 4. 👤 Profile & Privacy Controls (`(tabs)/profile.tsx`)
+- Avatar with live green-dot online status toggle.
+- Bodyweight manager (kg) for relative strength score calculation.
+- Public vs. Secret workout logs privacy switch.
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+---
 
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
+## 📁 Project Folder Structure
 
-## Get a fresh project
-
-When you're ready, run:
-
-```bash
-npm run reset-project
+```
+Gym/
+├── src/
+│   ├── app/                    # Expo Router file-based route screens
+│   │   ├── _layout.tsx         # Root Layout with Auth Provider
+│   │   ├── (auth)/             # Auth Screens (login.tsx, signup.tsx)
+│   │   └── (tabs)/             # Tab Screens (index, workout, fatigue, ranks, profile)
+│   ├── components/             # Reusable Components (MuscleMapSvg.tsx)
+│   ├── constants/              # Muscle definitions & 5-stage color scale (muscles.ts)
+│   ├── context/                # AuthContext.tsx (Supabase Auth & Mock Mode fallback)
+│   ├── lib/                    # Supabase Client config (supabase.ts)
+│   ├── types/                  # TypeScript Data Models (database.ts)
+│   └── __tests__/              # Unit Test Suite (muscles.test.ts, ranks.test.ts)
+├── supabase_schema.sql         # SQL Script for Supabase PostgreSQL tables & RLS
+├── jest.config.js              # Jest configuration
+└── AGENTS.md                   # Workspace rules & Git workflow guidelines
 ```
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+---
 
-### Other setup steps
+## ⚡ Getting Started
 
-- To set up ESLint for linting, run `npx expo lint`, or follow our guide on ["Using ESLint and Prettier"](https://docs.expo.dev/guides/using-eslint/)
-- If you'd like to set up unit testing, follow our guide on ["Unit Testing with Jest"](https://docs.expo.dev/develop/unit-testing/)
-- Learn more about the TypeScript setup in this template in our guide on ["Using TypeScript"](https://docs.expo.dev/guides/typescript/)
+### 1. Install Dependencies
 
-## Learn more
+```bash
+npm install
+```
 
-To learn more about developing your project with Expo, look at the following resources:
+### 2. Run local Development Server
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+```bash
+npx expo start
+```
 
-## Join the community
+You can open the app in:
+- **Expo Go** on iOS/Android
+- **iOS Simulator** / **Android Emulator**
+- **Web Browser** (`npm run web`)
 
-Join our community of developers creating universal apps.
+---
 
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+## 🗄️ Supabase Backend Setup
+
+To connect live Supabase cloud data:
+
+1. Copy the SQL script from [`supabase_schema.sql`](file:///workspaces/Gym/supabase_schema.sql) and execute it in your Supabase SQL Editor.
+2. Add your Supabase credentials to `.env`:
+
+```env
+EXPO_PUBLIC_SUPABASE_URL=https://your-project.supabase.co
+EXPO_PUBLIC_SUPABASE_ANON_KEY=your-anon-key
+```
+
+*Note: If no Supabase credentials are configured, GymPulse automatically activates **Demo Preview Mode** with pre-loaded mock data so all features work out-of-the-box!*
+
+---
+
+## 🧪 Verification & Development Commands
+
+Run the unified verification pipeline before submitting code:
+
+| Command | Action |
+| :--- | :--- |
+| `npm run check` | **Recommended**: Runs typecheck, unit tests, and build export in optimal order. |
+| `npm run typecheck` | Checks TypeScript compilation (`tsc --noEmit`). |
+| `npm test` | Runs Jest unit test suite. |
+| `npm run build:check` | Exports Expo production bundle (`expo export`). |
+
+---
+
+## 🛠️ Feature Development & Git Workflow
+
+All code contributions MUST adhere to the workspace guidelines in [`AGENTS.md`](file:///workspaces/Gym/AGENTS.md):
+
+1. **Branching**: Create a topic branch before writing code (`git checkout -b feat/feature-name`).
+2. **Conventional Commits**: Format commit messages (`feat: ...`, `refactor: ...`, `fix: ...`, `test: ...`).
+3. **Verification Pipeline**: Pass `npm run check` clean with zero errors before merging.
+4. **Integration**: Merge clean into `main` without conflicts and push changes.
