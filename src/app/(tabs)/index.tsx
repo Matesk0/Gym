@@ -65,24 +65,24 @@ export default function HomeScreen() {
         </View>
 
         <View style={styles.fatiguePillRow}>
-          <View style={[styles.fatiguePill, { borderColor: '#EF4444', backgroundColor: 'rgba(239,68,68,0.1)' }]}>
-            <View style={[styles.pillDot, { backgroundColor: '#EF4444' }]} />
-            <Text style={[styles.pillText, { color: '#EF4444' }]}>Quads (15% - Exhausted)</Text>
+          <View style={[styles.fatiguePill, { borderColor: '#e51f1f', backgroundColor: 'rgba(229,31,31,0.1)' }]}>
+            <View style={[styles.pillDot, { backgroundColor: '#e51f1f' }]} />
+            <Text style={[styles.pillText, { color: '#e51f1f' }]}>Quads (15% - Exhausted)</Text>
           </View>
 
-          <View style={[styles.fatiguePill, { borderColor: '#F97316', backgroundColor: 'rgba(249,115,22,0.1)' }]}>
-            <View style={[styles.pillDot, { backgroundColor: '#F97316' }]} />
-            <Text style={[styles.pillText, { color: '#F97316' }]}>Upper Chest (35% - Heavy Fatigue)</Text>
+          <View style={[styles.fatiguePill, { borderColor: '#f2a134', backgroundColor: 'rgba(242,161,52,0.1)' }]}>
+            <View style={[styles.pillDot, { backgroundColor: '#f2a134' }]} />
+            <Text style={[styles.pillText, { color: '#f2a134' }]}>Upper Chest (35% - Heavy Fatigue)</Text>
           </View>
 
-          <View style={[styles.fatiguePill, { borderColor: '#3B82F6', backgroundColor: 'rgba(59,130,246,0.1)' }]}>
-            <View style={[styles.pillDot, { backgroundColor: '#3B82F6' }]} />
-            <Text style={[styles.pillText, { color: '#3B82F6' }]}>Lower Back (75% - Mostly Recovered)</Text>
+          <View style={[styles.fatiguePill, { borderColor: '#bbdb44', backgroundColor: 'rgba(187,219,68,0.1)' }]}>
+            <View style={[styles.pillDot, { backgroundColor: '#bbdb44' }]} />
+            <Text style={[styles.pillText, { color: '#bbdb44' }]}>Lower Back (75% - Mostly Recovered)</Text>
           </View>
 
-          <View style={[styles.fatiguePill, { borderColor: '#10B981', backgroundColor: 'rgba(16,185,129,0.1)' }]}>
-            <View style={[styles.pillDot, { backgroundColor: '#10B981' }]} />
-            <Text style={[styles.pillText, { color: '#10B981' }]}>Lats (95% - Prime State)</Text>
+          <View style={[styles.fatiguePill, { borderColor: '#44ce1b', backgroundColor: 'rgba(68,206,27,0.1)' }]}>
+            <View style={[styles.pillDot, { backgroundColor: '#44ce1b' }]} />
+            <Text style={[styles.pillText, { color: '#44ce1b' }]}>Lats (95% - Prime State)</Text>
           </View>
         </View>
       </TouchableOpacity>

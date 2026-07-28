@@ -10,11 +10,11 @@ export interface MuscleDefinition {
 }
 
 export const FATIGUE_STAGES: Record<FatigueStage, { label: string; range: string; color: string; bg: string }> = {
-  1: { label: 'Exhausted', range: '0 - 20%', color: '#EF4444', bg: 'rgba(239, 68, 68, 0.15)' },
-  2: { label: 'Heavy Fatigue', range: '21 - 40%', color: '#F97316', bg: 'rgba(249, 115, 22, 0.15)' },
-  3: { label: 'Moderate Recovery', range: '41 - 60%', color: '#EAB308', bg: 'rgba(234, 179, 8, 0.15)' },
-  4: { label: 'Mostly Recovered', range: '61 - 80%', color: '#3B82F6', bg: 'rgba(59, 130, 246, 0.15)' },
-  5: { label: 'Fully Recovered', range: '81 - 100%', color: '#10B981', bg: 'rgba(16, 185, 129, 0.15)' },
+  1: { label: 'Exhausted', range: '0 - 20%', color: '#e51f1f', bg: 'rgba(229, 31, 31, 0.15)' },
+  2: { label: 'Heavy Fatigue', range: '21 - 40%', color: '#f2a134', bg: 'rgba(242, 161, 52, 0.15)' },
+  3: { label: 'Moderate Recovery', range: '41 - 60%', color: '#f7e379', bg: 'rgba(247, 227, 121, 0.15)' },
+  4: { label: 'Mostly Recovered', range: '61 - 80%', color: '#bbdb44', bg: 'rgba(187, 219, 68, 0.15)' },
+  5: { label: 'Fully Recovered', range: '81 - 100%', color: '#44ce1b', bg: 'rgba(68, 206, 27, 0.15)' },
 };
 
 export const MUSCLE_DEFINITIONS: MuscleDefinition[] = [
