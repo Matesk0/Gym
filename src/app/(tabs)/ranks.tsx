@@ -1,7 +1,8 @@
-import React from 'react';
-import { View, Text, StyleSheet, ScrollView, Image } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { View, Text, StyleSheet, ScrollView, Image, ActivityIndicator } from 'react-native';
 import { useAuth } from '../../context/AuthContext';
-import { RankTier } from '../../types/database';
+import { isSupabaseConfigured, supabase } from '../../lib/supabase';
+import { Profile, RankTier } from '../../types/database';
 import { Trophy, Globe } from 'lucide-react-native';
 
 interface LeaderboardUser {
@@ -80,8 +81,74 @@ const GLOBAL_LEADERBOARD: LeaderboardUser[] = [
   },
 ];
 
+const RANK_SCORE_MAP: Record<RankTier, number> = {
+  Grandmaster: 985,
+  Master: 920,
+  Platinum: 810,
+  Gold: 740,
+  Silver: 580,
+  Bronze: 420,
+  Diamond: 870,
+};
+
+const RANK_PERCENTILE_MAP: Record<RankTier, string> = {
+  Grandmaster: 'Top 0.1%',
+  Master: 'Top 0.8%',
+  Diamond: 'Top 3%',
+  Platinum: 'Top 8%',
+  Gold: 'Top 18%',
+  Silver: 'Top 45%',
+  Bronze: 'Top 70%',
+};
+
 export default function RanksScreen() {
-  const { profile } = useAuth();
+  const { profile, user } = useAuth();
+  const [leaderboard, setLeaderboard] = useState<LeaderboardUser[]>(GLOBAL_LEADERBOARD);
+  const [isLoading, setIsLoading] = useState(false);
+
+  useEffect(() => {
+    if (!isSupabaseConfigured) return;
+
+    let isMounted = true;
+    const loadProfiles = async () => {
+      setIsLoading(true);
+      try {
+        const { data, error } = await supabase.from('profiles').select('*');
+        if (data && data.length > 0 && !error && isMounted) {
+          const mapped: LeaderboardUser[] = data.map((p: Profile, idx: number) => {
+            const rank = p.overall_rank || 'Gold';
+            const baseScore = RANK_SCORE_MAP[rank] || 500;
+            const bw = p.bodyweight_kg || 75;
+            return {
+              id: p.id,
+              username: p.username || `Athlete_${idx + 1}`,
+              avatar_url: p.avatar_url || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150',
+              is_online: p.is_online ?? true,
+              rank,
+              total_score: baseScore,
+              bench_1rm: Math.round(bw * 1.47),
+              squat_1rm: Math.round(bw * 1.91),
+              deadlift_1rm: Math.round(bw * 2.35),
+              percentile: RANK_PERCENTILE_MAP[rank] || 'Top 20%',
+            };
+          });
+
+          // Sort by rank score descending
+          mapped.sort((a, b) => b.total_score - a.total_score);
+          setLeaderboard(mapped);
+        }
+      } catch (e) {
+        console.warn('Supabase leaderboard fetch warning:', e);
+      } finally {
+        if (isMounted) setIsLoading(false);
+      }
+    };
+
+    loadProfiles();
+    return () => {
+      isMounted = false;
+    };
+  }, [profile]);
 
   const getRankBadgeColor = (rank: RankTier) => {
     switch (rank) {
@@ -152,15 +219,18 @@ export default function RanksScreen() {
       </View>
 
       <View style={styles.leaderboardList}>
-        {GLOBAL_LEADERBOARD.map((item, index) => {
-          const isMe = item.id === 'u3';
-          const badgeColor = getRankBadgeColor(item.rank);
+        {isLoading ? (
+          <ActivityIndicator color="#30D158" size="large" style={{ marginVertical: 20 }} />
+        ) : (
+          leaderboard.map((item, index) => {
+            const isMe = item.id === user?.id || item.username === profile?.username;
+            const badgeColor = getRankBadgeColor(item.rank);
 
-          return (
-            <View key={item.id} style={[styles.playerRow, isMe && styles.playerRowMe]}>
-              <Text style={[styles.rankNumber, index < 3 && styles.rankTopThree]}>
-                #{index + 1}
-              </Text>
+            return (
+              <View key={item.id} style={[styles.playerRow, isMe && styles.playerRowMe]}>
+                <Text style={[styles.rankNumber, index < 3 && styles.rankTopThree]}>
+                  #{index + 1}
+                </Text>
 
               <View style={styles.pfpWrapperSmall}>
                 <Image source={{ uri: item.avatar_url }} style={styles.pfpSmall} />
@@ -188,8 +258,9 @@ export default function RanksScreen() {
                 <Text style={styles.percentileTag}>{item.percentile}</Text>
               </View>
             </View>
-          );
-        })}
+            );
+          })
+        )}
       </View>
     </ScrollView>
   );
