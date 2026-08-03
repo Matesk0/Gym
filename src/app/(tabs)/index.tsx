@@ -3,13 +3,50 @@ import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Image } from 'rea
 import { useRouter } from 'expo-router';
 import { useAuth } from '../../context/AuthContext';
 import { isSupabaseConfigured, supabase } from '../../lib/supabase';
-import { Dumbbell, Flame, Trophy, ChevronRight, Zap, Award, Calendar, Sparkles } from 'lucide-react-native';
+import { Dumbbell, Flame, Trophy, ChevronRight, Zap, Award, Calendar, Sparkles, Clock, Lock, Eye, History } from 'lucide-react-native';
+
+interface HistorySession {
+  id: string;
+  title: string;
+  date: string;
+  exerciseCount: number;
+  totalVolumeKg: number;
+  isPublic: boolean;
+}
+
+const RECENT_WORKOUT_HISTORY: HistorySession[] = [
+  {
+    id: 'w1',
+    title: 'Upper Body Power Session',
+    date: 'Today, 08:30 AM',
+    exerciseCount: 4,
+    totalVolumeKg: 4280,
+    isPublic: false,
+  },
+  {
+    id: 'w2',
+    title: 'Leg Day Hypertrophy & Quads',
+    date: 'Yesterday, 06:15 PM',
+    exerciseCount: 5,
+    totalVolumeKg: 6850,
+    isPublic: true,
+  },
+  {
+    id: 'w3',
+    title: 'Pull & Lats Destroyer',
+    date: '3 days ago',
+    exerciseCount: 4,
+    totalVolumeKg: 5120,
+    isPublic: true,
+  },
+];
 
 export default function HomeScreen() {
   const router = useRouter();
   const { profile, user } = useAuth();
   const [totalVolume, setTotalVolume] = useState<number>(12450);
   const [sessionCount, setSessionCount] = useState<number>(4);
+  const [historyLogs, setHistoryLogs] = useState<HistorySession[]>(RECENT_WORKOUT_HISTORY);
 
   useEffect(() => {
     if (!isSupabaseConfigured || !user?.id) return;
@@ -19,22 +56,36 @@ export default function HomeScreen() {
       try {
         const { data: logs, error } = await supabase
           .from('workout_logs')
-          .select('id, set_logs(weight_kg, reps)')
-          .eq('user_id', user.id);
+          .select('id, title, created_at, is_public, set_logs(weight_kg, reps)')
+          .eq('user_id', user.id)
+          .order('created_at', { ascending: false });
 
         if (logs && !error && isMounted) {
           setSessionCount(logs.length);
           let sumVolume = 0;
-          logs.forEach((log: any) => {
+          const mappedHistory: HistorySession[] = logs.map((log: any) => {
+            let logVol = 0;
+            let count = 0;
             if (Array.isArray(log.set_logs)) {
+              count = log.set_logs.length;
               log.set_logs.forEach((st: any) => {
-                sumVolume += (st.weight_kg || 0) * (st.reps || 0);
+                const setVol = (st.weight_kg || 0) * (st.reps || 0);
+                logVol += setVol;
+                sumVolume += setVol;
               });
             }
+            return {
+              id: log.id,
+              title: log.title || 'Workout Session',
+              date: new Date(log.created_at).toLocaleDateString(),
+              exerciseCount: count,
+              totalVolumeKg: logVol,
+              isPublic: log.is_public ?? false,
+            };
           });
-          if (sumVolume > 0) {
-            setTotalVolume(sumVolume);
-          }
+
+          if (sumVolume > 0) setTotalVolume(sumVolume);
+          if (mappedHistory.length > 0) setHistoryLogs(mappedHistory);
         }
       } catch (e) {
         console.warn('Supabase stats fetch notice:', e);
@@ -153,6 +204,46 @@ export default function HomeScreen() {
           </Text>
           <Text style={styles.statLbl}>World Strength Rank</Text>
         </View>
+      </View>
+
+      {/* Workout History Feed */}
+      <View style={[styles.sectionHeader, { marginTop: 24 }]}>
+        <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
+          <History color="#30D158" size={18} />
+          <Text style={styles.sectionTitle}>Recent Workout History</Text>
+        </View>
+        <TouchableOpacity onPress={() => router.push('/(tabs)/workout')}>
+          <Text style={styles.seeAllText}>Log New</Text>
+        </TouchableOpacity>
+      </View>
+
+      <View style={styles.historyList}>
+        {historyLogs.map((log) => (
+          <View key={log.id} style={styles.historyCard}>
+            <View style={styles.historyCardTop}>
+              <View style={{ flex: 1 }}>
+                <Text style={styles.historyTitle}>{log.title}</Text>
+                <View style={styles.historyDateRow}>
+                  <Clock color="#8E8E93" size={12} />
+                  <Text style={styles.historyDateText}>{log.date}</Text>
+                </View>
+              </View>
+
+              <View style={[styles.privacyBadge, log.isPublic ? styles.privacyBadgePublic : styles.privacyBadgePrivate]}>
+                {log.isPublic ? <Eye color="#30D158" size={12} /> : <Lock color="#FF9F0C" size={12} />}
+                <Text style={[styles.privacyBadgeText, { color: log.isPublic ? '#30D158' : '#FF9F0C' }]}>
+                  {log.isPublic ? 'Public' : 'Private'}
+                </Text>
+              </View>
+            </View>
+
+            <View style={styles.historyCardBottom}>
+              <Text style={styles.historyMetaText}>
+                {log.exerciseCount} Sets Logged • {log.totalVolumeKg.toLocaleString()} kg Total Volume
+              </Text>
+            </View>
+          </View>
+        ))}
       </View>
     </ScrollView>
   );
@@ -349,5 +440,68 @@ const styles = StyleSheet.create({
   statLbl: {
     fontSize: 12,
     color: '#8E8E93',
+  },
+  historyList: {
+    gap: 10,
+    marginTop: 12,
+  },
+  historyCard: {
+    backgroundColor: '#1C1C1E',
+    borderRadius: 18,
+    padding: 14,
+    borderWidth: 1,
+    borderColor: '#2C2C2E',
+    gap: 8,
+  },
+  historyCardTop: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    justifyContent: 'space-between',
+  },
+  historyTitle: {
+    fontSize: 15,
+    fontWeight: '700',
+    color: '#FFFFFF',
+  },
+  historyDateRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 4,
+    marginTop: 4,
+  },
+  historyDateText: {
+    fontSize: 12,
+    color: '#8E8E93',
+  },
+  privacyBadge: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 4,
+    paddingHorizontal: 8,
+    paddingVertical: 3,
+    borderRadius: 10,
+    borderWidth: 1,
+  },
+  privacyBadgePublic: {
+    backgroundColor: 'rgba(48, 209, 88, 0.12)',
+    borderColor: 'rgba(48, 209, 88, 0.3)',
+  },
+  privacyBadgePrivate: {
+    backgroundColor: 'rgba(255, 159, 12, 0.12)',
+    borderColor: 'rgba(255, 159, 12, 0.3)',
+  },
+  privacyBadgeText: {
+    fontSize: 11,
+    fontWeight: '700',
+  },
+  historyCardBottom: {
+    borderTopWidth: 1,
+    borderTopColor: '#2C2C2E',
+    paddingTop: 8,
+  },
+  historyMetaText: {
+    fontSize: 12,
+    color: '#30D158',
+    fontWeight: '600',
   },
 });

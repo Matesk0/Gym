@@ -3,6 +3,7 @@ import { View, Text, StyleSheet, ScrollView, Image, ActivityIndicator } from 're
 import { useAuth } from '../../context/AuthContext';
 import { isSupabaseConfigured, supabase } from '../../lib/supabase';
 import { Profile, RankTier } from '../../types/database';
+import { calculateRankProgress } from '../../lib/ranks';
 import { Trophy, Globe } from 'lucide-react-native';
 
 interface LeaderboardUser {
@@ -162,6 +163,10 @@ export default function RanksScreen() {
     }
   };
 
+  const userBw = profile?.bodyweight_kg || 78;
+  const userBenchRatio = 115 / userBw; // 1.47x
+  const rankProgress = calculateRankProgress(userBenchRatio);
+
   return (
     <ScrollView style={styles.container} contentContainerStyle={styles.content}>
       <View style={styles.header}>
@@ -192,23 +197,52 @@ export default function RanksScreen() {
           </View>
         </View>
 
+        {/* Tier Advancement Progress Bar */}
+        <View style={styles.progressContainer}>
+          <View style={styles.progressHeaderRow}>
+            <Text style={styles.progressTitleText}>
+              {rankProgress.nextRank
+                ? `Tier Progress to ${rankProgress.nextRank}`
+                : 'Pinnacle Tier Reached'}
+            </Text>
+            <Text style={styles.progressPctText}>{rankProgress.progressPercent}%</Text>
+          </View>
+
+          <View style={styles.progressBarTrack}>
+            <View
+              style={[
+                styles.progressBarFill,
+                {
+                  width: `${rankProgress.progressPercent}%`,
+                  backgroundColor: getRankBadgeColor(profile?.overall_rank || 'Gold'),
+                },
+              ]}
+            />
+          </View>
+          <Text style={styles.progressSubText}>
+            {rankProgress.nextRank
+              ? `Current: ${userBenchRatio.toFixed(2)}x BW • Target: ${rankProgress.targetRatio}x BW for ${rankProgress.nextRank}`
+              : 'You have achieved Grandmaster rank status!'}
+          </Text>
+        </View>
+
         <View style={styles.liftGrid}>
           <View style={styles.liftBox}>
             <Text style={styles.liftName}>BENCH 1RM</Text>
             <Text style={styles.liftVal}>115 kg</Text>
-            <Text style={styles.liftSub}>1.47x Bodyweight</Text>
+            <Text style={styles.liftSub}>{(115 / userBw).toFixed(2)}x Bodyweight</Text>
           </View>
 
           <View style={styles.liftBox}>
             <Text style={styles.liftName}>SQUAT 1RM</Text>
             <Text style={styles.liftVal}>150 kg</Text>
-            <Text style={styles.liftSub}>1.91x Bodyweight</Text>
+            <Text style={styles.liftSub}>{(150 / userBw).toFixed(2)}x Bodyweight</Text>
           </View>
 
           <View style={styles.liftBox}>
             <Text style={styles.liftName}>DEADLIFT 1RM</Text>
             <Text style={styles.liftVal}>185 kg</Text>
-            <Text style={styles.liftSub}>2.35x Bodyweight</Text>
+            <Text style={styles.liftSub}>{(185 / userBw).toFixed(2)}x Bodyweight</Text>
           </View>
         </View>
       </View>
@@ -348,6 +382,43 @@ const styles = StyleSheet.create({
     color: '#000000',
     fontWeight: '900',
     fontSize: 13,
+  },
+  progressContainer: {
+    backgroundColor: '#2C2C2E',
+    borderRadius: 14,
+    padding: 12,
+    marginBottom: 14,
+  },
+  progressHeaderRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 6,
+  },
+  progressTitleText: {
+    fontSize: 12,
+    fontWeight: '700',
+    color: '#FFFFFF',
+  },
+  progressPctText: {
+    fontSize: 12,
+    fontWeight: '800',
+    color: '#30D158',
+  },
+  progressBarTrack: {
+    height: 8,
+    backgroundColor: '#1C1C1E',
+    borderRadius: 4,
+    overflow: 'hidden',
+  },
+  progressBarFill: {
+    height: '100%',
+    borderRadius: 4,
+  },
+  progressSubText: {
+    fontSize: 11,
+    color: '#8E8E93',
+    marginTop: 6,
   },
   liftGrid: {
     flexDirection: 'row',

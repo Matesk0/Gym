@@ -63,3 +63,17 @@ export function calculateFatigueStage(percentage: number): FatigueStage {
   if (percentage <= 80) return 4;
   return 5;
 }
+
+export function calculateFatiguePercentage(lastTrainedHoursAgo: number, baseRecoveryHours: number): number {
+  if (lastTrainedHoursAgo >= baseRecoveryHours) return 100;
+  if (lastTrainedHoursAgo <= 0) return 15;
+  const ratio = lastTrainedHoursAgo / baseRecoveryHours;
+  const percentage = Math.round(15 + ratio * 85);
+  return Math.min(100, Math.max(0, percentage));
+}
+
+export function calculateRemainingRecoveryHours(lastTrainedHoursAgo: number, baseRecoveryHours: number): number {
+  const remaining = baseRecoveryHours - lastTrainedHoursAgo;
+  return Math.max(0, Math.round(remaining));
+}
+
