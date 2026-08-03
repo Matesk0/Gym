@@ -1,5 +1,11 @@
 import { describe, test, expect } from '@jest/globals';
-import { calculateFatigueStage, FATIGUE_STAGES, MUSCLE_DEFINITIONS } from '../constants/muscles';
+import {
+  calculateFatigueStage,
+  calculateFatiguePercentage,
+  calculateRemainingRecoveryHours,
+  FATIGUE_STAGES,
+  MUSCLE_DEFINITIONS,
+} from '../constants/muscles';
 
 describe('Muscle Fatigue & Recovery Calculations', () => {
   test('calculateFatigueStage classifies percentages into 5 distinct color stages correctly', () => {
@@ -10,6 +16,19 @@ describe('Muscle Fatigue & Recovery Calculations', () => {
     expect(calculateFatigueStage(75)).toBe(4); // 61-80% Mostly Recovered
     expect(calculateFatigueStage(95)).toBe(5); // 81-100% Fully Recovered
     expect(calculateFatigueStage(100)).toBe(5);
+  });
+
+  test('calculateFatiguePercentage computes linear time-decay recovery accurately', () => {
+    expect(calculateFatiguePercentage(0, 48)).toBe(15);
+    expect(calculateFatiguePercentage(24, 48)).toBe(58);
+    expect(calculateFatiguePercentage(48, 48)).toBe(100);
+    expect(calculateFatiguePercentage(60, 48)).toBe(100);
+  });
+
+  test('calculateRemainingRecoveryHours returns accurate remaining hours', () => {
+    expect(calculateRemainingRecoveryHours(10, 48)).toBe(38);
+    expect(calculateRemainingRecoveryHours(48, 48)).toBe(0);
+    expect(calculateRemainingRecoveryHours(60, 48)).toBe(0);
   });
 
   test('FATIGUE_STAGES mapping contains valid colors and descriptions for all 5 stages', () => {
@@ -32,3 +51,4 @@ describe('Muscle Fatigue & Recovery Calculations', () => {
     });
   });
 });
+

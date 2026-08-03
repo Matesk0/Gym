@@ -1,9 +1,16 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
+import { useRouter } from 'expo-router';
 import { MuscleMapSvg } from '../../components/MuscleMapSvg';
-import { FATIGUE_STAGES } from '../../constants/muscles';
+import {
+  FATIGUE_STAGES,
+  MUSCLE_DEFINITIONS,
+  calculateFatigueStage,
+  calculateFatiguePercentage,
+  calculateRemainingRecoveryHours,
+} from '../../constants/muscles';
 import { FatigueState, FatigueStage } from '../../types/database';
-import { Flame, RefreshCw, Dumbbell, ShieldAlert, CheckCircle2, ChevronRight, Sparkles } from 'lucide-react-native';
+import { Flame, RefreshCw, Dumbbell, ShieldAlert, CheckCircle2, ChevronRight, Sparkles, PlusCircle } from 'lucide-react-native';
 
 // MuscleWiki-style targeted exercises index
 const MUSCLEWIKI_EXERCISES: Record<string, string[]> = {
@@ -33,116 +40,55 @@ const MUSCLEWIKI_EXERCISES: Record<string, string[]> = {
   obliques: ['Russian Twists', 'Cable Woodchopper', 'Side Plank'],
 };
 
-export default function FatigueScreen() {
-  const [viewMode, setViewMode] = useState<'front' | 'back'>('front');
+// Initial training offset hours for realistic demo state
+const DEMO_TRAINED_HOURS: Record<string, number> = {
+  upper_chest: 14,
+  middle_chest: 14,
+  lower_chest: 14,
+  anterior_delt: 14,
+  lateral_delt: 72,
+  quads: 6,
+  lats: 48,
+  lower_back: 48,
+  traps: 48,
+  hamstrings: 18,
+  biceps_long: 30,
+  triceps_long: 28,
+};
 
-  const [fatigueData, setFatigueData] = useState<Record<string, FatigueState>>({
-    upper_chest: {
-      muscle_id: 'upper_chest',
-      name: 'Upper Chest',
-      sub_head: 'Clavicular Head (Pectoralis Major)',
-      main_category: 'Chest',
-      last_trained_hours_ago: 14,
-      fatigue_percentage: 35,
-      stage: 2,
-      color: FATIGUE_STAGES[2].color,
-      recovery_hours_needed: 31,
-    },
-    middle_chest: {
-      muscle_id: 'middle_chest',
-      name: 'Middle Chest',
-      sub_head: 'Sternal Head',
-      main_category: 'Chest',
-      last_trained_hours_ago: 14,
-      fatigue_percentage: 45,
-      stage: 3,
-      color: FATIGUE_STAGES[3].color,
-      recovery_hours_needed: 26,
-    },
-    lower_chest: {
-      muscle_id: 'lower_chest',
-      name: 'Lower Chest',
-      sub_head: 'Costal Head',
-      main_category: 'Chest',
-      last_trained_hours_ago: 14,
-      fatigue_percentage: 55,
-      stage: 3,
-      color: FATIGUE_STAGES[3].color,
-      recovery_hours_needed: 20,
-    },
-    anterior_delt: {
-      muscle_id: 'anterior_delt',
-      name: 'Front Shoulders',
-      sub_head: 'Anterior Deltoid',
-      main_category: 'Shoulders',
-      last_trained_hours_ago: 14,
-      fatigue_percentage: 40,
-      stage: 2,
-      color: FATIGUE_STAGES[2].color,
-      recovery_hours_needed: 24,
-    },
-    lateral_delt: {
-      muscle_id: 'lateral_delt',
-      name: 'Side Shoulders',
-      sub_head: 'Lateral Deltoid',
-      main_category: 'Shoulders',
-      last_trained_hours_ago: 72,
-      fatigue_percentage: 95,
-      stage: 5,
-      color: FATIGUE_STAGES[5].color,
-      recovery_hours_needed: 0,
-    },
-    quads: {
-      muscle_id: 'quads',
-      name: 'Quads',
-      sub_head: 'Rectus Femoris & Vastus Lateralis',
-      main_category: 'Legs',
-      last_trained_hours_ago: 6,
-      fatigue_percentage: 15,
-      stage: 1,
-      color: FATIGUE_STAGES[1].color,
-      recovery_hours_needed: 58,
-    },
-    lats: {
-      muscle_id: 'lats',
-      name: 'Lats',
-      sub_head: 'Latissimus Dorsi',
-      main_category: 'Back',
-      last_trained_hours_ago: 48,
-      fatigue_percentage: 75,
-      stage: 4,
-      color: FATIGUE_STAGES[4].color,
-      recovery_hours_needed: 12,
-    },
-    lower_back: {
-      muscle_id: 'lower_back',
-      name: 'Lower Back',
-      sub_head: 'Erector Spinae',
-      main_category: 'Back',
-      last_trained_hours_ago: 48,
-      fatigue_percentage: 65,
-      stage: 4,
-      color: FATIGUE_STAGES[4].color,
-      recovery_hours_needed: 25,
-    },
-    traps: {
-      muscle_id: 'traps',
-      name: 'Upper Back',
-      sub_head: 'Trapezius',
-      main_category: 'Back',
-      last_trained_hours_ago: 48,
-      fatigue_percentage: 85,
-      stage: 5,
-      color: FATIGUE_STAGES[5].color,
-      recovery_hours_needed: 0,
-    },
+function buildInitialFatigueData(): Record<string, FatigueState> {
+  const map: Record<string, FatigueState> = {};
+  MUSCLE_DEFINITIONS.forEach((def) => {
+    const hoursAgo = DEMO_TRAINED_HOURS[def.id] ?? 80; // default fully rested if not recently trained
+    const fatiguePct = calculateFatiguePercentage(hoursAgo, def.baseRecoveryHours);
+    const stage = calculateFatigueStage(fatiguePct);
+    const remainingHours = calculateRemainingRecoveryHours(hoursAgo, def.baseRecoveryHours);
+
+    map[def.id] = {
+      muscle_id: def.id,
+      name: def.name,
+      sub_head: def.subHead,
+      main_category: def.mainCategory,
+      last_trained_hours_ago: hoursAgo,
+      fatigue_percentage: fatiguePct,
+      stage,
+      color: FATIGUE_STAGES[stage].color,
+      recovery_hours_needed: remainingHours,
+    };
   });
+  return map;
+}
 
-  const [selectedMuscle, setSelectedMuscle] = useState<FatigueState>(fatigueData.upper_chest);
+export default function FatigueScreen() {
+  const router = useRouter();
+  const [viewMode, setViewMode] = useState<'front' | 'back'>('front');
+  const [fatigueData] = useState<Record<string, FatigueState>>(buildInitialFatigueData);
+  const [selectedMuscle, setSelectedMuscle] = useState<FatigueState>(fatigueData.upper_chest || Object.values(fatigueData)[0]);
 
   const muscleWikiExercises = selectedMuscle
     ? MUSCLEWIKI_EXERCISES[selectedMuscle.muscle_id] || ['Barbell Compound Movement', 'Dumbbell Isolation']
     : [];
+
 
   return (
     <ScrollView style={styles.container} contentContainerStyle={styles.content}>
@@ -261,11 +207,15 @@ export default function FatigueScreen() {
             </View>
 
             {muscleWikiExercises.map((exName, idx) => (
-              <View key={idx} style={styles.exerciseItem}>
+              <TouchableOpacity
+                key={idx}
+                style={styles.exerciseItem}
+                onPress={() => router.push(`/(tabs)/workout?category=${selectedMuscle.main_category}`)}
+              >
                 <View style={styles.exDot} />
                 <Text style={styles.exerciseNameText}>{exName}</Text>
-                <ChevronRight color="#8E8E93" size={16} />
-              </View>
+                <PlusCircle color="#30D158" size={18} />
+              </TouchableOpacity>
             ))}
           </View>
         </View>

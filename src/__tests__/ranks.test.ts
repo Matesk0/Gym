@@ -1,26 +1,12 @@
 import { describe, test, expect } from '@jest/globals';
-import { RankTier } from '../types/database';
-
-function calculateEstimated1RM(weightKg: number, reps: number): number {
-  if (reps === 1) return weightKg;
-  return Math.round(weightKg * (1 + reps / 30));
-}
-
-function calculateStrengthRank(ratioToBodyweight: number): RankTier {
-  if (ratioToBodyweight >= 2.5) return 'Grandmaster';
-  if (ratioToBodyweight >= 2.0) return 'Master';
-  if (ratioToBodyweight >= 1.75) return 'Diamond';
-  if (ratioToBodyweight >= 1.5) return 'Platinum';
-  if (ratioToBodyweight >= 1.25) return 'Gold';
-  if (ratioToBodyweight >= 1.0) return 'Silver';
-  return 'Bronze';
-}
+import { calculateEstimated1RM, calculateStrengthRank, calculateRankProgress } from '../lib/ranks';
 
 describe('Gamified Strength Rank & 1RM Calculations', () => {
   test('calculateEstimated1RM computes accurate 1-Rep Max using Epley formula', () => {
     expect(calculateEstimated1RM(100, 1)).toBe(100);
     expect(calculateEstimated1RM(100, 10)).toBe(133);
     expect(calculateEstimated1RM(80, 5)).toBe(93);
+    expect(calculateEstimated1RM(0, 5)).toBe(0);
   });
 
   test('calculateStrengthRank assigns appropriate gaming tier based on bodyweight ratio', () => {
@@ -32,4 +18,18 @@ describe('Gamified Strength Rank & 1RM Calculations', () => {
     expect(calculateStrengthRank(2.1)).toBe('Master');
     expect(calculateStrengthRank(2.7)).toBe('Grandmaster');
   });
+
+  test('calculateRankProgress returns correct percentage and target for next tier', () => {
+    const goldProgress = calculateRankProgress(1.375); // midpoint of Gold (1.25 -> 1.5)
+    expect(goldProgress.currentRank).toBe('Gold');
+    expect(goldProgress.nextRank).toBe('Platinum');
+    expect(goldProgress.progressPercent).toBe(50);
+    expect(goldProgress.targetRatio).toBe(1.5);
+
+    const gmProgress = calculateRankProgress(2.8);
+    expect(gmProgress.currentRank).toBe('Grandmaster');
+    expect(gmProgress.nextRank).toBeNull();
+    expect(gmProgress.progressPercent).toBe(100);
+  });
 });
+

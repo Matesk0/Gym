@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   View,
   Text,
@@ -10,12 +10,12 @@ import {
   Switch,
   ActivityIndicator,
 } from 'react-native';
-import { useRouter } from 'expo-router';
+import { useRouter, useLocalSearchParams } from 'expo-router';
 import { MUSCLE_DEFINITIONS } from '../../constants/muscles';
 import { MainMuscleCategory } from '../../types/database';
 import { useAuth } from '../../context/AuthContext';
 import { isSupabaseConfigured, supabase } from '../../lib/supabase';
-import { Dumbbell, Plus, Trash2, CheckCircle2, Lock, Eye } from 'lucide-react-native';
+import { Dumbbell, Plus, Trash2, CheckCircle2, Lock, Eye, Search, Timer, Play, Pause, RotateCcw } from 'lucide-react-native';
 
 interface LocalSet {
   id: string;
@@ -33,11 +33,40 @@ interface LocalExerciseLog {
 
 export default function WorkoutScreen() {
   const router = useRouter();
+  const params = useLocalSearchParams();
   const { user } = useAuth();
+
+  const initialCat = (params.category as MainMuscleCategory) || 'Chest';
   const [workoutTitle, setWorkoutTitle] = useState('Upper Body Power Session');
   const [isPublic, setIsPublic] = useState(false);
-  const [selectedCategory, setSelectedCategory] = useState<MainMuscleCategory>('Chest');
+  const [selectedCategory, setSelectedCategory] = useState<MainMuscleCategory>(initialCat);
+  const [searchQuery, setSearchQuery] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  // Rest Timer State
+  const [timerSeconds, setTimerSeconds] = useState<number>(0);
+  const [timerInitial, setTimerInitial] = useState<number>(60);
+  const [isTimerActive, setIsTimerActive] = useState<boolean>(false);
+
+  useEffect(() => {
+    let interval: any = null;
+    if (isTimerActive && timerSeconds > 0) {
+      interval = setInterval(() => {
+        setTimerSeconds((prev) => prev - 1);
+      }, 1000);
+    } else if (timerSeconds === 0 && isTimerActive) {
+      setIsTimerActive(false);
+    }
+    return () => {
+      if (interval) clearInterval(interval);
+    };
+  }, [isTimerActive, timerSeconds]);
+
+  const startRestTimer = (seconds: number) => {
+    setTimerInitial(seconds);
+    setTimerSeconds(seconds);
+    setIsTimerActive(true);
+  };
 
   const [loggedExercises, setLoggedExercises] = useState<LocalExerciseLog[]>([
     {
@@ -172,7 +201,12 @@ export default function WorkoutScreen() {
   };
 
   const categories: MainMuscleCategory[] = ['Chest', 'Back', 'Shoulders', 'Arms', 'Legs', 'Core'];
-  const filteredMuscles = MUSCLE_DEFINITIONS.filter((m) => m.mainCategory === selectedCategory);
+  const filteredMuscles = MUSCLE_DEFINITIONS.filter((m) => {
+    const matchesCat = m.mainCategory === selectedCategory;
+    if (!searchQuery.trim()) return matchesCat;
+    const q = searchQuery.toLowerCase();
+    return matchesCat && (m.name.toLowerCase().includes(q) || m.subHead.toLowerCase().includes(q));
+  });
 
   return (
     <ScrollView style={styles.container} contentContainerStyle={styles.content}>
@@ -207,6 +241,50 @@ export default function WorkoutScreen() {
         </View>
       </View>
 
+      {/* Inter-Set Rest Countdown Timer Card */}
+      <View style={styles.timerCard}>
+        <View style={styles.timerHeader}>
+          <View style={styles.timerHeaderLeft}>
+            <Timer color="#30D158" size={20} />
+            <Text style={styles.timerTitle}>Inter-Set Rest Timer</Text>
+          </View>
+          <Text style={styles.timerDisplay}>
+            {Math.floor(timerSeconds / 60)}:{('0' + (timerSeconds % 60)).slice(-2)}
+          </Text>
+        </View>
+
+        <View style={styles.timerBtnRow}>
+          {[30, 60, 90, 120, 180].map((sec) => (
+            <TouchableOpacity
+              key={sec}
+              style={[styles.presetChip, timerInitial === sec && isTimerActive && styles.presetChipActive]}
+              onPress={() => startRestTimer(sec)}
+            >
+              <Text style={[styles.presetChipText, timerInitial === sec && isTimerActive && styles.presetChipTextActive]}>
+                {sec}s
+              </Text>
+            </TouchableOpacity>
+          ))}
+
+          <TouchableOpacity
+            style={styles.timerActionBtn}
+            onPress={() => setIsTimerActive(!isTimerActive)}
+          >
+            {isTimerActive ? <Pause color="#FF9F0C" size={16} /> : <Play color="#30D158" size={16} />}
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            style={styles.timerActionBtn}
+            onPress={() => {
+              setIsTimerActive(false);
+              setTimerSeconds(0);
+            }}
+          >
+            <RotateCcw color="#8E8E93" size={16} />
+          </TouchableOpacity>
+        </View>
+      </View>
+
       <Text style={styles.sectionLabel}>Select Target Muscle Group</Text>
       <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.catScroll}>
         {categories.map((cat) => (
@@ -221,6 +299,18 @@ export default function WorkoutScreen() {
           </TouchableOpacity>
         ))}
       </ScrollView>
+
+      {/* Exercise Search Input */}
+      <View style={styles.searchWrapper}>
+        <Search color="#8E8E93" size={18} />
+        <TextInput
+          style={styles.searchInput}
+          placeholder="Search exercise by name or head..."
+          placeholderTextColor="#8E8E93"
+          value={searchQuery}
+          onChangeText={setSearchQuery}
+        />
+      </View>
 
       <View style={styles.pickerGrid}>
         {filteredMuscles.map((m) => (
@@ -362,6 +452,87 @@ const styles = StyleSheet.create({
   privacySubtitle: {
     fontSize: 12,
     color: '#8E8E93',
+  },
+  timerCard: {
+    backgroundColor: '#1C1C1E',
+    borderRadius: 18,
+    padding: 14,
+    marginBottom: 16,
+    borderWidth: 1,
+    borderColor: '#2C2C2E',
+  },
+  timerHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginBottom: 10,
+  },
+  timerHeaderLeft: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+  },
+  timerTitle: {
+    fontSize: 14,
+    fontWeight: '700',
+    color: '#FFFFFF',
+  },
+  timerDisplay: {
+    fontSize: 18,
+    fontWeight: '900',
+    color: '#30D158',
+    fontVariant: ['tabular-nums'],
+  },
+  timerBtnRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+  },
+  presetChip: {
+    flex: 1,
+    backgroundColor: '#2C2C2E',
+    paddingVertical: 8,
+    borderRadius: 10,
+    alignItems: 'center',
+  },
+  presetChipActive: {
+    backgroundColor: '#30D158',
+  },
+  presetChipText: {
+    color: '#FFFFFF',
+    fontSize: 12,
+    fontWeight: '700',
+  },
+  presetChipTextActive: {
+    color: '#000000',
+    fontWeight: '800',
+  },
+  timerActionBtn: {
+    width: 34,
+    height: 34,
+    borderRadius: 10,
+    backgroundColor: '#2C2C2E',
+    alignItems: 'center',
+    justifyContent: 'center',
+    alignSelf: 'center',
+  },
+  searchWrapper: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#1C1C1E',
+    borderRadius: 14,
+    paddingHorizontal: 12,
+    height: 44,
+    gap: 8,
+    marginBottom: 12,
+    borderWidth: 1,
+    borderColor: '#2C2C2E',
+  },
+  searchInput: {
+    flex: 1,
+    color: '#FFFFFF',
+    fontSize: 14,
+    fontWeight: '600',
   },
   sectionLabel: {
     fontSize: 14,
