@@ -5,8 +5,6 @@ import { isSupabaseConfigured, supabase } from '../../lib/supabase';
 import { Profile, RankTier } from '../../types/database';
 import { calculateRankProgress } from '../../lib/ranks';
 import {
-  Trophy,
-  Globe,
   Settings,
   BarChart2,
   Flame,
@@ -66,7 +64,7 @@ const GLOBAL_LEADERBOARD: LeaderboardUser[] = [
   },
   {
     id: 'u4',
-    username: 'Alex_LiftMaster',
+    username: 'Polly Strong',
     avatar_url: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150',
     is_online: true,
     rank: 'Gold',
@@ -166,12 +164,12 @@ export default function RanksScreen() {
       case 'Diamond': return '#38BDF8';
       case 'Platinum': return '#60A5FA';
       case 'Gold': return '#FBBF24';
-      case 'Silver': return '#9CA3AF';
+      case 'Silver': return '#9E9A97';
       default: return '#F59E0B';
     }
   };
 
-  const userBw = profile?.bodyweight_kg || 78;
+  const userBw = profile?.bodyweight_kg || 58;
   const userBenchRatio = 115 / userBw;
   const rankProgress = calculateRankProgress(userBenchRatio);
 
@@ -180,7 +178,7 @@ export default function RanksScreen() {
       {/* Settings Gear Top Left matching Screenshot 1 Screen 3 */}
       <View style={styles.topNavRow}>
         <TouchableOpacity style={styles.settingsBtn}>
-          <Settings color="#FFFFFF" size={20} />
+          <Settings color="#FFFFFF" size={18} />
         </TouchableOpacity>
       </View>
 
@@ -229,7 +227,7 @@ export default function RanksScreen() {
       {/* "Leaderboard" Header with Sub-Tabs matching Screenshot 1 Screen 3 */}
       <View style={styles.leaderboardTitleRow}>
         <Text style={styles.sectionHeaderTitle}>Leaderboard</Text>
-        <ChevronRight color="#9CA3AF" size={18} />
+        <ChevronRight color="#9E9A97" size={18} />
       </View>
 
       {/* Time Filter Tabs (All time | Today | Week | Month) */}
@@ -254,7 +252,7 @@ export default function RanksScreen() {
           <ActivityIndicator color="#38BDF8" size="large" style={{ marginVertical: 20 }} />
         ) : (
           leaderboard.map((item, index) => {
-            const isMe = item.id === user?.id || item.username === (profile?.username || 'Alex_LiftMaster');
+            const isMe = item.id === user?.id || item.username === (profile?.username || 'Polly Strong');
             const badgeColor = getRankBadgeColor(item.rank);
 
             return (
@@ -338,7 +336,7 @@ export default function RanksScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#161618',
+    backgroundColor: '#1D1B1B',
   },
   content: {
     paddingHorizontal: 20,
@@ -355,7 +353,7 @@ const styles = StyleSheet.create({
     width: 38,
     height: 38,
     borderRadius: 19,
-    backgroundColor: '#242427',
+    backgroundColor: '#292726',
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -383,7 +381,7 @@ const styles = StyleSheet.create({
     borderRadius: 7,
     backgroundColor: '#A3E635',
     borderWidth: 2,
-    borderColor: '#161618',
+    borderColor: '#1D1B1B',
   },
   heroUsername: {
     fontSize: 20,
@@ -392,7 +390,7 @@ const styles = StyleSheet.create({
   },
   heroHandle: {
     fontSize: 13,
-    color: '#9CA3AF',
+    color: '#9E9A97',
     marginTop: 2,
   },
   socialFollowRow: {
@@ -403,7 +401,7 @@ const styles = StyleSheet.create({
   },
   followText: {
     fontSize: 12,
-    color: '#9CA3AF',
+    color: '#9E9A97',
   },
   followNum: {
     fontSize: 14,
@@ -411,7 +409,7 @@ const styles = StyleSheet.create({
     color: '#FFFFFF',
   },
   followDivider: {
-    color: '#323236',
+    color: '#33302F',
   },
   sectionHeaderTitle: {
     fontSize: 17,
@@ -426,13 +424,13 @@ const styles = StyleSheet.create({
   },
   statColumnCard: {
     flex: 1,
-    backgroundColor: '#242427',
+    backgroundColor: '#292726',
     borderRadius: 18,
     padding: 14,
     alignItems: 'center',
     gap: 6,
     borderWidth: 1,
-    borderColor: '#323236',
+    borderColor: '#3D3A38',
   },
   statColValue: {
     fontSize: 18,
@@ -441,7 +439,7 @@ const styles = StyleSheet.create({
   },
   statColLabel: {
     fontSize: 10,
-    color: '#9CA3AF',
+    color: '#9E9A97',
     textAlign: 'center',
   },
   leaderboardTitleRow: {
@@ -455,7 +453,7 @@ const styles = StyleSheet.create({
     gap: 20,
     marginBottom: 16,
     borderBottomWidth: 1,
-    borderBottomColor: '#242427',
+    borderBottomColor: '#292726',
     paddingBottom: 4,
   },
   timeTabBtn: {
@@ -465,7 +463,7 @@ const styles = StyleSheet.create({
   timeTabText: {
     fontSize: 14,
     fontWeight: '600',
-    color: '#9CA3AF',
+    color: '#9E9A97',
   },
   timeTabTextActive: {
     color: '#FFFFFF',
@@ -477,7 +475,7 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     height: 3,
-    backgroundColor: '#38BDF8',
+    backgroundColor: '#FFFFFF',
     borderRadius: 1.5,
   },
   leaderboardList: {
@@ -486,11 +484,11 @@ const styles = StyleSheet.create({
   playerRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#242427',
+    backgroundColor: '#292726',
     borderRadius: 16,
     padding: 12,
     borderWidth: 1,
-    borderColor: '#323236',
+    borderColor: '#3D3A38',
   },
   playerRowMe: {
     borderColor: '#38BDF8',
@@ -500,7 +498,7 @@ const styles = StyleSheet.create({
     width: 28,
     fontSize: 14,
     fontWeight: '800',
-    color: '#9CA3AF',
+    color: '#9E9A97',
   },
   rankTopThree: {
     color: '#FBBF24',
@@ -522,7 +520,7 @@ const styles = StyleSheet.create({
     borderRadius: 4.5,
     backgroundColor: '#A3E635',
     borderWidth: 1.5,
-    borderColor: '#161618',
+    borderColor: '#1D1B1B',
   },
   playerUsername: {
     fontSize: 14,
@@ -545,14 +543,14 @@ const styles = StyleSheet.create({
     color: '#FFFFFF',
   },
   myRankCard: {
-    backgroundColor: '#242427',
+    backgroundColor: '#292726',
     borderRadius: 22,
     padding: 16,
     borderWidth: 1,
-    borderColor: '#323236',
+    borderColor: '#3D3A38',
   },
   progressContainer: {
-    backgroundColor: '#323236',
+    backgroundColor: '#33302F',
     borderRadius: 14,
     padding: 12,
     marginBottom: 14,
@@ -575,7 +573,7 @@ const styles = StyleSheet.create({
   },
   progressBarTrack: {
     height: 8,
-    backgroundColor: '#161618',
+    backgroundColor: '#1D1B1B',
     borderRadius: 4,
     overflow: 'hidden',
   },
@@ -589,7 +587,7 @@ const styles = StyleSheet.create({
   },
   liftBox: {
     flex: 1,
-    backgroundColor: '#323236',
+    backgroundColor: '#33302F',
     borderRadius: 14,
     padding: 10,
     alignItems: 'center',
@@ -597,7 +595,7 @@ const styles = StyleSheet.create({
   liftName: {
     fontSize: 10,
     fontWeight: '800',
-    color: '#9CA3AF',
+    color: '#9E9A97',
   },
   liftVal: {
     fontSize: 15,

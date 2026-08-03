@@ -2,18 +2,20 @@ import { Platform } from 'react-native';
 
 export const Colors = {
   dark: {
-    background: '#161618',
-    card: '#242427',
-    cardBorder: '#323236',
-    cardHover: '#2C2C30',
-    textPrimary: '#FFFFFF',
-    textSecondary: '#A1A1AA',
-    accentCyan: '#38BDF8',
-    accentCyanGlow: 'rgba(56, 189, 248, 0.2)',
-    accentLime: '#A3E635',
-    accentPurple: '#C084FC',
-    accentGold: '#FBBF24',
-    accentRed: '#F87171',
+    background: '#1D1B1B',       // Warm dark matte charcoal (matching screenshots)
+    card: '#292726',             // Warm dark card container
+    cardSecondary: '#33302F',    // Inputs, inner chips & sub-cards
+    cardBorder: '#3D3A38',       // Subtle warm border
+    textPrimary: '#FFFFFF',      // Clean primary white text
+    textSecondary: '#9E9A97',    // Soft warm grey secondary text
+    accentCyan: '#38BDF8',       // Sleek progress bar line & cyan highlight
+    accentPurple: '#C084FC',     // Workouts stats purple
+    accentLime: '#A3E635',       // Rewards stats lime green
+    accentGold: '#FBBF24',       // Rating star amber gold
+    accentRed: '#F87171',        // Fatigue red
+    tabBarBg: '#1D1B1B',
+    tabBarInactive: '#8C8885',
+    tabBarActive: '#FFFFFF',     // Clean white active tab icon matching screenshots
   },
 } as const;
 
