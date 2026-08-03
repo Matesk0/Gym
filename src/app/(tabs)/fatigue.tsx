@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Image } from 'react-native';
 import { useRouter } from 'expo-router';
 import { MuscleMapSvg } from '../../components/MuscleMapSvg';
 import {
@@ -10,9 +10,71 @@ import {
   calculateRemainingRecoveryHours,
 } from '../../constants/muscles';
 import { FatigueState, FatigueStage } from '../../types/database';
-import { Flame, RefreshCw, Dumbbell, ShieldAlert, CheckCircle2, ChevronRight, Sparkles, PlusCircle } from 'lucide-react-native';
+import {
+  Flame,
+  RefreshCw,
+  Dumbbell,
+  ChevronRight,
+  Sparkles,
+  PlusCircle,
+  Heart,
+  Star,
+  Zap,
+  Clock,
+} from 'lucide-react-native';
 
-// MuscleWiki-style targeted exercises index
+interface CatalogWorkoutCard {
+  id: string;
+  title: string;
+  trainer: string;
+  rating: number;
+  isPremium: boolean;
+  image: string;
+  duration: string;
+  calories: number;
+  level: string;
+  category: string;
+}
+
+const FAVORITE_WORKOUTS: CatalogWorkoutCard[] = [
+  {
+    id: 'fav1',
+    title: '10-minute morning yoga',
+    trainer: 'Nama Ste',
+    rating: 4.7,
+    isPremium: false,
+    image: 'https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?w=600',
+    duration: '10 min',
+    calories: 110,
+    level: '1 Level',
+    category: 'Flexibility',
+  },
+  {
+    id: 'fav2',
+    title: 'Dancing therapy',
+    trainer: 'Daria Pike',
+    rating: 4.9,
+    isPremium: true,
+    image: 'https://images.unsplash.com/photo-1508214751196-bcfd4ca60f91?w=600',
+    duration: '25 min',
+    calories: 240,
+    level: '2 Level',
+    category: 'Arms',
+  },
+  {
+    id: 'fav3',
+    title: 'HIIT Cardio for beginners',
+    trainer: 'Tadeas Izo',
+    rating: 4.9,
+    isPremium: true,
+    image: 'https://images.unsplash.com/photo-1517838277536-f5f99be501cd?w=600',
+    duration: '30 min',
+    calories: 300,
+    level: '1 Level',
+    category: 'Legs',
+  },
+];
+
 const MUSCLEWIKI_EXERCISES: Record<string, string[]> = {
   upper_chest: ['Incline Dumbbell Press', 'Incline Cable Fly', 'Low-to-High Cable Crossover'],
   middle_chest: ['Barbell Bench Press', 'Flat Dumbbell Fly', 'Chest Press Machine'],
@@ -40,7 +102,6 @@ const MUSCLEWIKI_EXERCISES: Record<string, string[]> = {
   obliques: ['Russian Twists', 'Cable Woodchopper', 'Side Plank'],
 };
 
-// Initial training offset hours for realistic demo state
 const DEMO_TRAINED_HOURS: Record<string, number> = {
   upper_chest: 14,
   middle_chest: 14,
@@ -59,7 +120,7 @@ const DEMO_TRAINED_HOURS: Record<string, number> = {
 function buildInitialFatigueData(): Record<string, FatigueState> {
   const map: Record<string, FatigueState> = {};
   MUSCLE_DEFINITIONS.forEach((def) => {
-    const hoursAgo = DEMO_TRAINED_HOURS[def.id] ?? 80; // default fully rested if not recently trained
+    const hoursAgo = DEMO_TRAINED_HOURS[def.id] ?? 80;
     const fatiguePct = calculateFatiguePercentage(hoursAgo, def.baseRecoveryHours);
     const stage = calculateFatigueStage(fatiguePct);
     const remainingHours = calculateRemainingRecoveryHours(hoursAgo, def.baseRecoveryHours);
@@ -82,6 +143,7 @@ function buildInitialFatigueData(): Record<string, FatigueState> {
 export default function FatigueScreen() {
   const router = useRouter();
   const [viewMode, setViewMode] = useState<'front' | 'back'>('front');
+  const [selectedCatFilter, setSelectedCatFilter] = useState<string>('All');
   const [fatigueData] = useState<Record<string, FatigueState>>(buildInitialFatigueData);
   const [selectedMuscle, setSelectedMuscle] = useState<FatigueState>(fatigueData.upper_chest || Object.values(fatigueData)[0]);
 
@@ -89,18 +151,39 @@ export default function FatigueScreen() {
     ? MUSCLEWIKI_EXERCISES[selectedMuscle.muscle_id] || ['Barbell Compound Movement', 'Dumbbell Isolation']
     : [];
 
+  const categories = ['All', 'Legs', 'Arms', 'Abs', 'Flexibility', 'Chest', 'Back'];
+
+  const filteredCatalog = FAVORITE_WORKOUTS.filter((w) => {
+    if (selectedCatFilter === 'All') return true;
+    return w.category === selectedCatFilter;
+  });
 
   return (
     <ScrollView style={styles.container} contentContainerStyle={styles.content}>
-      {/* iOS Prestige Header */}
+      {/* Header matching Screenshot 2 Top-Left ("Favorites") */}
       <View style={styles.header}>
-        <Text style={styles.title}>Muscle Fatigue Map</Text>
+        <Text style={styles.title}>Favorites & Catalog</Text>
         <Text style={styles.subtitle}>
-          MuscleWiki-style interactive physique breakdown & rest windows
+          MuscleWiki interactive physique recovery & curated workout library
         </Text>
       </View>
 
-      {/* Segmented iOS View Switcher (Anterior vs Posterior) */}
+      {/* Category Tag Pills matching Screenshot 2 Top-Left (All | Legs | Arms | Abs | Flexibility) */}
+      <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.catPillScroll}>
+        {categories.map((cat) => (
+          <TouchableOpacity
+            key={cat}
+            style={[styles.catPillBtn, selectedCatFilter === cat && styles.catPillBtnActive]}
+            onPress={() => setSelectedCatFilter(cat)}
+          >
+            <Text style={[styles.catPillText, selectedCatFilter === cat && styles.catPillTextActive]}>
+              {cat}
+            </Text>
+          </TouchableOpacity>
+        ))}
+      </ScrollView>
+
+      {/* Segmented View Switcher (Anterior vs Posterior) */}
       <View style={styles.segmentedControl}>
         <TouchableOpacity
           style={[styles.segmentBtn, viewMode === 'front' && styles.segmentBtnActive]}
@@ -123,7 +206,7 @@ export default function FatigueScreen() {
       {/* Hex Color Scale Legend Card */}
       <View style={styles.legendCard}>
         <View style={styles.legendHeader}>
-          <Sparkles color="#30D158" size={16} />
+          <Sparkles color="#38BDF8" size={16} />
           <Text style={styles.legendTitle}>Muscle Recovery Scale</Text>
         </View>
 
@@ -136,11 +219,6 @@ export default function FatigueScreen() {
               </View>
             );
           })}
-        </View>
-
-        <View style={styles.legendLabels}>
-          <Text style={[styles.labelLegendText, { color: '#e51f1f' }]}>#e51f1f (0% Exhausted)</Text>
-          <Text style={[styles.labelLegendText, { color: '#44ce1b' }]}>#44ce1b (100% Prime)</Text>
         </View>
       </View>
 
@@ -171,7 +249,6 @@ export default function FatigueScreen() {
             </View>
           </View>
 
-          {/* Progress Bar */}
           <View style={styles.progressTrack}>
             <View
               style={[
@@ -183,7 +260,7 @@ export default function FatigueScreen() {
 
           <View style={styles.statsRow}>
             <View style={styles.statBox}>
-              <RefreshCw color="#0A84FF" size={16} />
+              <RefreshCw color="#38BDF8" size={16} />
               <Text style={styles.statVal}>{selectedMuscle.last_trained_hours_ago}h ago</Text>
               <Text style={styles.statLbl}>Last Trained</Text>
             </View>
@@ -195,14 +272,14 @@ export default function FatigueScreen() {
                   ? `${selectedMuscle.recovery_hours_needed}h left`
                   : '100% Prime'}
               </Text>
-              <Text style={styles.statLbl}>Est. Rest Window</Text>
+              <Text style={styles.statLbl}>Rest Window</Text>
             </View>
           </View>
 
-          {/* MuscleWiki Recommended Targeted Exercises */}
+          {/* MuscleWiki Target Exercises */}
           <View style={styles.exerciseSection}>
             <View style={styles.exSectionTitleRow}>
-              <Dumbbell color="#30D158" size={16} />
+              <Dumbbell color="#38BDF8" size={16} />
               <Text style={styles.exSectionTitle}>MuscleWiki Target Exercises</Text>
             </View>
 
@@ -214,12 +291,65 @@ export default function FatigueScreen() {
               >
                 <View style={styles.exDot} />
                 <Text style={styles.exerciseNameText}>{exName}</Text>
-                <PlusCircle color="#30D158" size={18} />
+                <PlusCircle color="#38BDF8" size={18} />
               </TouchableOpacity>
             ))}
           </View>
         </View>
       )}
+
+      {/* Catalog Cards Section matching Screenshot 2 Top-Left */}
+      <Text style={[styles.sectionTitle, { marginTop: 14 }]}>Curated Catalog Exercises</Text>
+      <View style={styles.catalogGrid}>
+        {filteredCatalog.map((item) => (
+          <TouchableOpacity
+            key={item.id}
+            style={styles.favCard}
+            onPress={() => router.push('/(tabs)/workout')}
+          >
+            <View style={styles.favImageContainer}>
+              <Image source={{ uri: item.image }} style={styles.favImage} />
+              <TouchableOpacity style={styles.heartBtn}>
+                <Heart color="#C084FC" size={14} fill="#C084FC" />
+              </TouchableOpacity>
+
+              <View style={styles.ratingTag}>
+                <Star color="#FBBF24" size={12} fill="#FBBF24" />
+                <Text style={styles.ratingTagText}>{item.rating}</Text>
+              </View>
+
+              {item.isPremium && (
+                <View style={styles.favPremiumBadge}>
+                  <Text style={styles.favPremiumText}>Premium</Text>
+                </View>
+              )}
+            </View>
+
+            <View style={styles.favCardBody}>
+              <Text style={styles.favCardTitle}>{item.title}</Text>
+              <Text style={styles.favCardTrainer}>{item.trainer}</Text>
+
+              {/* Quick stats row matching Screenshot 2 top-right */}
+              <View style={styles.quickStatsRow}>
+                <View style={styles.quickStatItem}>
+                  <Text style={styles.quickStatVal}>{item.duration}</Text>
+                  <Text style={styles.quickStatLbl}>Minutes</Text>
+                </View>
+                <View style={styles.quickStatDivider} />
+                <View style={styles.quickStatItem}>
+                  <Text style={styles.quickStatVal}>{item.calories}</Text>
+                  <Text style={styles.quickStatLbl}>Calories</Text>
+                </View>
+                <View style={styles.quickStatDivider} />
+                <View style={styles.quickStatItem}>
+                  <Text style={styles.quickStatVal}>{item.level}</Text>
+                  <Text style={styles.quickStatLbl}>Level</Text>
+                </View>
+              </View>
+            </View>
+          </TouchableOpacity>
+        ))}
+      </View>
     </ScrollView>
   );
 }
@@ -227,7 +357,7 @@ export default function FatigueScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#000000', // iOS Pitch Black OLED
+    backgroundColor: '#161618',
   },
   content: {
     paddingHorizontal: 20,
@@ -246,16 +376,47 @@ const styles = StyleSheet.create({
   },
   subtitle: {
     fontSize: 13,
-    color: '#8E8E93',
+    color: '#9CA3AF',
     marginTop: 4,
+  },
+  sectionTitle: {
+    fontSize: 17,
+    fontWeight: '800',
+    color: '#FFFFFF',
+  },
+  catPillScroll: {
+    flexDirection: 'row',
+    marginBottom: 4,
+  },
+  catPillBtn: {
+    paddingHorizontal: 16,
+    paddingVertical: 8,
+    borderRadius: 18,
+    backgroundColor: '#242427',
+    marginRight: 8,
+    borderWidth: 1,
+    borderColor: '#323236',
+  },
+  catPillBtnActive: {
+    backgroundColor: '#38BDF8',
+    borderColor: '#38BDF8',
+  },
+  catPillText: {
+    color: '#9CA3AF',
+    fontSize: 13,
+    fontWeight: '600',
+  },
+  catPillTextActive: {
+    color: '#161618',
+    fontWeight: '800',
   },
   segmentedControl: {
     flexDirection: 'row',
-    backgroundColor: '#1C1C1E',
+    backgroundColor: '#242427',
     borderRadius: 14,
     padding: 3,
     borderWidth: 1,
-    borderColor: '#2C2C2E',
+    borderColor: '#323236',
   },
   segmentBtn: {
     flex: 1,
@@ -264,10 +425,10 @@ const styles = StyleSheet.create({
     borderRadius: 11,
   },
   segmentBtnActive: {
-    backgroundColor: '#2C2C2E',
+    backgroundColor: '#323236',
   },
   segmentText: {
-    color: '#8E8E93',
+    color: '#9CA3AF',
     fontSize: 13,
     fontWeight: '700',
   },
@@ -275,11 +436,11 @@ const styles = StyleSheet.create({
     color: '#FFFFFF',
   },
   legendCard: {
-    backgroundColor: '#1C1C1E',
+    backgroundColor: '#242427',
     borderRadius: 18,
     padding: 14,
     borderWidth: 1,
-    borderColor: '#2C2C2E',
+    borderColor: '#323236',
     gap: 8,
   },
   legendHeader: {
@@ -290,12 +451,12 @@ const styles = StyleSheet.create({
   legendTitle: {
     fontSize: 13,
     fontWeight: '700',
-    color: '#8E8E93',
+    color: '#9CA3AF',
   },
   legendBar: {
     flexDirection: 'row',
-    height: 14,
-    borderRadius: 7,
+    height: 12,
+    borderRadius: 6,
     overflow: 'hidden',
   },
   legendSegment: {
@@ -304,37 +465,29 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   legendStageNum: {
-    fontSize: 9,
+    fontSize: 8,
     fontWeight: '900',
     color: '#000000',
   },
-  legendLabels: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-  },
-  labelLegendText: {
-    fontSize: 11,
-    fontWeight: '700',
-  },
   mapCard: {
-    backgroundColor: '#1C1C1E',
+    backgroundColor: '#242427',
     borderRadius: 24,
     paddingVertical: 14,
     alignItems: 'center',
     borderWidth: 1,
-    borderColor: '#2C2C2E',
+    borderColor: '#323236',
   },
   mapHintText: {
-    color: '#8E8E93',
+    color: '#9CA3AF',
     fontSize: 12,
     marginTop: 2,
   },
   inspectorCard: {
-    backgroundColor: '#1C1C1E',
+    backgroundColor: '#242427',
     borderRadius: 22,
     padding: 18,
     borderWidth: 1,
-    borderColor: '#2C2C2E',
+    borderColor: '#323236',
     gap: 14,
   },
   inspectorHeader: {
@@ -349,7 +502,7 @@ const styles = StyleSheet.create({
   },
   inspectorSub: {
     fontSize: 13,
-    color: '#8E8E93',
+    color: '#9CA3AF',
     marginTop: 2,
   },
   badgePill: {
@@ -364,7 +517,7 @@ const styles = StyleSheet.create({
   },
   progressTrack: {
     height: 8,
-    backgroundColor: '#2C2C2E',
+    backgroundColor: '#323236',
     borderRadius: 4,
     overflow: 'hidden',
   },
@@ -378,7 +531,7 @@ const styles = StyleSheet.create({
   },
   statBox: {
     flex: 1,
-    backgroundColor: '#2C2C2E',
+    backgroundColor: '#323236',
     borderRadius: 14,
     padding: 12,
     alignItems: 'center',
@@ -391,7 +544,7 @@ const styles = StyleSheet.create({
   },
   statLbl: {
     fontSize: 11,
-    color: '#8E8E93',
+    color: '#9CA3AF',
   },
   exerciseSection: {
     gap: 8,
@@ -412,7 +565,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    backgroundColor: '#2C2C2E',
+    backgroundColor: '#323236',
     padding: 12,
     borderRadius: 14,
   },
@@ -420,7 +573,7 @@ const styles = StyleSheet.create({
     width: 6,
     height: 6,
     borderRadius: 3,
-    backgroundColor: '#30D158',
+    backgroundColor: '#38BDF8',
   },
   exerciseNameText: {
     flex: 1,
@@ -428,5 +581,107 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontWeight: '600',
     marginLeft: 10,
+  },
+  catalogGrid: {
+    gap: 16,
+  },
+  favCard: {
+    backgroundColor: '#242427',
+    borderRadius: 22,
+    overflow: 'hidden',
+    borderWidth: 1,
+    borderColor: '#323236',
+  },
+  favImageContainer: {
+    height: 160,
+    position: 'relative',
+  },
+  favImage: {
+    width: '100%',
+    height: '100%',
+  },
+  heartBtn: {
+    position: 'absolute',
+    top: 12,
+    right: 12,
+    width: 32,
+    height: 32,
+    borderRadius: 16,
+    backgroundColor: 'rgba(0, 0, 0, 0.6)',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  ratingTag: {
+    position: 'absolute',
+    top: 12,
+    right: 50,
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 4,
+    backgroundColor: 'rgba(0, 0, 0, 0.6)',
+    paddingHorizontal: 8,
+    paddingVertical: 4,
+    borderRadius: 10,
+  },
+  ratingTagText: {
+    color: '#FFFFFF',
+    fontSize: 11,
+    fontWeight: '800',
+  },
+  favPremiumBadge: {
+    position: 'absolute',
+    top: 12,
+    left: 12,
+    backgroundColor: 'rgba(0, 0, 0, 0.6)',
+    paddingHorizontal: 10,
+    paddingVertical: 4,
+    borderRadius: 10,
+  },
+  favPremiumText: {
+    color: '#FFFFFF',
+    fontSize: 11,
+    fontWeight: '700',
+  },
+  favCardBody: {
+    padding: 14,
+  },
+  favCardTitle: {
+    fontSize: 16,
+    fontWeight: '800',
+    color: '#FFFFFF',
+  },
+  favCardTrainer: {
+    fontSize: 12,
+    color: '#9CA3AF',
+    marginTop: 2,
+    marginBottom: 12,
+  },
+  quickStatsRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-around',
+    backgroundColor: '#161618',
+    borderRadius: 14,
+    paddingVertical: 10,
+    borderWidth: 1,
+    borderColor: '#323236',
+  },
+  quickStatItem: {
+    alignItems: 'center',
+  },
+  quickStatVal: {
+    fontSize: 14,
+    fontWeight: '800',
+    color: '#FFFFFF',
+  },
+  quickStatLbl: {
+    fontSize: 10,
+    color: '#9CA3AF',
+    marginTop: 2,
+  },
+  quickStatDivider: {
+    width: 1,
+    height: 20,
+    backgroundColor: '#323236',
   },
 });

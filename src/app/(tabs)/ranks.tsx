@@ -1,10 +1,18 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, ScrollView, Image, ActivityIndicator } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, Image, TouchableOpacity, ActivityIndicator } from 'react-native';
 import { useAuth } from '../../context/AuthContext';
 import { isSupabaseConfigured, supabase } from '../../lib/supabase';
 import { Profile, RankTier } from '../../types/database';
 import { calculateRankProgress } from '../../lib/ranks';
-import { Trophy, Globe } from 'lucide-react-native';
+import {
+  Trophy,
+  Globe,
+  Settings,
+  BarChart2,
+  Flame,
+  Coins,
+  ChevronRight,
+} from 'lucide-react-native';
 
 interface LeaderboardUser {
   id: string;
@@ -22,11 +30,11 @@ interface LeaderboardUser {
 const GLOBAL_LEADERBOARD: LeaderboardUser[] = [
   {
     id: 'u1',
-    username: 'Titan_Marcus',
-    avatar_url: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150',
+    username: 'Sarah L.',
+    avatar_url: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=150',
     is_online: true,
     rank: 'Grandmaster',
-    total_score: 985,
+    total_score: 211,
     bench_1rm: 180,
     squat_1rm: 240,
     deadlift_1rm: 290,
@@ -34,62 +42,62 @@ const GLOBAL_LEADERBOARD: LeaderboardUser[] = [
   },
   {
     id: 'u2',
-    username: 'Elena_Valkyrie',
-    avatar_url: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=150',
+    username: 'Joel G.',
+    avatar_url: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150',
     is_online: true,
     rank: 'Master',
-    total_score: 920,
-    bench_1rm: 130,
+    total_score: 198,
+    bench_1rm: 140,
     squat_1rm: 195,
     deadlift_1rm: 220,
     percentile: 'Top 0.8%',
   },
   {
     id: 'u3',
-    username: 'Alex_LiftMaster',
+    username: 'Sally R.',
     avatar_url: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150',
     is_online: true,
+    rank: 'Platinum',
+    total_score: 167,
+    bench_1rm: 125,
+    squat_1rm: 170,
+    deadlift_1rm: 200,
+    percentile: 'Top 5%',
+  },
+  {
+    id: 'u4',
+    username: 'Alex_LiftMaster',
+    avatar_url: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150',
+    is_online: true,
     rank: 'Gold',
-    total_score: 740,
+    total_score: 148,
     bench_1rm: 115,
     squat_1rm: 150,
     deadlift_1rm: 185,
     percentile: 'Top 18%',
   },
   {
-    id: 'u4',
-    username: 'Dmitri_Steel',
-    avatar_url: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150',
-    is_online: false,
-    rank: 'Platinum',
-    total_score: 810,
-    bench_1rm: 140,
-    squat_1rm: 180,
-    deadlift_1rm: 210,
-    percentile: 'Top 8%',
-  },
-  {
     id: 'u5',
-    username: 'Sarah_Pulse',
+    username: 'Dmitri_Steel',
     avatar_url: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=150',
-    is_online: true,
+    is_online: false,
     rank: 'Silver',
-    total_score: 580,
-    bench_1rm: 85,
-    squat_1rm: 110,
-    deadlift_1rm: 140,
+    total_score: 120,
+    bench_1rm: 90,
+    squat_1rm: 120,
+    deadlift_1rm: 150,
     percentile: 'Top 45%',
   },
 ];
 
 const RANK_SCORE_MAP: Record<RankTier, number> = {
-  Grandmaster: 985,
-  Master: 920,
-  Platinum: 810,
-  Gold: 740,
-  Silver: 580,
-  Bronze: 420,
-  Diamond: 870,
+  Grandmaster: 211,
+  Master: 198,
+  Diamond: 180,
+  Platinum: 167,
+  Gold: 148,
+  Silver: 120,
+  Bronze: 95,
 };
 
 const RANK_PERCENTILE_MAP: Record<RankTier, string> = {
@@ -105,6 +113,7 @@ const RANK_PERCENTILE_MAP: Record<RankTier, string> = {
 export default function RanksScreen() {
   const { profile, user } = useAuth();
   const [leaderboard, setLeaderboard] = useState<LeaderboardUser[]>(GLOBAL_LEADERBOARD);
+  const [activeTimeTab, setActiveTimeTab] = useState<'All time' | 'Today' | 'Week' | 'Month'>('All time');
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
@@ -118,7 +127,7 @@ export default function RanksScreen() {
         if (data && data.length > 0 && !error && isMounted) {
           const mapped: LeaderboardUser[] = data.map((p: Profile, idx: number) => {
             const rank = p.overall_rank || 'Gold';
-            const baseScore = RANK_SCORE_MAP[rank] || 500;
+            const baseScore = RANK_SCORE_MAP[rank] || 148;
             const bw = p.bodyweight_kg || 75;
             return {
               id: p.id,
@@ -134,7 +143,6 @@ export default function RanksScreen() {
             };
           });
 
-          // Sort by rank score descending
           mapped.sort((a, b) => b.total_score - a.total_score);
           setLeaderboard(mapped);
         }
@@ -153,51 +161,133 @@ export default function RanksScreen() {
 
   const getRankBadgeColor = (rank: RankTier) => {
     switch (rank) {
-      case 'Grandmaster': return '#FF375F';
-      case 'Master': return '#BF5AF2';
-      case 'Diamond': return '#0A84FF';
-      case 'Platinum': return '#64D2FF';
-      case 'Gold': return '#FFD60A';
-      case 'Silver': return '#8E8E93';
-      default: return '#FF9F0C';
+      case 'Grandmaster': return '#F87171';
+      case 'Master': return '#C084FC';
+      case 'Diamond': return '#38BDF8';
+      case 'Platinum': return '#60A5FA';
+      case 'Gold': return '#FBBF24';
+      case 'Silver': return '#9CA3AF';
+      default: return '#F59E0B';
     }
   };
 
   const userBw = profile?.bodyweight_kg || 78;
-  const userBenchRatio = 115 / userBw; // 1.47x
+  const userBenchRatio = 115 / userBw;
   const rankProgress = calculateRankProgress(userBenchRatio);
 
   return (
     <ScrollView style={styles.container} contentContainerStyle={styles.content}>
-      <View style={styles.header}>
-        <Text style={styles.title}>Global Strength Ranks</Text>
-        <Text style={styles.subtitle}>
-          Gaming rank system based on world strength percentiles
-        </Text>
+      {/* Settings Gear Top Left matching Screenshot 1 Screen 3 */}
+      <View style={styles.topNavRow}>
+        <TouchableOpacity style={styles.settingsBtn}>
+          <Settings color="#FFFFFF" size={20} />
+        </TouchableOpacity>
       </View>
 
-      <View style={styles.myRankCard}>
-        <View style={styles.myRankHeader}>
-          <View style={styles.pfpWrapper}>
-            <Image
-              source={{ uri: profile?.avatar_url || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150' }}
-              style={styles.pfp}
-            />
-            {profile?.is_online && <View style={styles.onlineDot} />}
-          </View>
-
-          <View style={{ flex: 1 }}>
-            <Text style={styles.myUsername}>{profile?.username || 'Alex_LiftMaster'}</Text>
-            <Text style={styles.myPercentile}>World Strength Percentile: Top 18%</Text>
-          </View>
-
-          <View style={[styles.tierBadge, { backgroundColor: getRankBadgeColor(profile?.overall_rank || 'Gold') }]}>
-            <Trophy color="#000000" size={14} />
-            <Text style={styles.tierText}>{profile?.overall_rank || 'Gold'}</Text>
-          </View>
+      {/* User Header Profile Section matching Screenshot 1 Screen 3 */}
+      <View style={styles.profileHeroSection}>
+        <View style={styles.pfpGlowWrapper}>
+          <Image
+            source={{ uri: profile?.avatar_url || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=200' }}
+            style={styles.heroPfp}
+          />
+          {profile?.is_online && <View style={styles.onlineDotHero} />}
         </View>
 
-        {/* Tier Advancement Progress Bar */}
+        <Text style={styles.heroUsername}>{profile?.username || 'Polly Strong'}</Text>
+        <Text style={styles.heroHandle}>@fitness_girl97</Text>
+
+        <View style={styles.socialFollowRow}>
+          <Text style={styles.followText}><Text style={styles.followNum}>15</Text> Followers</Text>
+          <Text style={styles.followDivider}>|</Text>
+          <Text style={styles.followText}><Text style={styles.followNum}>24</Text> Following</Text>
+        </View>
+      </View>
+
+      {/* "My statistics" Section matching Screenshot 1 Screen 3 */}
+      <Text style={styles.sectionHeaderTitle}>My statistics</Text>
+      <View style={styles.statsThreeGrid}>
+        <View style={styles.statColumnCard}>
+          <BarChart2 color="#C084FC" size={22} />
+          <Text style={styles.statColValue}>149</Text>
+          <Text style={styles.statColLabel}>Workouts total</Text>
+        </View>
+
+        <View style={styles.statColumnCard}>
+          <Flame color="#38BDF8" size={22} />
+          <Text style={styles.statColValue}>18 900</Text>
+          <Text style={styles.statColLabel}>Calories burnt</Text>
+        </View>
+
+        <View style={styles.statColumnCard}>
+          <Coins color="#A3E635" size={22} />
+          <Text style={styles.statColValue}>53</Text>
+          <Text style={styles.statColLabel}>Rewards collected</Text>
+        </View>
+      </View>
+
+      {/* "Leaderboard" Header with Sub-Tabs matching Screenshot 1 Screen 3 */}
+      <View style={styles.leaderboardTitleRow}>
+        <Text style={styles.sectionHeaderTitle}>Leaderboard</Text>
+        <ChevronRight color="#9CA3AF" size={18} />
+      </View>
+
+      {/* Time Filter Tabs (All time | Today | Week | Month) */}
+      <View style={styles.timeTabRow}>
+        {(['All time', 'Today', 'Week', 'Month'] as const).map((tab) => (
+          <TouchableOpacity
+            key={tab}
+            style={styles.timeTabBtn}
+            onPress={() => setActiveTimeTab(tab)}
+          >
+            <Text style={[styles.timeTabText, activeTimeTab === tab && styles.timeTabTextActive]}>
+              {tab}
+            </Text>
+            {activeTimeTab === tab && <View style={styles.timeTabLine} />}
+          </TouchableOpacity>
+        ))}
+      </View>
+
+      {/* Leaderboard Player List */}
+      <View style={styles.leaderboardList}>
+        {isLoading ? (
+          <ActivityIndicator color="#38BDF8" size="large" style={{ marginVertical: 20 }} />
+        ) : (
+          leaderboard.map((item, index) => {
+            const isMe = item.id === user?.id || item.username === (profile?.username || 'Alex_LiftMaster');
+            const badgeColor = getRankBadgeColor(item.rank);
+
+            return (
+              <View key={item.id} style={[styles.playerRow, isMe && styles.playerRowMe]}>
+                <Text style={[styles.rankNumber, index < 3 && styles.rankTopThree]}>
+                  #{index + 1}
+                </Text>
+
+                <View style={styles.pfpWrapperSmall}>
+                  <Image source={{ uri: item.avatar_url }} style={styles.pfpSmall} />
+                  {item.is_online && <View style={styles.onlineDotSmall} />}
+                </View>
+
+                <View style={{ flex: 1, marginLeft: 12 }}>
+                  <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6 }}>
+                    <Text style={[styles.playerUsername, isMe && { color: '#38BDF8' }]}>
+                      {item.username} {isMe && '(You)'}
+                    </Text>
+                    <View style={[styles.tierTag, { borderColor: badgeColor }]}>
+                      <Text style={[styles.tierTagText, { color: badgeColor }]}>{item.rank}</Text>
+                    </View>
+                  </View>
+                </View>
+
+                <Text style={styles.scoreVal}>{item.total_score}</Text>
+              </View>
+            );
+          })
+        )}
+      </View>
+
+      {/* Tier Advancement Progress Card */}
+      <View style={[styles.myRankCard, { marginTop: 24 }]}>
         <View style={styles.progressContainer}>
           <View style={styles.progressHeaderRow}>
             <Text style={styles.progressTitleText}>
@@ -219,11 +309,6 @@ export default function RanksScreen() {
               ]}
             />
           </View>
-          <Text style={styles.progressSubText}>
-            {rankProgress.nextRank
-              ? `Current: ${userBenchRatio.toFixed(2)}x BW • Target: ${rankProgress.targetRatio}x BW for ${rankProgress.nextRank}`
-              : 'You have achieved Grandmaster rank status!'}
-          </Text>
         </View>
 
         <View style={styles.liftGrid}>
@@ -246,56 +331,6 @@ export default function RanksScreen() {
           </View>
         </View>
       </View>
-
-      <View style={styles.tableHeaderRow}>
-        <Globe color="#30D158" size={18} />
-        <Text style={styles.tableHeaderTitle}>World Athletes (Global Rank)</Text>
-      </View>
-
-      <View style={styles.leaderboardList}>
-        {isLoading ? (
-          <ActivityIndicator color="#30D158" size="large" style={{ marginVertical: 20 }} />
-        ) : (
-          leaderboard.map((item, index) => {
-            const isMe = item.id === user?.id || item.username === profile?.username;
-            const badgeColor = getRankBadgeColor(item.rank);
-
-            return (
-              <View key={item.id} style={[styles.playerRow, isMe && styles.playerRowMe]}>
-                <Text style={[styles.rankNumber, index < 3 && styles.rankTopThree]}>
-                  #{index + 1}
-                </Text>
-
-              <View style={styles.pfpWrapperSmall}>
-                <Image source={{ uri: item.avatar_url }} style={styles.pfpSmall} />
-                {item.is_online && <View style={styles.onlineDotSmall} />}
-              </View>
-
-              <View style={{ flex: 1, marginLeft: 10 }}>
-                <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6 }}>
-                  <Text style={[styles.playerUsername, isMe && { color: '#30D158' }]}>
-                    {item.username}
-                  </Text>
-
-                  <View style={[styles.tierTag, { borderColor: badgeColor }]}>
-                    <Text style={[styles.tierTagText, { color: badgeColor }]}>{item.rank}</Text>
-                  </View>
-                </View>
-
-                <Text style={styles.playerMetaText}>
-                  B: {item.bench_1rm}kg • S: {item.squat_1rm}kg • D: {item.deadlift_1rm}kg
-                </Text>
-              </View>
-
-              <View style={{ alignItems: 'flex-end' }}>
-                <Text style={styles.scoreVal}>{item.total_score} pts</Text>
-                <Text style={styles.percentileTag}>{item.percentile}</Text>
-              </View>
-            </View>
-            );
-          })
-        )}
-      </View>
     </ScrollView>
   );
 }
@@ -303,88 +338,221 @@ export default function RanksScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#000000',
+    backgroundColor: '#161618',
   },
   content: {
     paddingHorizontal: 20,
     paddingTop: 54,
     paddingBottom: 40,
   },
-  header: {
-    marginBottom: 18,
-  },
-  title: {
-    fontSize: 28,
-    fontWeight: '800',
-    color: '#FFFFFF',
-    letterSpacing: -0.5,
-  },
-  subtitle: {
-    fontSize: 13,
-    color: '#8E8E93',
-    marginTop: 4,
-  },
-  myRankCard: {
-    backgroundColor: '#1C1C1E',
-    borderRadius: 22,
-    padding: 16,
-    borderWidth: 1,
-    borderColor: '#2C2C2E',
-    marginBottom: 24,
-  },
-  myRankHeader: {
+  topNavRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 12,
-    marginBottom: 16,
+    justifyContent: 'flex-start',
+    marginBottom: 10,
   },
-  pfpWrapper: {
+  settingsBtn: {
+    width: 38,
+    height: 38,
+    borderRadius: 19,
+    backgroundColor: '#242427',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  profileHeroSection: {
+    alignItems: 'center',
+    marginBottom: 24,
+  },
+  pfpGlowWrapper: {
     position: 'relative',
+    marginBottom: 12,
   },
-  pfp: {
-    width: 52,
-    height: 52,
-    borderRadius: 26,
+  heroPfp: {
+    width: 80,
+    height: 80,
+    borderRadius: 40,
     borderWidth: 2,
-    borderColor: '#2C2C2E',
+    borderColor: '#38BDF8',
   },
-  onlineDot: {
+  onlineDotHero: {
     position: 'absolute',
     bottom: 2,
     right: 2,
-    width: 13,
-    height: 13,
-    borderRadius: 6.5,
-    backgroundColor: '#30D158',
+    width: 14,
+    height: 14,
+    borderRadius: 7,
+    backgroundColor: '#A3E635',
     borderWidth: 2,
-    borderColor: '#1C1C1E',
+    borderColor: '#161618',
   },
-  myUsername: {
-    fontSize: 18,
+  heroUsername: {
+    fontSize: 20,
     fontWeight: '800',
     color: '#FFFFFF',
   },
-  myPercentile: {
+  heroHandle: {
     fontSize: 13,
-    color: '#30D158',
-    fontWeight: '600',
+    color: '#9CA3AF',
     marginTop: 2,
   },
-  tierBadge: {
+  socialFollowRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 12,
+    marginTop: 10,
+  },
+  followText: {
+    fontSize: 12,
+    color: '#9CA3AF',
+  },
+  followNum: {
+    fontSize: 14,
+    fontWeight: '800',
+    color: '#FFFFFF',
+  },
+  followDivider: {
+    color: '#323236',
+  },
+  sectionHeaderTitle: {
+    fontSize: 17,
+    fontWeight: '800',
+    color: '#FFFFFF',
+    marginBottom: 12,
+  },
+  statsThreeGrid: {
+    flexDirection: 'row',
+    gap: 10,
+    marginBottom: 24,
+  },
+  statColumnCard: {
+    flex: 1,
+    backgroundColor: '#242427',
+    borderRadius: 18,
+    padding: 14,
+    alignItems: 'center',
+    gap: 6,
+    borderWidth: 1,
+    borderColor: '#323236',
+  },
+  statColValue: {
+    fontSize: 18,
+    fontWeight: '900',
+    color: '#FFFFFF',
+  },
+  statColLabel: {
+    fontSize: 10,
+    color: '#9CA3AF',
+    textAlign: 'center',
+  },
+  leaderboardTitleRow: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: 6,
-    paddingHorizontal: 12,
-    paddingVertical: 6,
-    borderRadius: 16,
+    marginBottom: 10,
   },
-  tierText: {
-    color: '#000000',
+  timeTabRow: {
+    flexDirection: 'row',
+    gap: 20,
+    marginBottom: 16,
+    borderBottomWidth: 1,
+    borderBottomColor: '#242427',
+    paddingBottom: 4,
+  },
+  timeTabBtn: {
+    position: 'relative',
+    paddingVertical: 6,
+  },
+  timeTabText: {
+    fontSize: 14,
+    fontWeight: '600',
+    color: '#9CA3AF',
+  },
+  timeTabTextActive: {
+    color: '#FFFFFF',
+    fontWeight: '800',
+  },
+  timeTabLine: {
+    position: 'absolute',
+    bottom: -5,
+    left: 0,
+    right: 0,
+    height: 3,
+    backgroundColor: '#38BDF8',
+    borderRadius: 1.5,
+  },
+  leaderboardList: {
+    gap: 10,
+  },
+  playerRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#242427',
+    borderRadius: 16,
+    padding: 12,
+    borderWidth: 1,
+    borderColor: '#323236',
+  },
+  playerRowMe: {
+    borderColor: '#38BDF8',
+    backgroundColor: 'rgba(56, 189, 248, 0.08)',
+  },
+  rankNumber: {
+    width: 28,
+    fontSize: 14,
+    fontWeight: '800',
+    color: '#9CA3AF',
+  },
+  rankTopThree: {
+    color: '#FBBF24',
+  },
+  pfpWrapperSmall: {
+    position: 'relative',
+  },
+  pfpSmall: {
+    width: 36,
+    height: 36,
+    borderRadius: 18,
+  },
+  onlineDotSmall: {
+    position: 'absolute',
+    bottom: 0,
+    right: 0,
+    width: 9,
+    height: 9,
+    borderRadius: 4.5,
+    backgroundColor: '#A3E635',
+    borderWidth: 1.5,
+    borderColor: '#161618',
+  },
+  playerUsername: {
+    fontSize: 14,
+    fontWeight: '700',
+    color: '#FFFFFF',
+  },
+  tierTag: {
+    borderWidth: 1,
+    paddingHorizontal: 6,
+    paddingVertical: 1,
+    borderRadius: 8,
+  },
+  tierTagText: {
+    fontSize: 9,
+    fontWeight: '800',
+  },
+  scoreVal: {
+    fontSize: 16,
     fontWeight: '900',
-    fontSize: 13,
+    color: '#FFFFFF',
+  },
+  myRankCard: {
+    backgroundColor: '#242427',
+    borderRadius: 22,
+    padding: 16,
+    borderWidth: 1,
+    borderColor: '#323236',
   },
   progressContainer: {
-    backgroundColor: '#2C2C2E',
+    backgroundColor: '#323236',
     borderRadius: 14,
     padding: 12,
     marginBottom: 14,
@@ -403,11 +571,11 @@ const styles = StyleSheet.create({
   progressPctText: {
     fontSize: 12,
     fontWeight: '800',
-    color: '#30D158',
+    color: '#38BDF8',
   },
   progressBarTrack: {
     height: 8,
-    backgroundColor: '#1C1C1E',
+    backgroundColor: '#161618',
     borderRadius: 4,
     overflow: 'hidden',
   },
@@ -415,18 +583,13 @@ const styles = StyleSheet.create({
     height: '100%',
     borderRadius: 4,
   },
-  progressSubText: {
-    fontSize: 11,
-    color: '#8E8E93',
-    marginTop: 6,
-  },
   liftGrid: {
     flexDirection: 'row',
     gap: 8,
   },
   liftBox: {
     flex: 1,
-    backgroundColor: '#2C2C2E',
+    backgroundColor: '#323236',
     borderRadius: 14,
     padding: 10,
     alignItems: 'center',
@@ -434,7 +597,7 @@ const styles = StyleSheet.create({
   liftName: {
     fontSize: 10,
     fontWeight: '800',
-    color: '#8E8E93',
+    color: '#9CA3AF',
   },
   liftVal: {
     fontSize: 15,
@@ -444,94 +607,7 @@ const styles = StyleSheet.create({
   },
   liftSub: {
     fontSize: 10,
-    color: '#30D158',
-    marginTop: 2,
-  },
-  tableHeaderRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8,
-    marginBottom: 12,
-  },
-  tableHeaderTitle: {
-    fontSize: 16,
-    fontWeight: '700',
-    color: '#FFFFFF',
-  },
-  leaderboardList: {
-    gap: 10,
-  },
-  playerRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: '#1C1C1E',
-    borderRadius: 18,
-    padding: 12,
-    borderWidth: 1,
-    borderColor: '#2C2C2E',
-  },
-  playerRowMe: {
-    borderColor: '#30D158',
-    backgroundColor: 'rgba(48, 209, 88, 0.08)',
-  },
-  rankNumber: {
-    width: 28,
-    fontSize: 15,
-    fontWeight: '800',
-    color: '#8E8E93',
-    textAlign: 'center',
-  },
-  rankTopThree: {
-    color: '#FF9F0C',
-  },
-  pfpWrapperSmall: {
-    position: 'relative',
-  },
-  pfpSmall: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-  },
-  onlineDotSmall: {
-    position: 'absolute',
-    bottom: 0,
-    right: 0,
-    width: 10,
-    height: 10,
-    borderRadius: 5,
-    backgroundColor: '#30D158',
-    borderWidth: 1.5,
-    borderColor: '#1C1C1E',
-  },
-  playerUsername: {
-    fontSize: 14,
-    fontWeight: '700',
-    color: '#FFFFFF',
-  },
-  tierTag: {
-    borderWidth: 1,
-    paddingHorizontal: 6,
-    paddingVertical: 1,
-    borderRadius: 8,
-  },
-  tierTagText: {
-    fontSize: 10,
-    fontWeight: '800',
-  },
-  playerMetaText: {
-    fontSize: 12,
-    color: '#8E8E93',
-    marginTop: 2,
-  },
-  scoreVal: {
-    fontSize: 15,
-    fontWeight: '800',
-    color: '#FFFFFF',
-  },
-  percentileTag: {
-    fontSize: 11,
-    color: '#30D158',
-    fontWeight: '700',
+    color: '#38BDF8',
     marginTop: 2,
   },
 });

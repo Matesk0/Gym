@@ -7,11 +7,11 @@ export default function TabLayout() {
     <Tabs
       screenOptions={{
         headerShown: false,
-        tabBarActiveTintColor: '#30D158', // iOS Vivid Green
-        tabBarInactiveTintColor: '#8E8E93', // iOS Gray
+        tabBarActiveTintColor: '#38BDF8', // Cyan Accent matching screenshots
+        tabBarInactiveTintColor: '#71717A',
         tabBarStyle: {
-          backgroundColor: '#1C1C1E', // iOS Grouped Secondary
-          borderTopColor: '#2C2C2E',
+          backgroundColor: '#161618',
+          borderTopColor: '#242427',
           height: 65,
           paddingBottom: 10,
           paddingTop: 8,

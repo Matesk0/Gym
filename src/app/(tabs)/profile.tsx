@@ -12,14 +12,28 @@ import {
 } from 'react-native';
 import { useAuth } from '../../context/AuthContext';
 import { useRouter } from 'expo-router';
-import { User, Lock, Eye, LogOut, Save, Scale, Sparkles } from 'lucide-react-native';
+import {
+  User,
+  Lock,
+  Eye,
+  LogOut,
+  Save,
+  Scale,
+  Sparkles,
+  Check,
+  BarChart2,
+  Flame,
+  Coins,
+  Settings,
+} from 'lucide-react-native';
 
 export default function ProfileScreen() {
   const router = useRouter();
   const { profile, updateProfile, signOut } = useAuth();
 
-  const [username, setUsername] = useState(profile?.username || 'Alex_LiftMaster');
-  const [bodyweight, setBodyweight] = useState(profile?.bodyweight_kg?.toString() || '78.5');
+  const [username, setUsername] = useState(profile?.username || 'Polly Strong');
+  const [bodyweight, setBodyweight] = useState(profile?.bodyweight_kg?.toString() || '58');
+  const [heightCm, setHeightCm] = useState<number>(159);
   const [isPublicLogs, setIsPublicLogs] = useState(profile?.is_public_logs || false);
   const [isOnlineStatus, setIsOnlineStatus] = useState(profile?.is_online ?? true);
 
@@ -45,6 +59,15 @@ export default function ProfileScreen() {
 
   return (
     <ScrollView style={styles.container} contentContainerStyle={styles.content}>
+      {/* Top Bar with Settings */}
+      <View style={styles.topNavRow}>
+        <Text style={styles.headerTitle}>My Profile</Text>
+        <TouchableOpacity style={styles.settingsBtn}>
+          <Settings color="#FFFFFF" size={18} />
+        </TouchableOpacity>
+      </View>
+
+      {/* User Avatar & Followers Header matching Screenshot 1 Screen 3 */}
       <View style={styles.heroSection}>
         <View style={styles.avatarWrapper}>
           <Image
@@ -55,92 +78,127 @@ export default function ProfileScreen() {
         </View>
 
         <Text style={styles.heroName}>{username}</Text>
-        <View style={styles.rankPill}>
-          <Sparkles color="#FF9F0C" size={14} />
-          <Text style={styles.rankPillText}>{profile?.overall_rank || 'Gold Tier Athlete'}</Text>
+        <Text style={styles.heroHandle}>@fitness_girl97</Text>
+
+        <View style={styles.socialFollowRow}>
+          <Text style={styles.followText}><Text style={styles.followNum}>15</Text> Followers</Text>
+          <Text style={styles.followDivider}>|</Text>
+          <Text style={styles.followText}><Text style={styles.followNum}>24</Text> Following</Text>
         </View>
       </View>
 
+      {/* "My statistics" 3 Columns Section matching Screenshot 1 Screen 3 */}
+      <Text style={styles.sectionHeaderTitle}>My statistics</Text>
+      <View style={styles.statsThreeGrid}>
+        <View style={styles.statColumnCard}>
+          <BarChart2 color="#C084FC" size={22} />
+          <Text style={styles.statColValue}>149</Text>
+          <Text style={styles.statColLabel}>Workouts total</Text>
+        </View>
+
+        <View style={styles.statColumnCard}>
+          <Flame color="#38BDF8" size={22} />
+          <Text style={styles.statColValue}>18 900</Text>
+          <Text style={styles.statColLabel}>Calories burnt</Text>
+        </View>
+
+        <View style={styles.statColumnCard}>
+          <Coins color="#A3E635" size={22} />
+          <Text style={styles.statColValue}>53</Text>
+          <Text style={styles.statColLabel}>Rewards collected</Text>
+        </View>
+      </View>
+
+      {/* Height & Weight Manager Section matching Screenshot 2 Bottom-Left */}
+      <View style={styles.biometricsCard}>
+        <Text style={styles.bioTitle}>Your height & weight?</Text>
+        <Text style={styles.bioSub}>Let us know you better for relative strength score</Text>
+
+        <View style={styles.bioValuesRow}>
+          <View style={styles.bioItem}>
+            <Text style={styles.bioItemLabel}>Height</Text>
+            <View style={styles.bioPillActive}>
+              <Text style={styles.bioPillTextActive}>{heightCm} cm</Text>
+              <View style={styles.checkDot}>
+                <Check color="#FFFFFF" size={10} />
+              </View>
+            </View>
+          </View>
+
+          <View style={styles.bioItem}>
+            <Text style={styles.bioItemLabel}>Weight</Text>
+            <View style={styles.bioInputWrapper}>
+              <TextInput
+                style={styles.bioInputText}
+                value={bodyweight}
+                onChangeText={setBodyweight}
+                keyboardType="numeric"
+              />
+              <Text style={styles.bioUnitText}>kg</Text>
+            </View>
+          </View>
+        </View>
+      </View>
+
+      {/* Account Settings Form Card */}
       <View style={styles.sectionCard}>
-        <Text style={styles.sectionHeaderTitle}>Profile & Bodyweight Stats</Text>
+        <Text style={styles.sectionHeaderTitle}>Profile & Privacy Controls</Text>
 
         <View style={styles.inputGroup}>
           <Text style={styles.inputLabel}>Username</Text>
           <View style={styles.inputWrapper}>
-            <User color="#8E8E93" size={18} />
+            <User color="#9CA3AF" size={18} />
             <TextInput
               style={styles.input}
               value={username}
               onChangeText={setUsername}
-              placeholderTextColor="#8E8E93"
+              placeholderTextColor="#9CA3AF"
             />
           </View>
         </View>
-
-        <View style={styles.inputGroup}>
-          <Text style={styles.inputLabel}>Bodyweight (KG) - Used for Strength Percentile</Text>
-          <View style={styles.inputWrapper}>
-            <Scale color="#8E8E93" size={18} />
-            <TextInput
-              style={styles.input}
-              value={bodyweight}
-              onChangeText={setBodyweight}
-              keyboardType="numeric"
-              placeholderTextColor="#8E8E93"
-            />
-          </View>
-        </View>
-      </View>
-
-      <View style={styles.sectionCard}>
-        <Text style={styles.sectionHeaderTitle}>Privacy & Workout Security</Text>
 
         <View style={styles.switchRow}>
           <View style={styles.switchLeft}>
-            {isPublicLogs ? <Eye color="#30D158" size={20} /> : <Lock color="#FF9F0C" size={20} />}
+            {isPublicLogs ? <Eye color="#38BDF8" size={20} /> : <Lock color="#FBBF24" size={20} />}
             <View style={{ flex: 1 }}>
-              <Text style={styles.switchTitle}>Allow Others to See Workout Logs</Text>
+              <Text style={styles.switchTitle}>Allow Public Workout Logs</Text>
               <Text style={styles.switchSub}>
-                {isPublicLogs
-                  ? 'Your workout logs are visible on your public profile'
-                  : 'Workout logs are strictly secret and hidden'}
+                {isPublicLogs ? 'Visible on your public profile' : 'Logs are secret & private'}
               </Text>
             </View>
           </View>
           <Switch
             value={isPublicLogs}
             onValueChange={setIsPublicLogs}
-            trackColor={{ false: '#2C2C2E', true: '#30D158' }}
+            trackColor={{ false: '#323236', true: '#38BDF8' }}
             thumbColor="#FFFFFF"
           />
         </View>
 
-        <View style={[styles.switchRow, { marginTop: 12 }]}>
+        <View style={[styles.switchRow, { marginTop: 10 }]}>
           <View style={styles.switchLeft}>
-            <View style={[styles.dotPreview, { backgroundColor: isOnlineStatus ? '#30D158' : '#8E8E93' }]} />
+            <View style={[styles.dotPreview, { backgroundColor: isOnlineStatus ? '#A3E635' : '#9CA3AF' }]} />
             <View style={{ flex: 1 }}>
-              <Text style={styles.switchTitle}>Online Status Indicator</Text>
-              <Text style={styles.switchSub}>
-                Show green dot next to PFP on global leaderboard
-              </Text>
+              <Text style={styles.switchTitle}>Online Status Badge</Text>
+              <Text style={styles.switchSub}>Display green dot on global leaderboard</Text>
             </View>
           </View>
           <Switch
             value={isOnlineStatus}
             onValueChange={setIsOnlineStatus}
-            trackColor={{ false: '#2C2C2E', true: '#30D158' }}
+            trackColor={{ false: '#323236', true: '#38BDF8' }}
             thumbColor="#FFFFFF"
           />
         </View>
       </View>
 
       <TouchableOpacity style={styles.saveBtn} onPress={handleSaveProfile}>
-        <Save color="#000000" size={20} />
-        <Text style={styles.saveBtnText}>Save Profile Settings</Text>
+        <Save color="#161618" size={18} />
+        <Text style={styles.saveBtnText}>Save Settings</Text>
       </TouchableOpacity>
 
       <TouchableOpacity style={styles.logoutBtn} onPress={handleSignOut}>
-        <LogOut color="#FF453A" size={20} />
+        <LogOut color="#F87171" size={18} />
         <Text style={styles.logoutBtnText}>Sign Out Account</Text>
       </TouchableOpacity>
     </ScrollView>
@@ -150,7 +208,7 @@ export default function ProfileScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#000000',
+    backgroundColor: '#161618',
   },
   content: {
     paddingHorizontal: 20,
@@ -158,66 +216,187 @@ const styles = StyleSheet.create({
     paddingBottom: 40,
     gap: 20,
   },
+  topNavRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
+  headerTitle: {
+    fontSize: 24,
+    fontWeight: '800',
+    color: '#FFFFFF',
+  },
+  settingsBtn: {
+    width: 38,
+    height: 38,
+    borderRadius: 19,
+    backgroundColor: '#242427',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
   heroSection: {
     alignItems: 'center',
   },
   avatarWrapper: {
     position: 'relative',
-    marginBottom: 12,
+    marginBottom: 10,
   },
   avatar: {
-    width: 84,
-    height: 84,
-    borderRadius: 42,
-    borderWidth: 3,
-    borderColor: '#2C2C2E',
+    width: 80,
+    height: 80,
+    borderRadius: 40,
+    borderWidth: 2,
+    borderColor: '#38BDF8',
   },
   onlineDot: {
     position: 'absolute',
-    bottom: 4,
-    right: 4,
+    bottom: 2,
+    right: 2,
+    width: 14,
+    height: 14,
+    borderRadius: 7,
+    backgroundColor: '#A3E635',
+    borderWidth: 2,
+    borderColor: '#161618',
+  },
+  heroName: {
+    fontSize: 20,
+    fontWeight: '800',
+    color: '#FFFFFF',
+  },
+  heroHandle: {
+    fontSize: 13,
+    color: '#9CA3AF',
+    marginTop: 2,
+  },
+  socialFollowRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 12,
+    marginTop: 10,
+  },
+  followText: {
+    fontSize: 12,
+    color: '#9CA3AF',
+  },
+  followNum: {
+    fontSize: 14,
+    fontWeight: '800',
+    color: '#FFFFFF',
+  },
+  followDivider: {
+    color: '#323236',
+  },
+  sectionHeaderTitle: {
+    fontSize: 17,
+    fontWeight: '800',
+    color: '#FFFFFF',
+  },
+  statsThreeGrid: {
+    flexDirection: 'row',
+    gap: 10,
+  },
+  statColumnCard: {
+    flex: 1,
+    backgroundColor: '#242427',
+    borderRadius: 18,
+    padding: 14,
+    alignItems: 'center',
+    gap: 6,
+    borderWidth: 1,
+    borderColor: '#323236',
+  },
+  statColValue: {
+    fontSize: 18,
+    fontWeight: '900',
+    color: '#FFFFFF',
+  },
+  statColLabel: {
+    fontSize: 10,
+    color: '#9CA3AF',
+    textAlign: 'center',
+  },
+  biometricsCard: {
+    backgroundColor: '#242427',
+    borderRadius: 20,
+    padding: 16,
+    borderWidth: 1,
+    borderColor: '#323236',
+  },
+  bioTitle: {
+    fontSize: 16,
+    fontWeight: '800',
+    color: '#FFFFFF',
+  },
+  bioSub: {
+    fontSize: 12,
+    color: '#9CA3AF',
+    marginTop: 2,
+    marginBottom: 12,
+  },
+  bioValuesRow: {
+    flexDirection: 'row',
+    gap: 12,
+  },
+  bioItem: {
+    flex: 1,
+    gap: 6,
+  },
+  bioItemLabel: {
+    fontSize: 12,
+    color: '#9CA3AF',
+    fontWeight: '600',
+  },
+  bioPillActive: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    backgroundColor: '#323236',
+    borderRadius: 14,
+    paddingHorizontal: 12,
+    paddingVertical: 10,
+    borderWidth: 1,
+    borderColor: '#38BDF8',
+  },
+  bioPillTextActive: {
+    fontSize: 16,
+    fontWeight: '800',
+    color: '#FFFFFF',
+  },
+  checkDot: {
     width: 18,
     height: 18,
     borderRadius: 9,
-    backgroundColor: '#30D158',
-    borderWidth: 3,
-    borderColor: '#000000',
+    backgroundColor: '#38BDF8',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
-  heroName: {
-    fontSize: 24,
-    fontWeight: '800',
-    color: '#FFFFFF',
-    letterSpacing: -0.5,
-  },
-  rankPill: {
+  bioInputWrapper: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 6,
-    backgroundColor: 'rgba(255, 159, 12, 0.15)',
+    backgroundColor: '#323236',
+    borderRadius: 14,
     paddingHorizontal: 12,
-    paddingVertical: 6,
-    borderRadius: 16,
-    marginTop: 6,
-    borderWidth: 1,
-    borderColor: 'rgba(255, 159, 12, 0.3)',
+    height: 44,
   },
-  rankPillText: {
-    color: '#FF9F0C',
-    fontWeight: '700',
-    fontSize: 13,
+  bioInputText: {
+    flex: 1,
+    fontSize: 16,
+    fontWeight: '800',
+    color: '#FFFFFF',
+  },
+  bioUnitText: {
+    fontSize: 14,
+    fontWeight: '600',
+    color: '#9CA3AF',
   },
   sectionCard: {
-    backgroundColor: '#1C1C1E',
-    borderRadius: 22,
+    backgroundColor: '#242427',
+    borderRadius: 20,
     padding: 16,
     borderWidth: 1,
-    borderColor: '#2C2C2E',
+    borderColor: '#323236',
     gap: 14,
-  },
-  sectionHeaderTitle: {
-    fontSize: 16,
-    fontWeight: '700',
-    color: '#FFFFFF',
   },
   inputGroup: {
     gap: 6,
@@ -225,15 +404,15 @@ const styles = StyleSheet.create({
   inputLabel: {
     fontSize: 12,
     fontWeight: '600',
-    color: '#8E8E93',
+    color: '#9CA3AF',
   },
   inputWrapper: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#2C2C2E',
+    backgroundColor: '#323236',
     borderRadius: 14,
     paddingHorizontal: 12,
-    height: 48,
+    height: 46,
     gap: 10,
     borderWidth: 1,
     borderColor: '#3A3A3C',
@@ -257,9 +436,9 @@ const styles = StyleSheet.create({
     paddingRight: 10,
   },
   dotPreview: {
-    width: 14,
-    height: 14,
-    borderRadius: 7,
+    width: 12,
+    height: 12,
+    borderRadius: 6,
   },
   switchTitle: {
     fontSize: 14,
@@ -268,7 +447,7 @@ const styles = StyleSheet.create({
   },
   switchSub: {
     fontSize: 12,
-    color: '#8E8E93',
+    color: '#9CA3AF',
     marginTop: 2,
   },
   saveBtn: {
@@ -276,12 +455,12 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     gap: 8,
-    backgroundColor: '#30D158',
-    height: 52,
-    borderRadius: 18,
+    backgroundColor: '#38BDF8',
+    height: 50,
+    borderRadius: 16,
   },
   saveBtnText: {
-    color: '#000000',
+    color: '#161618',
     fontSize: 16,
     fontWeight: '800',
   },
@@ -290,14 +469,14 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     gap: 8,
-    backgroundColor: 'rgba(255, 69, 58, 0.12)',
-    height: 50,
-    borderRadius: 18,
+    backgroundColor: 'rgba(248, 113, 113, 0.12)',
+    height: 48,
+    borderRadius: 16,
     borderWidth: 1,
-    borderColor: 'rgba(255, 69, 58, 0.3)',
+    borderColor: 'rgba(248, 113, 113, 0.3)',
   },
   logoutBtnText: {
-    color: '#FF453A',
+    color: '#F87171',
     fontSize: 15,
     fontWeight: '700',
   },
