@@ -1,9 +1,74 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Image } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Image, TextInput } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useAuth } from '../../context/AuthContext';
 import { isSupabaseConfigured, supabase } from '../../lib/supabase';
-import { Dumbbell, Flame, Trophy, ChevronRight, Zap, Award, Calendar, Sparkles, Clock, Lock, Eye, History } from 'lucide-react-native';
+import {
+  Bell,
+  Search,
+  SlidersHorizontal,
+  Star,
+  Play,
+  Flame,
+  Trophy,
+  ChevronRight,
+  Zap,
+  Award,
+  Calendar,
+  Clock,
+  Lock,
+  Eye,
+  History,
+  Sparkles,
+} from 'lucide-react-native';
+
+interface PopularWorkout {
+  id: string;
+  title: string;
+  trainer: string;
+  rating: number;
+  isPremium: boolean;
+  image: string;
+  duration: string;
+  calories: number;
+  category: string;
+}
+
+const POPULAR_WORKOUTS: PopularWorkout[] = [
+  {
+    id: 'pw1',
+    title: 'HIIT Cardio for beginners',
+    trainer: 'Tadeas Izo',
+    rating: 4.9,
+    isPremium: true,
+    image: 'https://images.unsplash.com/photo-1517838277536-f5f99be501cd?w=600',
+    duration: '30 min',
+    calories: 300,
+    category: 'Cardio',
+  },
+  {
+    id: 'pw2',
+    title: '10-minute morning yoga',
+    trainer: 'Nama Ste',
+    rating: 4.7,
+    isPremium: false,
+    image: 'https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?w=600',
+    duration: '10 min',
+    calories: 110,
+    category: 'Flexibility',
+  },
+  {
+    id: 'pw3',
+    title: 'Dancing therapy',
+    trainer: 'Daria Pike',
+    rating: 4.9,
+    isPremium: true,
+    image: 'https://images.unsplash.com/photo-1508214751196-bcfd4ca60f91?w=600',
+    duration: '25 min',
+    calories: 240,
+    category: 'Aerobic',
+  },
+];
 
 interface HistorySession {
   id: string;
@@ -31,19 +96,13 @@ const RECENT_WORKOUT_HISTORY: HistorySession[] = [
     totalVolumeKg: 6850,
     isPublic: true,
   },
-  {
-    id: 'w3',
-    title: 'Pull & Lats Destroyer',
-    date: '3 days ago',
-    exerciseCount: 4,
-    totalVolumeKg: 5120,
-    isPublic: true,
-  },
 ];
 
 export default function HomeScreen() {
   const router = useRouter();
   const { profile, user } = useAuth();
+  const [activeSubTab, setActiveSubTab] = useState<'Discover' | 'Trainers' | 'My plan'>('Discover');
+  const [searchQuery, setSearchQuery] = useState('');
   const [totalVolume, setTotalVolume] = useState<number>(12450);
   const [sessionCount, setSessionCount] = useState<number>(4);
   const [historyLogs, setHistoryLogs] = useState<HistorySession[]>(RECENT_WORKOUT_HISTORY);
@@ -98,123 +157,164 @@ export default function HomeScreen() {
     };
   }, [user]);
 
+  const filteredWorkouts = POPULAR_WORKOUTS.filter((w) => {
+    if (!searchQuery.trim()) return true;
+    const q = searchQuery.toLowerCase();
+    return w.title.toLowerCase().includes(q) || w.trainer.toLowerCase().includes(q);
+  });
+
   return (
     <ScrollView style={styles.container} contentContainerStyle={styles.content}>
-      {/* Header Profile Section */}
+      {/* Header matching Screenshot 1 (Avatar + Good morning + Bell icon) */}
       <View style={styles.headerRow}>
         <View style={styles.userMeta}>
-          <View style={styles.avatarContainer}>
-            <Image
-              source={{ uri: profile?.avatar_url || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150' }}
-              style={styles.avatar}
-            />
-            {/* iOS Green Dot Online Indicator */}
-            {profile?.is_online && <View style={styles.onlineDot} />}
-          </View>
+          <Image
+            source={{ uri: profile?.avatar_url || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150' }}
+            style={styles.avatar}
+          />
           <View>
-            <Text style={styles.welcomeText}>Welcome back,</Text>
-            <Text style={styles.usernameText}>{profile?.username || 'Athlete'}</Text>
+            <Text style={styles.greetingText}>Good morning,</Text>
+            <Text style={styles.usernameText}>{profile?.username || 'Polly Strong'}</Text>
           </View>
         </View>
 
-        <TouchableOpacity style={styles.rankBadge} onPress={() => router.push('/(tabs)/ranks')}>
-          <Trophy color="#FF9F0C" size={15} />
-          <Text style={styles.rankText}>{profile?.overall_rank || 'Gold'}</Text>
+        <TouchableOpacity style={styles.bellBtn}>
+          <Bell color="#FFFFFF" size={20} />
+          <View style={styles.bellDot} />
         </TouchableOpacity>
       </View>
 
-      {/* Quick Start Action Card - iOS Accent */}
-      <TouchableOpacity style={styles.startCard} onPress={() => router.push('/(tabs)/workout')}>
-        <View style={styles.startCardTextCol}>
-          <Text style={styles.startCardTitle}>Log Today's Workout</Text>
-          <Text style={styles.startCardSubtitle}>Track sets, weight, reps & update muscle recovery</Text>
+      {/* Weekly Goal Progress Card matching Screenshot 1 */}
+      <View style={styles.goalCard}>
+        <Text style={styles.goalTitle}>You've done 3 workouts this week!</Text>
+        <Text style={styles.goalSubtitle}>75% of your weekly goal is completed.</Text>
+        <View style={styles.goalTrack}>
+          <View style={[styles.goalFill, { width: '75%' }]} />
         </View>
-        <View style={styles.startCardIcon}>
-          <Dumbbell color="#000000" size={26} />
+      </View>
+
+      {/* Sub-Tab Navigation (Discover | Trainers | My plan) */}
+      <View style={styles.subTabRow}>
+        {(['Discover', 'Trainers', 'My plan'] as const).map((tab) => (
+          <TouchableOpacity
+            key={tab}
+            style={styles.subTabBtn}
+            onPress={() => setActiveSubTab(tab)}
+          >
+            <Text style={[styles.subTabText, activeSubTab === tab && styles.subTabTextActive]}>
+              {tab}
+            </Text>
+            {activeSubTab === tab && <View style={styles.subTabLine} />}
+          </TouchableOpacity>
+        ))}
+      </View>
+
+      {/* Search Input Bar with Filter Button */}
+      <View style={styles.searchRow}>
+        <View style={styles.searchBox}>
+          <Search color="#9CA3AF" size={18} />
+          <TextInput
+            style={styles.searchInput}
+            placeholder="Search workouts..."
+            placeholderTextColor="#9CA3AF"
+            value={searchQuery}
+            onChangeText={setSearchQuery}
+          />
+        </View>
+        <TouchableOpacity style={styles.filterBtn}>
+          <SlidersHorizontal color="#FFFFFF" size={18} />
+        </TouchableOpacity>
+      </View>
+
+      {/* Most Popular Workouts Horizontal Carousel */}
+      <View style={styles.sectionHeader}>
+        <Text style={styles.sectionTitle}>Most popular workouts</Text>
+        <TouchableOpacity onPress={() => router.push('/(tabs)/fatigue')}>
+          <Text style={styles.seeAllText}>See all</Text>
+        </TouchableOpacity>
+      </View>
+
+      <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.carouselScroll}>
+        {filteredWorkouts.map((item) => (
+          <TouchableOpacity
+            key={item.id}
+            style={styles.workoutCard}
+            onPress={() => router.push('/(tabs)/workout')}
+          >
+            <View style={styles.cardImageContainer}>
+              <Image source={{ uri: item.image }} style={styles.cardImage} />
+
+              {item.isPremium && (
+                <View style={styles.premiumBadge}>
+                  <Text style={styles.premiumText}>Premium</Text>
+                </View>
+              )}
+
+              <View style={styles.ratingBadge}>
+                <Star color="#FBBF24" size={12} fill="#FBBF24" />
+                <Text style={styles.ratingText}>{item.rating}</Text>
+              </View>
+            </View>
+
+            <View style={styles.cardInfo}>
+              <Text style={styles.cardTitle} numberOfLines={1}>
+                {item.title}
+              </Text>
+              <Text style={styles.cardAuthor}>{item.trainer}</Text>
+            </View>
+          </TouchableOpacity>
+        ))}
+      </ScrollView>
+
+      {/* Quick Start Action Card */}
+      <TouchableOpacity style={styles.quickStartCard} onPress={() => router.push('/(tabs)/workout')}>
+        <View style={styles.quickStartTextCol}>
+          <Text style={styles.quickStartTitle}>Start Active Workout</Text>
+          <Text style={styles.quickStartSubtitle}>Log sets, reps, weight & start rest timer</Text>
+        </View>
+        <View style={styles.quickStartPlayBtn}>
+          <Play color="#161618" size={22} fill="#161618" />
         </View>
       </TouchableOpacity>
 
-      {/* Muscle Fatigue Status Glance */}
+      {/* Muscle Recovery Glance Card */}
       <View style={styles.sectionHeader}>
-        <Text style={styles.sectionTitle}>Muscle Recovery Overview</Text>
+        <Text style={styles.sectionTitle}>Muscle Recovery Glance</Text>
         <TouchableOpacity onPress={() => router.push('/(tabs)/fatigue')}>
-          <Text style={styles.seeAllText}>Open MuscleWiki Map</Text>
+          <Text style={styles.seeAllText}>Open Heatmap</Text>
         </TouchableOpacity>
       </View>
 
       <TouchableOpacity style={styles.fatigueCard} onPress={() => router.push('/(tabs)/fatigue')}>
         <View style={styles.fatigueCardHeader}>
           <View style={styles.fatigueIconBadge}>
-            <Flame color="#e51f1f" size={22} />
+            <Flame color="#F87171" size={22} />
           </View>
           <View style={{ flex: 1 }}>
-            <Text style={styles.fatigueCardTitle}>Active Muscle Breakdown</Text>
-            <Text style={styles.fatigueCardSubtitle}>2 muscle heads in deep repair</Text>
+            <Text style={styles.fatigueCardTitle}>Active Muscle Repair</Text>
+            <Text style={styles.fatigueCardSubtitle}>Quads & Upper Chest in deep recovery</Text>
           </View>
-          <ChevronRight color="#8E8E93" size={20} />
+          <ChevronRight color="#9CA3AF" size={20} />
         </View>
 
         <View style={styles.fatiguePillRow}>
-          <View style={[styles.fatiguePill, { borderColor: '#e51f1f', backgroundColor: 'rgba(229,31,31,0.1)' }]}>
-            <View style={[styles.pillDot, { backgroundColor: '#e51f1f' }]} />
-            <Text style={[styles.pillText, { color: '#e51f1f' }]}>Quads (15% - Exhausted)</Text>
+          <View style={[styles.fatiguePill, { borderColor: '#F87171', backgroundColor: 'rgba(248, 113, 113, 0.12)' }]}>
+            <View style={[styles.pillDot, { backgroundColor: '#F87171' }]} />
+            <Text style={[styles.pillText, { color: '#F87171' }]}>Quads (15% Exhausted)</Text>
           </View>
-
-          <View style={[styles.fatiguePill, { borderColor: '#f2a134', backgroundColor: 'rgba(242,161,52,0.1)' }]}>
-            <View style={[styles.pillDot, { backgroundColor: '#f2a134' }]} />
-            <Text style={[styles.pillText, { color: '#f2a134' }]}>Upper Chest (35% - Heavy Fatigue)</Text>
-          </View>
-
-          <View style={[styles.fatiguePill, { borderColor: '#bbdb44', backgroundColor: 'rgba(187,219,68,0.1)' }]}>
-            <View style={[styles.pillDot, { backgroundColor: '#bbdb44' }]} />
-            <Text style={[styles.pillText, { color: '#bbdb44' }]}>Lower Back (75% - Mostly Recovered)</Text>
-          </View>
-
-          <View style={[styles.fatiguePill, { borderColor: '#44ce1b', backgroundColor: 'rgba(68,206,27,0.1)' }]}>
-            <View style={[styles.pillDot, { backgroundColor: '#44ce1b' }]} />
-            <Text style={[styles.pillText, { color: '#44ce1b' }]}>Lats (95% - Prime State)</Text>
+          <View style={[styles.fatiguePill, { borderColor: '#A3E635', backgroundColor: 'rgba(163, 230, 53, 0.12)' }]}>
+            <View style={[styles.pillDot, { backgroundColor: '#A3E635' }]} />
+            <Text style={[styles.pillText, { color: '#A3E635' }]}>Lats (95% Prime)</Text>
           </View>
         </View>
       </TouchableOpacity>
 
-      {/* Weekly Stats Grid */}
-      <Text style={[styles.sectionTitle, { marginTop: 24 }]}>This Week's Pulse</Text>
-
-      <View style={styles.statsGrid}>
-        <View style={styles.statCard}>
-          <Zap color="#30D158" size={20} />
-          <Text style={styles.statVal}>{totalVolume.toLocaleString()} kg</Text>
-          <Text style={styles.statLbl}>Total Volume</Text>
-        </View>
-
-        <View style={styles.statCard}>
-          <Calendar color="#0A84FF" size={20} />
-          <Text style={styles.statVal}>{sessionCount} Sessions</Text>
-          <Text style={styles.statLbl}>Workouts Logged</Text>
-        </View>
-
-        <View style={styles.statCard}>
-          <Award color="#FF9F0C" size={20} />
-          <Text style={styles.statVal}>
-            {profile?.overall_rank === 'Grandmaster'
-              ? 'Top 0.1%'
-              : profile?.overall_rank === 'Master'
-              ? 'Top 0.8%'
-              : 'Top 18%'}
-          </Text>
-          <Text style={styles.statLbl}>World Strength Rank</Text>
-        </View>
-      </View>
-
-      {/* Workout History Feed */}
-      <View style={[styles.sectionHeader, { marginTop: 24 }]}>
+      {/* Recent Workout History */}
+      <View style={[styles.sectionHeader, { marginTop: 20 }]}>
         <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
-          <History color="#30D158" size={18} />
+          <History color="#38BDF8" size={18} />
           <Text style={styles.sectionTitle}>Recent Workout History</Text>
         </View>
-        <TouchableOpacity onPress={() => router.push('/(tabs)/workout')}>
-          <Text style={styles.seeAllText}>Log New</Text>
-        </TouchableOpacity>
       </View>
 
       <View style={styles.historyList}>
@@ -224,14 +324,14 @@ export default function HomeScreen() {
               <View style={{ flex: 1 }}>
                 <Text style={styles.historyTitle}>{log.title}</Text>
                 <View style={styles.historyDateRow}>
-                  <Clock color="#8E8E93" size={12} />
+                  <Clock color="#9CA3AF" size={12} />
                   <Text style={styles.historyDateText}>{log.date}</Text>
                 </View>
               </View>
 
               <View style={[styles.privacyBadge, log.isPublic ? styles.privacyBadgePublic : styles.privacyBadgePrivate]}>
-                {log.isPublic ? <Eye color="#30D158" size={12} /> : <Lock color="#FF9F0C" size={12} />}
-                <Text style={[styles.privacyBadgeText, { color: log.isPublic ? '#30D158' : '#FF9F0C' }]}>
+                {log.isPublic ? <Eye color="#38BDF8" size={12} /> : <Lock color="#FBBF24" size={12} />}
+                <Text style={[styles.privacyBadgeText, { color: log.isPublic ? '#38BDF8' : '#FBBF24' }]}>
                   {log.isPublic ? 'Public' : 'Private'}
                 </Text>
               </View>
@@ -239,7 +339,7 @@ export default function HomeScreen() {
 
             <View style={styles.historyCardBottom}>
               <Text style={styles.historyMetaText}>
-                {log.exerciseCount} Sets Logged • {log.totalVolumeKg.toLocaleString()} kg Total Volume
+                {log.exerciseCount} Sets • {log.totalVolumeKg.toLocaleString()} kg Volume
               </Text>
             </View>
           </View>
@@ -252,7 +352,7 @@ export default function HomeScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#000000', // iOS OLED True Dark
+    backgroundColor: '#161618',
   },
   content: {
     paddingHorizontal: 20,
@@ -263,91 +363,139 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    marginBottom: 22,
+    marginBottom: 20,
   },
   userMeta: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: 12,
   },
-  avatarContainer: {
-    position: 'relative',
-  },
   avatar: {
-    width: 48,
-    height: 48,
-    borderRadius: 24,
+    width: 44,
+    height: 44,
+    borderRadius: 22,
     borderWidth: 2,
-    borderColor: '#2C2C2E',
+    borderColor: '#323236',
   },
-  onlineDot: {
-    position: 'absolute',
-    bottom: 2,
-    right: 2,
-    width: 12,
-    height: 12,
-    borderRadius: 6,
-    backgroundColor: '#30D158',
-    borderWidth: 2,
-    borderColor: '#000000',
-  },
-  welcomeText: {
+  greetingText: {
     fontSize: 13,
-    color: '#8E8E93',
+    color: '#9CA3AF',
   },
   usernameText: {
     fontSize: 18,
     fontWeight: '800',
     color: '#FFFFFF',
-    letterSpacing: -0.3,
   },
-  rankBadge: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 6,
-    backgroundColor: 'rgba(255, 159, 12, 0.15)',
-    borderWidth: 1,
-    borderColor: 'rgba(255, 159, 12, 0.3)',
-    paddingHorizontal: 12,
-    paddingVertical: 6,
+  bellBtn: {
+    width: 40,
+    height: 40,
     borderRadius: 20,
-  },
-  rankText: {
-    color: '#FF9F0C',
-    fontWeight: '700',
-    fontSize: 13,
-  },
-  startCard: {
-    backgroundColor: '#30D158', // Vivid iOS Green
-    borderRadius: 22,
-    padding: 20,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    marginBottom: 24,
-  },
-  startCardTextCol: {
-    flex: 1,
-    paddingRight: 10,
-  },
-  startCardTitle: {
-    fontSize: 18,
-    fontWeight: '800',
-    color: '#000000',
-    letterSpacing: -0.3,
-  },
-  startCardSubtitle: {
-    fontSize: 13,
-    color: '#042F2E',
-    marginTop: 4,
-  },
-  startCardIcon: {
-    width: 50,
-    height: 50,
-    borderRadius: 16,
-    backgroundColor: 'rgba(0, 0, 0, 0.15)',
+    backgroundColor: '#242427',
     alignItems: 'center',
     justifyContent: 'center',
+    position: 'relative',
+  },
+  bellDot: {
+    position: 'absolute',
+    top: 9,
+    right: 10,
+    width: 7,
+    height: 7,
+    borderRadius: 3.5,
+    backgroundColor: '#38BDF8',
+  },
+  goalCard: {
+    backgroundColor: '#242427',
+    borderRadius: 20,
+    padding: 16,
+    marginBottom: 20,
+    borderWidth: 1,
+    borderColor: '#323236',
+  },
+  goalTitle: {
+    fontSize: 15,
+    fontWeight: '700',
+    color: '#FFFFFF',
+  },
+  goalSubtitle: {
+    fontSize: 12,
+    color: '#9CA3AF',
+    marginTop: 4,
+    marginBottom: 12,
+  },
+  goalTrack: {
+    height: 8,
+    backgroundColor: '#323236',
+    borderRadius: 4,
+    overflow: 'hidden',
+  },
+  goalFill: {
+    height: '100%',
+    backgroundColor: '#38BDF8',
+    borderRadius: 4,
+  },
+  subTabRow: {
+    flexDirection: 'row',
+    gap: 24,
+    marginBottom: 16,
+    borderBottomWidth: 1,
+    borderBottomColor: '#242427',
+    paddingBottom: 4,
+  },
+  subTabBtn: {
+    position: 'relative',
+    paddingVertical: 6,
+  },
+  subTabText: {
+    fontSize: 15,
+    fontWeight: '600',
+    color: '#9CA3AF',
+  },
+  subTabTextActive: {
+    color: '#FFFFFF',
+    fontWeight: '800',
+  },
+  subTabLine: {
+    position: 'absolute',
+    bottom: -5,
+    left: 0,
+    right: 0,
+    height: 3,
+    backgroundColor: '#38BDF8',
+    borderRadius: 1.5,
+  },
+  searchRow: {
+    flexDirection: 'row',
+    gap: 10,
+    marginBottom: 20,
+  },
+  searchBox: {
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#242427',
+    borderRadius: 16,
+    paddingHorizontal: 14,
+    height: 46,
+    gap: 10,
+    borderWidth: 1,
+    borderColor: '#323236',
+  },
+  searchInput: {
+    flex: 1,
+    color: '#FFFFFF',
+    fontSize: 14,
+    fontWeight: '600',
+  },
+  filterBtn: {
+    width: 46,
+    height: 46,
+    borderRadius: 16,
+    backgroundColor: '#242427',
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderWidth: 1,
+    borderColor: '#323236',
   },
   sectionHeader: {
     flexDirection: 'row',
@@ -356,34 +504,129 @@ const styles = StyleSheet.create({
     marginBottom: 12,
   },
   sectionTitle: {
-    fontSize: 18,
-    fontWeight: '700',
+    fontSize: 17,
+    fontWeight: '800',
     color: '#FFFFFF',
-    letterSpacing: -0.3,
   },
   seeAllText: {
     fontSize: 13,
-    color: '#30D158',
+    color: '#38BDF8',
     fontWeight: '600',
   },
+  carouselScroll: {
+    flexDirection: 'row',
+    marginBottom: 20,
+  },
+  workoutCard: {
+    width: 210,
+    backgroundColor: '#242427',
+    borderRadius: 20,
+    marginRight: 14,
+    overflow: 'hidden',
+    borderWidth: 1,
+    borderColor: '#323236',
+  },
+  cardImageContainer: {
+    height: 125,
+    position: 'relative',
+  },
+  cardImage: {
+    width: '100%',
+    height: '100%',
+  },
+  premiumBadge: {
+    position: 'absolute',
+    top: 10,
+    left: 10,
+    backgroundColor: 'rgba(0, 0, 0, 0.65)',
+    paddingHorizontal: 8,
+    paddingVertical: 3,
+    borderRadius: 8,
+  },
+  premiumText: {
+    color: '#FFFFFF',
+    fontSize: 10,
+    fontWeight: '700',
+  },
+  ratingBadge: {
+    position: 'absolute',
+    top: 10,
+    right: 10,
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 4,
+    backgroundColor: 'rgba(0, 0, 0, 0.65)',
+    paddingHorizontal: 8,
+    paddingVertical: 3,
+    borderRadius: 8,
+  },
+  ratingText: {
+    color: '#FFFFFF',
+    fontSize: 11,
+    fontWeight: '800',
+  },
+  cardInfo: {
+    padding: 12,
+  },
+  cardTitle: {
+    fontSize: 14,
+    fontWeight: '800',
+    color: '#FFFFFF',
+  },
+  cardAuthor: {
+    fontSize: 12,
+    color: '#9CA3AF',
+    marginTop: 2,
+  },
+  quickStartCard: {
+    backgroundColor: '#38BDF8',
+    borderRadius: 20,
+    padding: 16,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginBottom: 20,
+  },
+  quickStartTextCol: {
+    flex: 1,
+    paddingRight: 10,
+  },
+  quickStartTitle: {
+    fontSize: 16,
+    fontWeight: '900',
+    color: '#161618',
+  },
+  quickStartSubtitle: {
+    fontSize: 12,
+    color: '#0F172A',
+    marginTop: 2,
+  },
+  quickStartPlayBtn: {
+    width: 44,
+    height: 44,
+    borderRadius: 22,
+    backgroundColor: 'rgba(255, 255, 255, 0.3)',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
   fatigueCard: {
-    backgroundColor: '#1C1C1E',
+    backgroundColor: '#242427',
     borderRadius: 20,
     padding: 16,
     borderWidth: 1,
-    borderColor: '#2C2C2E',
+    borderColor: '#323236',
   },
   fatigueCardHeader: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: 12,
-    marginBottom: 14,
+    marginBottom: 12,
   },
   fatigueIconBadge: {
-    width: 42,
-    height: 42,
+    width: 40,
+    height: 40,
     borderRadius: 12,
-    backgroundColor: 'rgba(229, 31, 31, 0.15)',
+    backgroundColor: 'rgba(248, 113, 113, 0.15)',
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -393,64 +636,42 @@ const styles = StyleSheet.create({
     color: '#FFFFFF',
   },
   fatigueCardSubtitle: {
-    fontSize: 13,
-    color: '#8E8E93',
+    fontSize: 12,
+    color: '#9CA3AF',
     marginTop: 2,
   },
   fatiguePillRow: {
+    flexDirection: 'row',
     gap: 8,
   },
   fatiguePill: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 8,
+    gap: 6,
     borderWidth: 1,
-    paddingHorizontal: 12,
-    paddingVertical: 8,
-    borderRadius: 12,
+    paddingHorizontal: 10,
+    paddingVertical: 6,
+    borderRadius: 10,
   },
   pillDot: {
-    width: 8,
-    height: 8,
-    borderRadius: 4,
+    width: 6,
+    height: 6,
+    borderRadius: 3,
   },
   pillText: {
-    fontSize: 13,
-    fontWeight: '600',
-  },
-  statsGrid: {
-    flexDirection: 'row',
-    gap: 10,
-    marginTop: 12,
-  },
-  statCard: {
-    flex: 1,
-    backgroundColor: '#1C1C1E',
-    borderRadius: 18,
-    padding: 14,
-    borderWidth: 1,
-    borderColor: '#2C2C2E',
-    gap: 6,
-  },
-  statVal: {
-    fontSize: 16,
-    fontWeight: '800',
-    color: '#FFFFFF',
-  },
-  statLbl: {
-    fontSize: 12,
-    color: '#8E8E93',
+    fontSize: 11,
+    fontWeight: '700',
   },
   historyList: {
     gap: 10,
-    marginTop: 12,
+    marginTop: 10,
   },
   historyCard: {
-    backgroundColor: '#1C1C1E',
+    backgroundColor: '#242427',
     borderRadius: 18,
     padding: 14,
     borderWidth: 1,
-    borderColor: '#2C2C2E',
+    borderColor: '#323236',
     gap: 8,
   },
   historyCardTop: {
@@ -459,7 +680,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   historyTitle: {
-    fontSize: 15,
+    fontSize: 14,
     fontWeight: '700',
     color: '#FFFFFF',
   },
@@ -471,7 +692,7 @@ const styles = StyleSheet.create({
   },
   historyDateText: {
     fontSize: 12,
-    color: '#8E8E93',
+    color: '#9CA3AF',
   },
   privacyBadge: {
     flexDirection: 'row',
@@ -479,16 +700,16 @@ const styles = StyleSheet.create({
     gap: 4,
     paddingHorizontal: 8,
     paddingVertical: 3,
-    borderRadius: 10,
+    borderRadius: 8,
     borderWidth: 1,
   },
   privacyBadgePublic: {
-    backgroundColor: 'rgba(48, 209, 88, 0.12)',
-    borderColor: 'rgba(48, 209, 88, 0.3)',
+    backgroundColor: 'rgba(56, 189, 248, 0.12)',
+    borderColor: 'rgba(56, 189, 248, 0.3)',
   },
   privacyBadgePrivate: {
-    backgroundColor: 'rgba(255, 159, 12, 0.12)',
-    borderColor: 'rgba(255, 159, 12, 0.3)',
+    backgroundColor: 'rgba(251, 191, 36, 0.12)',
+    borderColor: 'rgba(251, 191, 36, 0.3)',
   },
   privacyBadgeText: {
     fontSize: 11,
@@ -496,12 +717,12 @@ const styles = StyleSheet.create({
   },
   historyCardBottom: {
     borderTopWidth: 1,
-    borderTopColor: '#2C2C2E',
+    borderTopColor: '#323236',
     paddingTop: 8,
   },
   historyMetaText: {
     fontSize: 12,
-    color: '#30D158',
+    color: '#38BDF8',
     fontWeight: '600',
   },
 });
