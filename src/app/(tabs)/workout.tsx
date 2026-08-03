@@ -31,7 +31,6 @@ import {
   ChevronRight,
   Check,
   Dumbbell,
-  SlidersHorizontal,
 } from 'lucide-react-native';
 
 interface LocalSet {
@@ -69,7 +68,7 @@ export default function WorkoutScreen() {
   const [timerInitial, setTimerInitial] = useState<number>(60);
   const [isTimerActive, setIsTimerActive] = useState<boolean>(false);
 
-  // Height & Weight Quick Adjustment Modal State (Screenshot 2 Bottom-Left)
+  // Height & Weight State matching Screenshot 2 Bottom-Left
   const [heightCm, setHeightCm] = useState<number>(159);
   const [weightKgVal, setWeightKgVal] = useState<number>(profile?.bodyweight_kg || 58);
 
@@ -147,7 +146,7 @@ export default function WorkoutScreen() {
       reps: lastSet ? lastSet.reps : '10',
     });
     setLoggedExercises(updated);
-    startRestTimer(60); // Auto trigger 60s rest timer
+    startRestTimer(60);
   };
 
   const handleUpdateSet = (
@@ -342,7 +341,7 @@ export default function WorkoutScreen() {
               setTimerSeconds(0);
             }}
           >
-            <RotateCcw color="#9CA3AF" size={16} />
+            <RotateCcw color="#9E9A97" size={16} />
           </TouchableOpacity>
         </View>
       </View>
@@ -351,7 +350,7 @@ export default function WorkoutScreen() {
       <View style={styles.biometricsCard}>
         <View style={styles.bioHeaderRow}>
           <Text style={styles.bioTitle}>Your height & weight?</Text>
-          <Text style={styles.bioSub}>Used for strength percentile 1RM calculation</Text>
+          <Text style={styles.bioSub}>Let us know you better for strength score</Text>
         </View>
 
         <View style={styles.bioValuesRow}>
@@ -392,11 +391,11 @@ export default function WorkoutScreen() {
 
       {/* Exercise Search Input */}
       <View style={styles.searchWrapper}>
-        <Search color="#9CA3AF" size={18} />
+        <Search color="#9E9A97" size={18} />
         <TextInput
           style={styles.searchInput}
           placeholder="Search exercises..."
-          placeholderTextColor="#9CA3AF"
+          placeholderTextColor="#9E9A97"
           value={searchQuery}
           onChangeText={setSearchQuery}
         />
@@ -475,10 +474,10 @@ export default function WorkoutScreen() {
         disabled={isSubmitting}
       >
         {isSubmitting ? (
-          <ActivityIndicator color="#161618" size="small" />
+          <ActivityIndicator color="#FFFFFF" size="small" />
         ) : (
           <>
-            <CheckCircle2 color="#161618" size={20} />
+            <CheckCircle2 color="#FFFFFF" size={20} />
             <Text style={styles.finishBtnText}>Finish & Record Workout</Text>
           </>
         )}
@@ -490,7 +489,7 @@ export default function WorkoutScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#161618',
+    backgroundColor: '#1D1B1B',
   },
   content: {
     paddingHorizontal: 20,
@@ -519,7 +518,7 @@ const styles = StyleSheet.create({
     width: 38,
     height: 38,
     borderRadius: 12,
-    backgroundColor: '#242427',
+    backgroundColor: '#33302F',
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -527,25 +526,25 @@ const styles = StyleSheet.create({
     width: 38,
     height: 38,
     borderRadius: 12,
-    backgroundColor: '#242427',
+    backgroundColor: '#33302F',
     alignItems: 'center',
     justifyContent: 'center',
   },
   currentExerciseTitle: {
     fontSize: 16,
     fontWeight: '600',
-    color: '#9CA3AF',
+    color: '#9E9A97',
     marginBottom: 14,
   },
   heroMediaCard: {
     height: 220,
     borderRadius: 24,
-    backgroundColor: '#242427',
+    backgroundColor: '#292726',
     overflow: 'hidden',
     position: 'relative',
     marginBottom: 18,
     borderWidth: 1,
-    borderColor: '#323236',
+    borderColor: '#3D3A38',
   },
   heroMediaImage: {
     width: '100%',
@@ -580,19 +579,19 @@ const styles = StyleSheet.create({
   sectionLabel: {
     fontSize: 14,
     fontWeight: '700',
-    color: '#9CA3AF',
+    color: '#9E9A97',
     marginBottom: 10,
   },
   upNextCard: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#242427',
+    backgroundColor: '#292726',
     borderRadius: 18,
     padding: 12,
     gap: 12,
     marginBottom: 18,
     borderWidth: 1,
-    borderColor: '#323236',
+    borderColor: '#3D3A38',
   },
   upNextThumb: {
     width: 48,
@@ -606,16 +605,16 @@ const styles = StyleSheet.create({
   },
   upNextMeta: {
     fontSize: 12,
-    color: '#9CA3AF',
+    color: '#9E9A97',
     marginTop: 2,
   },
   timerCard: {
-    backgroundColor: '#242427',
+    backgroundColor: '#292726',
     borderRadius: 18,
     padding: 14,
     marginBottom: 18,
     borderWidth: 1,
-    borderColor: '#323236',
+    borderColor: '#3D3A38',
   },
   timerHeader: {
     flexDirection: 'row',
@@ -646,7 +645,7 @@ const styles = StyleSheet.create({
   },
   presetChip: {
     flex: 1,
-    backgroundColor: '#323236',
+    backgroundColor: '#33302F',
     paddingVertical: 8,
     borderRadius: 10,
     alignItems: 'center',
@@ -660,24 +659,24 @@ const styles = StyleSheet.create({
     fontWeight: '700',
   },
   presetChipTextActive: {
-    color: '#161618',
+    color: '#1D1B1B',
     fontWeight: '800',
   },
   timerActionBtn: {
     width: 34,
     height: 34,
     borderRadius: 10,
-    backgroundColor: '#323236',
+    backgroundColor: '#33302F',
     alignItems: 'center',
     justifyContent: 'center',
   },
   biometricsCard: {
-    backgroundColor: '#242427',
+    backgroundColor: '#292726',
     borderRadius: 20,
     padding: 16,
     marginBottom: 18,
     borderWidth: 1,
-    borderColor: '#323236',
+    borderColor: '#3D3A38',
   },
   bioHeaderRow: {
     marginBottom: 12,
@@ -689,7 +688,7 @@ const styles = StyleSheet.create({
   },
   bioSub: {
     fontSize: 12,
-    color: '#9CA3AF',
+    color: '#9E9A97',
     marginTop: 2,
   },
   bioValuesRow: {
@@ -702,14 +701,14 @@ const styles = StyleSheet.create({
   },
   bioItemLabel: {
     fontSize: 12,
-    color: '#9CA3AF',
+    color: '#9E9A97',
     fontWeight: '600',
   },
   bioPillActive: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    backgroundColor: '#323236',
+    backgroundColor: '#33302F',
     borderRadius: 14,
     paddingHorizontal: 12,
     paddingVertical: 10,
@@ -730,7 +729,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   bioPillVal: {
-    backgroundColor: '#323236',
+    backgroundColor: '#33302F',
     borderRadius: 14,
     paddingHorizontal: 12,
     paddingVertical: 10,
@@ -745,38 +744,36 @@ const styles = StyleSheet.create({
     marginBottom: 12,
   },
   catChip: {
-    backgroundColor: '#242427',
+    backgroundColor: '#292726',
     paddingHorizontal: 16,
     paddingVertical: 10,
     borderRadius: 18,
     marginRight: 8,
     borderWidth: 1,
-    borderColor: '#323236',
+    borderColor: '#3D3A38',
   },
   catChipActive: {
-    backgroundColor: '#38BDF8',
-    borderColor: '#38BDF8',
+    backgroundColor: '#FFFFFF',
+    borderColor: '#FFFFFF',
   },
   catChipText: {
-    color: '#9CA3AF',
+    color: '#9E9A97',
     fontWeight: '600',
     fontSize: 13,
   },
   catChipTextActive: {
-    color: '#161618',
+    color: '#1D1B1B',
     fontWeight: '800',
   },
   searchWrapper: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#242427',
+    backgroundColor: '#33302F',
     borderRadius: 14,
     paddingHorizontal: 12,
     height: 44,
     gap: 8,
     marginBottom: 12,
-    borderWidth: 1,
-    borderColor: '#323236',
   },
   searchInput: {
     flex: 1,
@@ -791,11 +788,11 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: 12,
-    backgroundColor: '#242427',
+    backgroundColor: '#292726',
     borderRadius: 14,
     padding: 12,
     borderWidth: 1,
-    borderColor: '#323236',
+    borderColor: '#3D3A38',
   },
   pickerName: {
     fontSize: 14,
@@ -804,15 +801,15 @@ const styles = StyleSheet.create({
   },
   pickerSub: {
     fontSize: 12,
-    color: '#9CA3AF',
+    color: '#9E9A97',
   },
   exerciseCard: {
-    backgroundColor: '#242427',
+    backgroundColor: '#292726',
     borderRadius: 18,
     padding: 16,
     marginBottom: 16,
     borderWidth: 1,
-    borderColor: '#323236',
+    borderColor: '#3D3A38',
   },
   exCardHeader: {
     flexDirection: 'row',
@@ -837,7 +834,7 @@ const styles = StyleSheet.create({
   thText: {
     fontSize: 11,
     fontWeight: '700',
-    color: '#9CA3AF',
+    color: '#9E9A97',
   },
   setRow: {
     flexDirection: 'row',
@@ -849,7 +846,7 @@ const styles = StyleSheet.create({
     width: 32,
     height: 32,
     borderRadius: 8,
-    backgroundColor: '#323236',
+    backgroundColor: '#33302F',
     color: '#FFFFFF',
     fontWeight: '700',
     textAlign: 'center',
@@ -857,7 +854,7 @@ const styles = StyleSheet.create({
   },
   setValInput: {
     flex: 1,
-    backgroundColor: '#323236',
+    backgroundColor: '#33302F',
     borderRadius: 10,
     color: '#38BDF8',
     fontWeight: '700',
@@ -866,7 +863,7 @@ const styles = StyleSheet.create({
     height: 38,
     textAlign: 'center',
     borderWidth: 1,
-    borderColor: '#3A3A3C',
+    borderColor: '#3D3A38',
   },
   delBtn: {
     width: 32,
@@ -892,14 +889,16 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     gap: 10,
-    backgroundColor: '#38BDF8',
+    backgroundColor: '#292726',
     paddingVertical: 16,
     borderRadius: 18,
     marginTop: 10,
+    borderWidth: 1,
+    borderColor: '#3D3A38',
   },
   finishBtnText: {
-    color: '#161618',
-    fontSize: 17,
+    color: '#FFFFFF',
+    fontSize: 16,
     fontWeight: '800',
   },
 });

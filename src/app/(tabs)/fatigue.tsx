@@ -14,13 +14,10 @@ import {
   Flame,
   RefreshCw,
   Dumbbell,
-  ChevronRight,
   Sparkles,
   PlusCircle,
   Heart,
   Star,
-  Zap,
-  Clock,
 } from 'lucide-react-native';
 
 interface CatalogWorkoutCard {
@@ -299,7 +296,7 @@ export default function FatigueScreen() {
       )}
 
       {/* Catalog Cards Section matching Screenshot 2 Top-Left */}
-      <Text style={[styles.sectionTitle, { marginTop: 14 }]}>Curated Catalog Exercises</Text>
+      <Text style={styles.sectionTitle}>Curated Catalog Exercises</Text>
       <View style={styles.catalogGrid}>
         {filteredCatalog.map((item) => (
           <TouchableOpacity
@@ -357,7 +354,7 @@ export default function FatigueScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#161618',
+    backgroundColor: '#1D1B1B',
   },
   content: {
     paddingHorizontal: 20,
@@ -376,7 +373,7 @@ const styles = StyleSheet.create({
   },
   subtitle: {
     fontSize: 13,
-    color: '#9CA3AF',
+    color: '#9E9A97',
     marginTop: 4,
   },
   sectionTitle: {
@@ -392,31 +389,31 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingVertical: 8,
     borderRadius: 18,
-    backgroundColor: '#242427',
+    backgroundColor: '#292726',
     marginRight: 8,
     borderWidth: 1,
-    borderColor: '#323236',
+    borderColor: '#3D3A38',
   },
   catPillBtnActive: {
-    backgroundColor: '#38BDF8',
-    borderColor: '#38BDF8',
+    backgroundColor: '#FFFFFF',
+    borderColor: '#FFFFFF',
   },
   catPillText: {
-    color: '#9CA3AF',
+    color: '#9E9A97',
     fontSize: 13,
     fontWeight: '600',
   },
   catPillTextActive: {
-    color: '#161618',
+    color: '#1D1B1B',
     fontWeight: '800',
   },
   segmentedControl: {
     flexDirection: 'row',
-    backgroundColor: '#242427',
+    backgroundColor: '#292726',
     borderRadius: 14,
     padding: 3,
     borderWidth: 1,
-    borderColor: '#323236',
+    borderColor: '#3D3A38',
   },
   segmentBtn: {
     flex: 1,
@@ -425,10 +422,10 @@ const styles = StyleSheet.create({
     borderRadius: 11,
   },
   segmentBtnActive: {
-    backgroundColor: '#323236',
+    backgroundColor: '#33302F',
   },
   segmentText: {
-    color: '#9CA3AF',
+    color: '#9E9A97',
     fontSize: 13,
     fontWeight: '700',
   },
@@ -436,11 +433,11 @@ const styles = StyleSheet.create({
     color: '#FFFFFF',
   },
   legendCard: {
-    backgroundColor: '#242427',
+    backgroundColor: '#292726',
     borderRadius: 18,
     padding: 14,
     borderWidth: 1,
-    borderColor: '#323236',
+    borderColor: '#3D3A38',
     gap: 8,
   },
   legendHeader: {
@@ -451,7 +448,7 @@ const styles = StyleSheet.create({
   legendTitle: {
     fontSize: 13,
     fontWeight: '700',
-    color: '#9CA3AF',
+    color: '#9E9A97',
   },
   legendBar: {
     flexDirection: 'row',
@@ -470,24 +467,24 @@ const styles = StyleSheet.create({
     color: '#000000',
   },
   mapCard: {
-    backgroundColor: '#242427',
+    backgroundColor: '#292726',
     borderRadius: 24,
     paddingVertical: 14,
     alignItems: 'center',
     borderWidth: 1,
-    borderColor: '#323236',
+    borderColor: '#3D3A38',
   },
   mapHintText: {
-    color: '#9CA3AF',
+    color: '#9E9A97',
     fontSize: 12,
     marginTop: 2,
   },
   inspectorCard: {
-    backgroundColor: '#242427',
+    backgroundColor: '#292726',
     borderRadius: 22,
     padding: 18,
     borderWidth: 1,
-    borderColor: '#323236',
+    borderColor: '#3D3A38',
     gap: 14,
   },
   inspectorHeader: {
@@ -502,7 +499,7 @@ const styles = StyleSheet.create({
   },
   inspectorSub: {
     fontSize: 13,
-    color: '#9CA3AF',
+    color: '#9E9A97',
     marginTop: 2,
   },
   badgePill: {
@@ -517,7 +514,7 @@ const styles = StyleSheet.create({
   },
   progressTrack: {
     height: 8,
-    backgroundColor: '#323236',
+    backgroundColor: '#33302F',
     borderRadius: 4,
     overflow: 'hidden',
   },
@@ -531,7 +528,7 @@ const styles = StyleSheet.create({
   },
   statBox: {
     flex: 1,
-    backgroundColor: '#323236',
+    backgroundColor: '#33302F',
     borderRadius: 14,
     padding: 12,
     alignItems: 'center',
@@ -544,7 +541,7 @@ const styles = StyleSheet.create({
   },
   statLbl: {
     fontSize: 11,
-    color: '#9CA3AF',
+    color: '#9E9A97',
   },
   exerciseSection: {
     gap: 8,
@@ -565,7 +562,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    backgroundColor: '#323236',
+    backgroundColor: '#33302F',
     padding: 12,
     borderRadius: 14,
   },
@@ -586,11 +583,11 @@ const styles = StyleSheet.create({
     gap: 16,
   },
   favCard: {
-    backgroundColor: '#242427',
+    backgroundColor: '#292726',
     borderRadius: 22,
     overflow: 'hidden',
     borderWidth: 1,
-    borderColor: '#323236',
+    borderColor: '#3D3A38',
   },
   favImageContainer: {
     height: 160,
@@ -652,7 +649,7 @@ const styles = StyleSheet.create({
   },
   favCardTrainer: {
     fontSize: 12,
-    color: '#9CA3AF',
+    color: '#9E9A97',
     marginTop: 2,
     marginBottom: 12,
   },
@@ -660,11 +657,11 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-around',
-    backgroundColor: '#161618',
+    backgroundColor: '#1D1B1B',
     borderRadius: 14,
     paddingVertical: 10,
     borderWidth: 1,
-    borderColor: '#323236',
+    borderColor: '#3D3A38',
   },
   quickStatItem: {
     alignItems: 'center',
@@ -676,12 +673,12 @@ const styles = StyleSheet.create({
   },
   quickStatLbl: {
     fontSize: 10,
-    color: '#9CA3AF',
+    color: '#9E9A97',
     marginTop: 2,
   },
   quickStatDivider: {
     width: 1,
     height: 20,
-    backgroundColor: '#323236',
+    backgroundColor: '#3D3A38',
   },
 });

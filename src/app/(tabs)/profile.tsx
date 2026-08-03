@@ -18,8 +18,6 @@ import {
   Eye,
   LogOut,
   Save,
-  Scale,
-  Sparkles,
   Check,
   BarChart2,
   Flame,
@@ -147,12 +145,12 @@ export default function ProfileScreen() {
         <View style={styles.inputGroup}>
           <Text style={styles.inputLabel}>Username</Text>
           <View style={styles.inputWrapper}>
-            <User color="#9CA3AF" size={18} />
+            <User color="#9E9A97" size={18} />
             <TextInput
               style={styles.input}
               value={username}
               onChangeText={setUsername}
-              placeholderTextColor="#9CA3AF"
+              placeholderTextColor="#9E9A97"
             />
           </View>
         </View>
@@ -170,14 +168,14 @@ export default function ProfileScreen() {
           <Switch
             value={isPublicLogs}
             onValueChange={setIsPublicLogs}
-            trackColor={{ false: '#323236', true: '#38BDF8' }}
+            trackColor={{ false: '#33302F', true: '#38BDF8' }}
             thumbColor="#FFFFFF"
           />
         </View>
 
         <View style={[styles.switchRow, { marginTop: 10 }]}>
           <View style={styles.switchLeft}>
-            <View style={[styles.dotPreview, { backgroundColor: isOnlineStatus ? '#A3E635' : '#9CA3AF' }]} />
+            <View style={[styles.dotPreview, { backgroundColor: isOnlineStatus ? '#A3E635' : '#9E9A97' }]} />
             <View style={{ flex: 1 }}>
               <Text style={styles.switchTitle}>Online Status Badge</Text>
               <Text style={styles.switchSub}>Display green dot on global leaderboard</Text>
@@ -186,14 +184,14 @@ export default function ProfileScreen() {
           <Switch
             value={isOnlineStatus}
             onValueChange={setIsOnlineStatus}
-            trackColor={{ false: '#323236', true: '#38BDF8' }}
+            trackColor={{ false: '#33302F', true: '#38BDF8' }}
             thumbColor="#FFFFFF"
           />
         </View>
       </View>
 
       <TouchableOpacity style={styles.saveBtn} onPress={handleSaveProfile}>
-        <Save color="#161618" size={18} />
+        <Save color="#FFFFFF" size={18} />
         <Text style={styles.saveBtnText}>Save Settings</Text>
       </TouchableOpacity>
 
@@ -208,7 +206,7 @@ export default function ProfileScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#161618',
+    backgroundColor: '#1D1B1B',
   },
   content: {
     paddingHorizontal: 20,
@@ -230,7 +228,7 @@ const styles = StyleSheet.create({
     width: 38,
     height: 38,
     borderRadius: 19,
-    backgroundColor: '#242427',
+    backgroundColor: '#292726',
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -257,7 +255,7 @@ const styles = StyleSheet.create({
     borderRadius: 7,
     backgroundColor: '#A3E635',
     borderWidth: 2,
-    borderColor: '#161618',
+    borderColor: '#1D1B1B',
   },
   heroName: {
     fontSize: 20,
@@ -266,7 +264,7 @@ const styles = StyleSheet.create({
   },
   heroHandle: {
     fontSize: 13,
-    color: '#9CA3AF',
+    color: '#9E9A97',
     marginTop: 2,
   },
   socialFollowRow: {
@@ -277,7 +275,7 @@ const styles = StyleSheet.create({
   },
   followText: {
     fontSize: 12,
-    color: '#9CA3AF',
+    color: '#9E9A97',
   },
   followNum: {
     fontSize: 14,
@@ -285,7 +283,7 @@ const styles = StyleSheet.create({
     color: '#FFFFFF',
   },
   followDivider: {
-    color: '#323236',
+    color: '#33302F',
   },
   sectionHeaderTitle: {
     fontSize: 17,
@@ -298,13 +296,13 @@ const styles = StyleSheet.create({
   },
   statColumnCard: {
     flex: 1,
-    backgroundColor: '#242427',
+    backgroundColor: '#292726',
     borderRadius: 18,
     padding: 14,
     alignItems: 'center',
     gap: 6,
     borderWidth: 1,
-    borderColor: '#323236',
+    borderColor: '#3D3A38',
   },
   statColValue: {
     fontSize: 18,
@@ -313,15 +311,15 @@ const styles = StyleSheet.create({
   },
   statColLabel: {
     fontSize: 10,
-    color: '#9CA3AF',
+    color: '#9E9A97',
     textAlign: 'center',
   },
   biometricsCard: {
-    backgroundColor: '#242427',
+    backgroundColor: '#292726',
     borderRadius: 20,
     padding: 16,
     borderWidth: 1,
-    borderColor: '#323236',
+    borderColor: '#3D3A38',
   },
   bioTitle: {
     fontSize: 16,
@@ -330,7 +328,7 @@ const styles = StyleSheet.create({
   },
   bioSub: {
     fontSize: 12,
-    color: '#9CA3AF',
+    color: '#9E9A97',
     marginTop: 2,
     marginBottom: 12,
   },
@@ -344,14 +342,14 @@ const styles = StyleSheet.create({
   },
   bioItemLabel: {
     fontSize: 12,
-    color: '#9CA3AF',
+    color: '#9E9A97',
     fontWeight: '600',
   },
   bioPillActive: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    backgroundColor: '#323236',
+    backgroundColor: '#33302F',
     borderRadius: 14,
     paddingHorizontal: 12,
     paddingVertical: 10,
@@ -370,11 +368,12 @@ const styles = StyleSheet.create({
     backgroundColor: '#38BDF8',
     alignItems: 'center',
     justifyContent: 'center',
+    alignSelf: 'center',
   },
   bioInputWrapper: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#323236',
+    backgroundColor: '#33302F',
     borderRadius: 14,
     paddingHorizontal: 12,
     height: 44,
@@ -388,14 +387,14 @@ const styles = StyleSheet.create({
   bioUnitText: {
     fontSize: 14,
     fontWeight: '600',
-    color: '#9CA3AF',
+    color: '#9E9A97',
   },
   sectionCard: {
-    backgroundColor: '#242427',
+    backgroundColor: '#292726',
     borderRadius: 20,
     padding: 16,
     borderWidth: 1,
-    borderColor: '#323236',
+    borderColor: '#3D3A38',
     gap: 14,
   },
   inputGroup: {
@@ -404,18 +403,18 @@ const styles = StyleSheet.create({
   inputLabel: {
     fontSize: 12,
     fontWeight: '600',
-    color: '#9CA3AF',
+    color: '#9E9A97',
   },
   inputWrapper: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#323236',
+    backgroundColor: '#33302F',
     borderRadius: 14,
     paddingHorizontal: 12,
     height: 46,
     gap: 10,
     borderWidth: 1,
-    borderColor: '#3A3A3C',
+    borderColor: '#3D3A38',
   },
   input: {
     flex: 1,
@@ -447,7 +446,7 @@ const styles = StyleSheet.create({
   },
   switchSub: {
     fontSize: 12,
-    color: '#9CA3AF',
+    color: '#9E9A97',
     marginTop: 2,
   },
   saveBtn: {
@@ -455,12 +454,14 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     gap: 8,
-    backgroundColor: '#38BDF8',
+    backgroundColor: '#292726',
     height: 50,
     borderRadius: 16,
+    borderWidth: 1,
+    borderColor: '#3D3A38',
   },
   saveBtnText: {
-    color: '#161618',
+    color: '#FFFFFF',
     fontSize: 16,
     fontWeight: '800',
   },

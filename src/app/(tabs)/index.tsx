@@ -10,16 +10,11 @@ import {
   Star,
   Play,
   Flame,
-  Trophy,
   ChevronRight,
-  Zap,
-  Award,
-  Calendar,
   Clock,
   Lock,
   Eye,
   History,
-  Sparkles,
 } from 'lucide-react-native';
 
 interface PopularWorkout {
@@ -103,8 +98,6 @@ export default function HomeScreen() {
   const { profile, user } = useAuth();
   const [activeSubTab, setActiveSubTab] = useState<'Discover' | 'Trainers' | 'My plan'>('Discover');
   const [searchQuery, setSearchQuery] = useState('');
-  const [totalVolume, setTotalVolume] = useState<number>(12450);
-  const [sessionCount, setSessionCount] = useState<number>(4);
   const [historyLogs, setHistoryLogs] = useState<HistorySession[]>(RECENT_WORKOUT_HISTORY);
 
   useEffect(() => {
@@ -120,17 +113,13 @@ export default function HomeScreen() {
           .order('created_at', { ascending: false });
 
         if (logs && !error && isMounted) {
-          setSessionCount(logs.length);
-          let sumVolume = 0;
           const mappedHistory: HistorySession[] = logs.map((log: any) => {
             let logVol = 0;
             let count = 0;
             if (Array.isArray(log.set_logs)) {
               count = log.set_logs.length;
               log.set_logs.forEach((st: any) => {
-                const setVol = (st.weight_kg || 0) * (st.reps || 0);
-                logVol += setVol;
-                sumVolume += setVol;
+                logVol += (st.weight_kg || 0) * (st.reps || 0);
               });
             }
             return {
@@ -143,7 +132,6 @@ export default function HomeScreen() {
             };
           });
 
-          if (sumVolume > 0) setTotalVolume(sumVolume);
           if (mappedHistory.length > 0) setHistoryLogs(mappedHistory);
         }
       } catch (e) {
@@ -165,7 +153,7 @@ export default function HomeScreen() {
 
   return (
     <ScrollView style={styles.container} contentContainerStyle={styles.content}>
-      {/* Header matching Screenshot 1 (Avatar + Good morning + Bell icon) */}
+      {/* Header matching Screenshot 1 Screen 1 (Avatar + Good morning + Bell icon) */}
       <View style={styles.headerRow}>
         <View style={styles.userMeta}>
           <Image
@@ -179,12 +167,12 @@ export default function HomeScreen() {
         </View>
 
         <TouchableOpacity style={styles.bellBtn}>
-          <Bell color="#FFFFFF" size={20} />
+          <Bell color="#FFFFFF" size={18} />
           <View style={styles.bellDot} />
         </TouchableOpacity>
       </View>
 
-      {/* Weekly Goal Progress Card matching Screenshot 1 */}
+      {/* Weekly Goal Progress Card matching Screenshot 1 Screen 1 */}
       <View style={styles.goalCard}>
         <Text style={styles.goalTitle}>You've done 3 workouts this week!</Text>
         <Text style={styles.goalSubtitle}>75% of your weekly goal is completed.</Text>
@@ -212,11 +200,11 @@ export default function HomeScreen() {
       {/* Search Input Bar with Filter Button */}
       <View style={styles.searchRow}>
         <View style={styles.searchBox}>
-          <Search color="#9CA3AF" size={18} />
+          <Search color="#9E9A97" size={18} />
           <TextInput
             style={styles.searchInput}
-            placeholder="Search workouts..."
-            placeholderTextColor="#9CA3AF"
+            placeholder="Search..."
+            placeholderTextColor="#9E9A97"
             value={searchQuery}
             onChangeText={setSearchQuery}
           />
@@ -266,14 +254,18 @@ export default function HomeScreen() {
         ))}
       </ScrollView>
 
-      {/* Quick Start Action Card */}
+      {/* Quick Start Workout Action Section */}
+      <View style={styles.sectionHeader}>
+        <Text style={styles.sectionTitle}>Quick Workouts</Text>
+      </View>
+
       <TouchableOpacity style={styles.quickStartCard} onPress={() => router.push('/(tabs)/workout')}>
         <View style={styles.quickStartTextCol}>
-          <Text style={styles.quickStartTitle}>Start Active Workout</Text>
+          <Text style={styles.quickStartTitle}>Active Workout Session</Text>
           <Text style={styles.quickStartSubtitle}>Log sets, reps, weight & start rest timer</Text>
         </View>
         <View style={styles.quickStartPlayBtn}>
-          <Play color="#161618" size={22} fill="#161618" />
+          <Play color="#FFFFFF" size={20} fill="#FFFFFF" />
         </View>
       </TouchableOpacity>
 
@@ -288,13 +280,13 @@ export default function HomeScreen() {
       <TouchableOpacity style={styles.fatigueCard} onPress={() => router.push('/(tabs)/fatigue')}>
         <View style={styles.fatigueCardHeader}>
           <View style={styles.fatigueIconBadge}>
-            <Flame color="#F87171" size={22} />
+            <Flame color="#F87171" size={20} />
           </View>
           <View style={{ flex: 1 }}>
             <Text style={styles.fatigueCardTitle}>Active Muscle Repair</Text>
             <Text style={styles.fatigueCardSubtitle}>Quads & Upper Chest in deep recovery</Text>
           </View>
-          <ChevronRight color="#9CA3AF" size={20} />
+          <ChevronRight color="#9E9A97" size={20} />
         </View>
 
         <View style={styles.fatiguePillRow}>
@@ -324,7 +316,7 @@ export default function HomeScreen() {
               <View style={{ flex: 1 }}>
                 <Text style={styles.historyTitle}>{log.title}</Text>
                 <View style={styles.historyDateRow}>
-                  <Clock color="#9CA3AF" size={12} />
+                  <Clock color="#9E9A97" size={12} />
                   <Text style={styles.historyDateText}>{log.date}</Text>
                 </View>
               </View>
@@ -352,7 +344,7 @@ export default function HomeScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#161618',
+    backgroundColor: '#1D1B1B',
   },
   content: {
     paddingHorizontal: 20,
@@ -374,12 +366,12 @@ const styles = StyleSheet.create({
     width: 44,
     height: 44,
     borderRadius: 22,
-    borderWidth: 2,
-    borderColor: '#323236',
+    borderWidth: 1.5,
+    borderColor: '#3D3A38',
   },
   greetingText: {
     fontSize: 13,
-    color: '#9CA3AF',
+    color: '#9E9A97',
   },
   usernameText: {
     fontSize: 18,
@@ -390,27 +382,27 @@ const styles = StyleSheet.create({
     width: 40,
     height: 40,
     borderRadius: 20,
-    backgroundColor: '#242427',
+    backgroundColor: '#292726',
     alignItems: 'center',
     justifyContent: 'center',
     position: 'relative',
   },
   bellDot: {
     position: 'absolute',
-    top: 9,
-    right: 10,
-    width: 7,
-    height: 7,
-    borderRadius: 3.5,
+    top: 10,
+    right: 11,
+    width: 6,
+    height: 6,
+    borderRadius: 3,
     backgroundColor: '#38BDF8',
   },
   goalCard: {
-    backgroundColor: '#242427',
+    backgroundColor: '#292726',
     borderRadius: 20,
     padding: 16,
     marginBottom: 20,
     borderWidth: 1,
-    borderColor: '#323236',
+    borderColor: '#3D3A38',
   },
   goalTitle: {
     fontSize: 15,
@@ -419,27 +411,27 @@ const styles = StyleSheet.create({
   },
   goalSubtitle: {
     fontSize: 12,
-    color: '#9CA3AF',
+    color: '#9E9A97',
     marginTop: 4,
     marginBottom: 12,
   },
   goalTrack: {
-    height: 8,
-    backgroundColor: '#323236',
-    borderRadius: 4,
+    height: 6,
+    backgroundColor: '#33302F',
+    borderRadius: 3,
     overflow: 'hidden',
   },
   goalFill: {
     height: '100%',
     backgroundColor: '#38BDF8',
-    borderRadius: 4,
+    borderRadius: 3,
   },
   subTabRow: {
     flexDirection: 'row',
     gap: 24,
     marginBottom: 16,
     borderBottomWidth: 1,
-    borderBottomColor: '#242427',
+    borderBottomColor: '#292726',
     paddingBottom: 4,
   },
   subTabBtn: {
@@ -449,7 +441,7 @@ const styles = StyleSheet.create({
   subTabText: {
     fontSize: 15,
     fontWeight: '600',
-    color: '#9CA3AF',
+    color: '#9E9A97',
   },
   subTabTextActive: {
     color: '#FFFFFF',
@@ -461,7 +453,7 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     height: 3,
-    backgroundColor: '#38BDF8',
+    backgroundColor: '#FFFFFF',
     borderRadius: 1.5,
   },
   searchRow: {
@@ -473,13 +465,11 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#242427',
+    backgroundColor: '#33302F',
     borderRadius: 16,
     paddingHorizontal: 14,
     height: 46,
     gap: 10,
-    borderWidth: 1,
-    borderColor: '#323236',
   },
   searchInput: {
     flex: 1,
@@ -491,11 +481,9 @@ const styles = StyleSheet.create({
     width: 46,
     height: 46,
     borderRadius: 16,
-    backgroundColor: '#242427',
+    backgroundColor: '#33302F',
     alignItems: 'center',
     justifyContent: 'center',
-    borderWidth: 1,
-    borderColor: '#323236',
   },
   sectionHeader: {
     flexDirection: 'row',
@@ -510,7 +498,7 @@ const styles = StyleSheet.create({
   },
   seeAllText: {
     fontSize: 13,
-    color: '#38BDF8',
+    color: '#9E9A97',
     fontWeight: '600',
   },
   carouselScroll: {
@@ -519,12 +507,12 @@ const styles = StyleSheet.create({
   },
   workoutCard: {
     width: 210,
-    backgroundColor: '#242427',
+    backgroundColor: '#292726',
     borderRadius: 20,
     marginRight: 14,
     overflow: 'hidden',
     borderWidth: 1,
-    borderColor: '#323236',
+    borderColor: '#3D3A38',
   },
   cardImageContainer: {
     height: 125,
@@ -575,17 +563,19 @@ const styles = StyleSheet.create({
   },
   cardAuthor: {
     fontSize: 12,
-    color: '#9CA3AF',
+    color: '#9E9A97',
     marginTop: 2,
   },
   quickStartCard: {
-    backgroundColor: '#38BDF8',
+    backgroundColor: '#292726',
     borderRadius: 20,
     padding: 16,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
     marginBottom: 20,
+    borderWidth: 1,
+    borderColor: '#3D3A38',
   },
   quickStartTextCol: {
     flex: 1,
@@ -593,28 +583,28 @@ const styles = StyleSheet.create({
   },
   quickStartTitle: {
     fontSize: 16,
-    fontWeight: '900',
-    color: '#161618',
+    fontWeight: '800',
+    color: '#FFFFFF',
   },
   quickStartSubtitle: {
     fontSize: 12,
-    color: '#0F172A',
+    color: '#9E9A97',
     marginTop: 2,
   },
   quickStartPlayBtn: {
     width: 44,
     height: 44,
     borderRadius: 22,
-    backgroundColor: 'rgba(255, 255, 255, 0.3)',
+    backgroundColor: '#33302F',
     alignItems: 'center',
     justifyContent: 'center',
   },
   fatigueCard: {
-    backgroundColor: '#242427',
+    backgroundColor: '#292726',
     borderRadius: 20,
     padding: 16,
     borderWidth: 1,
-    borderColor: '#323236',
+    borderColor: '#3D3A38',
   },
   fatigueCardHeader: {
     flexDirection: 'row',
@@ -637,7 +627,7 @@ const styles = StyleSheet.create({
   },
   fatigueCardSubtitle: {
     fontSize: 12,
-    color: '#9CA3AF',
+    color: '#9E9A97',
     marginTop: 2,
   },
   fatiguePillRow: {
@@ -667,11 +657,11 @@ const styles = StyleSheet.create({
     marginTop: 10,
   },
   historyCard: {
-    backgroundColor: '#242427',
+    backgroundColor: '#292726',
     borderRadius: 18,
     padding: 14,
     borderWidth: 1,
-    borderColor: '#323236',
+    borderColor: '#3D3A38',
     gap: 8,
   },
   historyCardTop: {
@@ -692,7 +682,7 @@ const styles = StyleSheet.create({
   },
   historyDateText: {
     fontSize: 12,
-    color: '#9CA3AF',
+    color: '#9E9A97',
   },
   privacyBadge: {
     flexDirection: 'row',
@@ -717,7 +707,7 @@ const styles = StyleSheet.create({
   },
   historyCardBottom: {
     borderTopWidth: 1,
-    borderTopColor: '#323236',
+    borderTopColor: '#33302F',
     paddingTop: 8,
   },
   historyMetaText: {
