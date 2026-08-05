@@ -7,11 +7,11 @@ export default function TabLayout() {
     <Tabs
       screenOptions={{
         headerShown: false,
-        tabBarActiveTintColor: '#6366F1', // Primary Indigo accent from design-system.md
-        tabBarInactiveTintColor: '#94A3B8', // Slate 400
+        tabBarActiveTintColor: '#30D158', // Prestige Vivid Green Accent
+        tabBarInactiveTintColor: '#8E8E93', // System Gray
         tabBarStyle: {
-          backgroundColor: '#0F172A', // Slate 900
-          borderTopColor: '#1E293B',  // Slate 800
+          backgroundColor: '#000000', // OLED Pure Black
+          borderTopColor: '#1C1C1E',  // Charcoal border
           height: 65,
           paddingBottom: 10,
           paddingTop: 8,

@@ -2,34 +2,34 @@ import { Platform } from 'react-native';
 
 export const Colors = {
   dark: {
-    // Base Colors from design-system.md
-    background: '#0F172A',         // Slate 900 - Deep rich background
-    card: '#1E293B',               // Slate 800 - Glass card surface
-    cardGlass: 'rgba(30, 41, 59, 0.7)', // Slate 800 with opacity for glassmorphism
-    cardSecondary: '#334155',      // Slate 700 - Inputs, inner chips & sub-cards
-    cardBorder: 'rgba(255, 255, 255, 0.08)', // Subtle white border edge
-    cardBorderSolid: '#334155',    // Solid border fallback
-    textPrimary: '#F8FAFC',        // Slate 50 - Heading & primary text
-    textSecondary: '#94A3B8',      // Slate 400 - Subtitle & description text
+    // Prestige iOS OLED Dark Theme from AGENTS.md
+    background: '#000000',         // OLED Pure Black background
+    card: '#1C1C1E',               // Secondary Charcoal Card surface
+    cardGlass: 'rgba(28, 28, 30, 0.85)', // Glassmorphism surface
+    cardSecondary: '#2C2C2E',      // Tertiary Slate Card & Input field
+    cardBorder: 'rgba(255, 255, 255, 0.10)', // Subtle white edge
+    cardBorderSolid: '#2C2C2E',    // Solid border fallback
+    textPrimary: '#FFFFFF',        // Pure White heading & text
+    textSecondary: '#8E8E93',      // System Gray subtitle & description
 
-    // Brand & Accent Colors from design-system.md
-    primaryAccent: '#6366F1',      // Indigo 500 - Primary buttons, active states, links
-    secondaryAccent: '#EC4899',    // Pink 500 - Highlights, badges, gradient secondary
-    gradientStart: '#6366F1',      // Indigo 500
-    gradientEnd: '#EC4899',        // Pink 500
+    // Prestige Brand & Accent Colors
+    primaryAccent: '#30D158',      // Vivid Green accent (Apple Fitness Style)
+    secondaryAccent: '#0A84FF',    // Electric Blue accent
+    gradientStart: '#30D158',      // Vivid Lime Green
+    gradientEnd: '#0A84FF',        // Electric Blue
 
     // Utility Accents
-    accentCyan: '#38BDF8',         // Sky 400
-    accentPurple: '#A855F7',       // Purple 500
-    accentLime: '#10B981',         // Emerald 500
-    accentGold: '#FBBF24',         // Amber 400
-    accentRed: '#F87171',          // Red 400
+    accentLime: '#30D158',         // Vivid Green
+    accentCyan: '#0A84FF',         // Electric Blue
+    accentPurple: '#BF5AF2',       // System Purple
+    accentGold: '#FF9F0C',         // Amber Gold
+    accentRed: '#FF453A',          // Coral Red
 
     // Tab Bar Styling
-    tabBarBg: '#0F172A',
-    tabBarBorder: '#1E293B',
-    tabBarInactive: '#94A3B8',
-    tabBarActive: '#6366F1',       // Primary Indigo accent
+    tabBarBg: '#000000',
+    tabBarBorder: '#1C1C1E',
+    tabBarInactive: '#8E8E93',
+    tabBarActive: '#30D158',       // Vivid Green accent
   },
 } as const;
 

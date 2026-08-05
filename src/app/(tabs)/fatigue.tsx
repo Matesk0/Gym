@@ -354,7 +354,7 @@ export default function FatigueScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#0F172A',
+    backgroundColor: '#000000',
   },
   content: {
     paddingHorizontal: 20,
@@ -398,8 +398,8 @@ const styles = StyleSheet.create({
     borderColor: 'rgba(255, 255, 255, 0.08)',
   },
   catPillBtnActive: {
-    backgroundColor: '#6366F1',
-    borderColor: '#6366F1',
+    backgroundColor: '#30D158',
+    borderColor: '#30D158',
   },
   catPillText: {
     color: '#94A3B8',
@@ -573,7 +573,7 @@ const styles = StyleSheet.create({
     width: 6,
     height: 6,
     borderRadius: 3,
-    backgroundColor: '#6366F1',
+    backgroundColor: '#30D158',
   },
   exerciseNameText: {
     flex: 1,
