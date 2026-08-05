@@ -1,5 +1,9 @@
 export type RankTier = 'Bronze' | 'Silver' | 'Gold' | 'Platinum' | 'Diamond' | 'Master' | 'Grandmaster';
 
+export type FitnessGoal = 'Hypertrophy' | 'Strength' | 'Fat Loss' | 'Endurance' | 'General Fitness';
+export type ExperienceLevel = 'Beginner' | 'Intermediate' | 'Advanced' | 'Elite';
+export type PreferredUnit = 'kg' | 'lbs';
+
 export interface Profile {
   id: string;
   username: string;
@@ -8,6 +12,11 @@ export interface Profile {
   is_public_logs: boolean;
   gender: 'male' | 'female';
   bodyweight_kg: number;
+  height_cm?: number;
+  fitness_goal?: FitnessGoal;
+  experience_level?: ExperienceLevel;
+  preferred_unit?: PreferredUnit;
+  default_rest_seconds?: number;
   overall_rank: RankTier;
   created_at?: string;
 }

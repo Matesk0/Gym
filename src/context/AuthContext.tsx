@@ -2,13 +2,29 @@ import React, { createContext, useContext, useEffect, useState } from 'react';
 import { isSupabaseConfigured, supabase } from '../lib/supabase';
 import { Profile } from '../types/database';
 
+export interface OptionalSignUpOptions {
+  bodyweight_kg?: number;
+  height_cm?: number;
+  gender?: 'male' | 'female';
+  fitness_goal?: Profile['fitness_goal'];
+  experience_level?: Profile['experience_level'];
+  preferred_unit?: Profile['preferred_unit'];
+  default_rest_seconds?: number;
+  is_public_logs?: boolean;
+}
+
 interface AuthContextType {
   user: { id: string; email: string } | null;
   profile: Profile | null;
   isLoading: boolean;
   isMockMode: boolean;
   signIn: (email: string, pass: string) => Promise<{ error: string | null }>;
-  signUp: (email: string, pass: string, username: string) => Promise<{ error: string | null }>;
+  signUp: (
+    email: string,
+    pass: string,
+    username: string,
+    optionalDetails?: OptionalSignUpOptions
+  ) => Promise<{ error: string | null }>;
   signOut: () => Promise<void>;
   updateProfile: (updates: Partial<Profile>) => Promise<void>;
 }
@@ -21,6 +37,11 @@ const DEFAULT_PROFILE: Profile = {
   is_public_logs: false,
   gender: 'male',
   bodyweight_kg: 78.5,
+  height_cm: 178,
+  fitness_goal: 'Hypertrophy',
+  experience_level: 'Intermediate',
+  preferred_unit: 'kg',
+  default_rest_seconds: 90,
   overall_rank: 'Gold',
 };
 
@@ -92,9 +113,18 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     return { error: error ? error.message : null };
   };
 
-  const signUp = async (email: string, pass: string, username: string) => {
+  const signUp = async (
+    email: string,
+    pass: string,
+    username: string,
+    optionalDetails?: OptionalSignUpOptions
+  ) => {
     if (!isSupabaseConfigured) {
-      const newProf = { ...DEFAULT_PROFILE, username };
+      const newProf: Profile = {
+        ...DEFAULT_PROFILE,
+        username,
+        ...optionalDetails,
+      };
       setUser({ id: DEFAULT_PROFILE.id, email });
       setProfile(newProf);
       return { error: null };
@@ -102,7 +132,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     const { error } = await supabase.auth.signUp({
       email,
       password: pass,
-      options: { data: { username } },
+      options: {
+        data: {
+          username,
+          ...optionalDetails,
+        },
+      },
     });
     return { error: error ? error.message : null };
   };

@@ -23,7 +23,12 @@ import {
   Flame,
   Coins,
   Settings,
+  Target,
+  Award,
+  Timer,
+  Ruler,
 } from 'lucide-react-native';
+import { FitnessGoal, ExperienceLevel, PreferredUnit } from '../../types/database';
 
 export default function ProfileScreen() {
   const router = useRouter();
@@ -31,23 +36,40 @@ export default function ProfileScreen() {
 
   const [username, setUsername] = useState(profile?.username || 'Polly Strong');
   const [bodyweight, setBodyweight] = useState(profile?.bodyweight_kg?.toString() || '58');
-  const [heightCm, setHeightCm] = useState<number>(159);
+  const [heightCm, setHeightCm] = useState(profile?.height_cm?.toString() || '159');
   const [isPublicLogs, setIsPublicLogs] = useState(profile?.is_public_logs || false);
   const [isOnlineStatus, setIsOnlineStatus] = useState(profile?.is_online ?? true);
+  const [fitnessGoal, setFitnessGoal] = useState<FitnessGoal>(profile?.fitness_goal || 'Hypertrophy');
+  const [experienceLevel, setExperienceLevel] = useState<ExperienceLevel>(profile?.experience_level || 'Intermediate');
+  const [preferredUnit, setPreferredUnit] = useState<PreferredUnit>(profile?.preferred_unit || 'kg');
+  const [defaultRestSeconds, setDefaultRestSeconds] = useState<number>(profile?.default_rest_seconds || 90);
+  const [gender, setGender] = useState<'male' | 'female'>(profile?.gender || 'female');
+
+  const fitnessGoals: FitnessGoal[] = ['Hypertrophy', 'Strength', 'Fat Loss', 'Endurance', 'General Fitness'];
+  const experienceLevels: ExperienceLevel[] = ['Beginner', 'Intermediate', 'Advanced', 'Elite'];
+  const restTimerOptions = [60, 90, 120, 180];
 
   const handleSaveProfile = async () => {
     const bwNum = parseFloat(bodyweight);
     if (isNaN(bwNum)) {
-      Alert.alert('Invalid Weight', 'Please enter a valid numeric bodyweight in kg.');
+      Alert.alert('Invalid Weight', 'Please enter a valid numeric bodyweight.');
       return;
     }
+    const htNum = parseFloat(heightCm);
+
     await updateProfile({
       username,
       bodyweight_kg: bwNum,
+      height_cm: isNaN(htNum) ? 159 : htNum,
       is_public_logs: isPublicLogs,
       is_online: isOnlineStatus,
+      fitness_goal: fitnessGoal,
+      experience_level: experienceLevel,
+      preferred_unit: preferredUnit,
+      default_rest_seconds: defaultRestSeconds,
+      gender,
     });
-    Alert.alert('Profile Saved', 'Your privacy and bodyweight settings have been updated.');
+    Alert.alert('Settings Saved', 'Your fitness preferences and biometrics have been updated.');
   };
 
   const handleSignOut = async () => {
@@ -65,7 +87,7 @@ export default function ProfileScreen() {
         </TouchableOpacity>
       </View>
 
-      {/* User Avatar & Followers Header matching Screenshot 1 Screen 3 */}
+      {/* User Avatar & Header */}
       <View style={styles.heroSection}>
         <View style={styles.avatarWrapper}>
           <Image
@@ -76,7 +98,13 @@ export default function ProfileScreen() {
         </View>
 
         <Text style={styles.heroName}>{username}</Text>
-        <Text style={styles.heroHandle}>@fitness_girl97</Text>
+        <Text style={styles.heroHandle}>@{username.toLowerCase().replace(/\s+/g, '_')}</Text>
+
+        {/* Goal Badge */}
+        <View style={styles.goalTag}>
+          <Target color="#818CF8" size={14} />
+          <Text style={styles.goalTagText}>{fitnessGoal} • {experienceLevel}</Text>
+        </View>
 
         <View style={styles.socialFollowRow}>
           <Text style={styles.followText}><Text style={styles.followNum}>15</Text> Followers</Text>
@@ -85,7 +113,7 @@ export default function ProfileScreen() {
         </View>
       </View>
 
-      {/* "My statistics" 3 Columns Section matching Screenshot 1 Screen 3 */}
+      {/* "My statistics" 3 Columns Section */}
       <Text style={styles.sectionHeaderTitle}>My statistics</Text>
       <View style={styles.statsThreeGrid}>
         <View style={styles.statColumnCard}>
@@ -107,24 +135,27 @@ export default function ProfileScreen() {
         </View>
       </View>
 
-      {/* Height & Weight Manager Section matching Screenshot 2 Bottom-Left */}
+      {/* Height & Weight Manager Section */}
       <View style={styles.biometricsCard}>
-        <Text style={styles.bioTitle}>Your height & weight?</Text>
-        <Text style={styles.bioSub}>Let us know you better for relative strength score</Text>
+        <Text style={styles.bioTitle}>Height & Weight Biometrics</Text>
+        <Text style={styles.bioSub}>Used to calculate relative strength scores and rank percentiles</Text>
 
         <View style={styles.bioValuesRow}>
           <View style={styles.bioItem}>
-            <Text style={styles.bioItemLabel}>Height</Text>
-            <View style={styles.bioPillActive}>
-              <Text style={styles.bioPillTextActive}>{heightCm} cm</Text>
-              <View style={styles.checkDot}>
-                <Check color="#FFFFFF" size={10} />
-              </View>
+            <Text style={styles.bioItemLabel}>Height (cm)</Text>
+            <View style={styles.bioInputWrapper}>
+              <Ruler color="#94A3B8" size={16} />
+              <TextInput
+                style={styles.bioInputText}
+                value={heightCm}
+                onChangeText={setHeightCm}
+                keyboardType="numeric"
+              />
             </View>
           </View>
 
           <View style={styles.bioItem}>
-            <Text style={styles.bioItemLabel}>Weight</Text>
+            <Text style={styles.bioItemLabel}>Weight ({preferredUnit})</Text>
             <View style={styles.bioInputWrapper}>
               <TextInput
                 style={styles.bioInputText}
@@ -132,13 +163,104 @@ export default function ProfileScreen() {
                 onChangeText={setBodyweight}
                 keyboardType="numeric"
               />
-              <Text style={styles.bioUnitText}>kg</Text>
+              <Text style={styles.bioUnitText}>{preferredUnit}</Text>
             </View>
           </View>
         </View>
       </View>
 
-      {/* Account Settings Form Card */}
+      {/* Fitness Preferences Section */}
+      <View style={styles.sectionCard}>
+        <Text style={styles.sectionHeaderTitle}>Fitness Preferences & Goals</Text>
+
+        {/* Goal Selector */}
+        <View style={styles.prefGroup}>
+          <Text style={styles.inputLabel}>Primary Goal</Text>
+          <View style={styles.chipRow}>
+            {fitnessGoals.map((g) => (
+              <TouchableOpacity
+                key={g}
+                style={[styles.chip, fitnessGoal === g && styles.chipActive]}
+                onPress={() => setFitnessGoal(g)}
+              >
+                <Text style={[styles.chipText, fitnessGoal === g && styles.chipTextActive]}>{g}</Text>
+              </TouchableOpacity>
+            ))}
+          </View>
+        </View>
+
+        {/* Experience Level Selector */}
+        <View style={styles.prefGroup}>
+          <Text style={styles.inputLabel}>Experience Level</Text>
+          <View style={styles.chipRow}>
+            {experienceLevels.map((lvl) => (
+              <TouchableOpacity
+                key={lvl}
+                style={[styles.chip, experienceLevel === lvl && styles.chipActive]}
+                onPress={() => setExperienceLevel(lvl)}
+              >
+                <Text style={[styles.chipText, experienceLevel === lvl && styles.chipTextActive]}>{lvl}</Text>
+              </TouchableOpacity>
+            ))}
+          </View>
+        </View>
+
+        {/* Units System Selector */}
+        <View style={styles.prefGroup}>
+          <Text style={styles.inputLabel}>Weight Unit System</Text>
+          <View style={styles.unitToggleRow}>
+            <TouchableOpacity
+              style={[styles.unitBtn, preferredUnit === 'kg' && styles.unitBtnActive]}
+              onPress={() => setPreferredUnit('kg')}
+            >
+              <Text style={[styles.unitBtnText, preferredUnit === 'kg' && styles.unitBtnTextActive]}>Kilograms (kg)</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={[styles.unitBtn, preferredUnit === 'lbs' && styles.unitBtnActive]}
+              onPress={() => setPreferredUnit('lbs')}
+            >
+              <Text style={[styles.unitBtnText, preferredUnit === 'lbs' && styles.unitBtnTextActive]}>Pounds (lbs)</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+
+        {/* Rest Timer Preference */}
+        <View style={styles.prefGroup}>
+          <Text style={styles.inputLabel}>Default Rest Timer</Text>
+          <View style={styles.chipRow}>
+            {restTimerOptions.map((secs) => (
+              <TouchableOpacity
+                key={secs}
+                style={[styles.chip, defaultRestSeconds === secs && styles.chipActive]}
+                onPress={() => setDefaultRestSeconds(secs)}
+              >
+                <Text style={[styles.chipText, defaultRestSeconds === secs && styles.chipTextActive]}>{secs}s</Text>
+              </TouchableOpacity>
+            ))}
+          </View>
+        </View>
+
+        {/* Benchmark Gender Standard */}
+        <View style={styles.prefGroup}>
+          <Text style={styles.inputLabel}>Strength Standard Benchmark</Text>
+          <View style={styles.unitToggleRow}>
+            <TouchableOpacity
+              style={[styles.unitBtn, gender === 'male' && styles.unitBtnActive]}
+              onPress={() => setGender('male')}
+            >
+              <Text style={[styles.unitBtnText, gender === 'male' && styles.unitBtnTextActive]}>Male Benchmark</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={[styles.unitBtn, gender === 'female' && styles.unitBtnActive]}
+              onPress={() => setGender('female')}
+            >
+              <Text style={[styles.unitBtnText, gender === 'female' && styles.unitBtnTextActive]}>Female Benchmark</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </View>
+
+      {/* Account Privacy & Settings */}
       <View style={styles.sectionCard}>
         <Text style={styles.sectionHeaderTitle}>Profile & Privacy Controls</Text>
 
@@ -272,6 +394,23 @@ const styles = StyleSheet.create({
     color: '#94A3B8',
     marginTop: 2,
   },
+  goalTag: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+    backgroundColor: 'rgba(99, 102, 241, 0.15)',
+    paddingHorizontal: 12,
+    paddingVertical: 5,
+    borderRadius: 12,
+    marginTop: 8,
+    borderWidth: 1,
+    borderColor: 'rgba(99, 102, 241, 0.3)',
+  },
+  goalTagText: {
+    fontSize: 12,
+    fontWeight: '600',
+    color: '#818CF8',
+  },
   socialFollowRow: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -350,31 +489,6 @@ const styles = StyleSheet.create({
     color: '#94A3B8',
     fontWeight: '600',
   },
-  bioPillActive: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    backgroundColor: '#334155',
-    borderRadius: 12,
-    paddingHorizontal: 12,
-    paddingVertical: 10,
-    borderWidth: 1,
-    borderColor: '#6366F1',
-  },
-  bioPillTextActive: {
-    fontSize: 16,
-    fontWeight: '700',
-    color: '#F8FAFC',
-  },
-  checkDot: {
-    width: 18,
-    height: 18,
-    borderRadius: 9,
-    backgroundColor: '#6366F1',
-    alignItems: 'center',
-    justifyContent: 'center',
-    alignSelf: 'center',
-  },
   bioInputWrapper: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -382,6 +496,7 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     paddingHorizontal: 12,
     height: 44,
+    gap: 8,
   },
   bioInputText: {
     flex: 1,
@@ -402,6 +517,9 @@ const styles = StyleSheet.create({
     borderColor: 'rgba(255, 255, 255, 0.08)',
     gap: 14,
   },
+  prefGroup: {
+    gap: 6,
+  },
   inputGroup: {
     gap: 6,
   },
@@ -409,6 +527,53 @@ const styles = StyleSheet.create({
     fontSize: 12,
     fontWeight: '600',
     color: '#94A3B8',
+  },
+  chipRow: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 6,
+  },
+  chip: {
+    backgroundColor: '#334155',
+    paddingHorizontal: 12,
+    paddingVertical: 7,
+    borderRadius: 18,
+  },
+  chipActive: {
+    backgroundColor: '#6366F1',
+  },
+  chipText: {
+    fontSize: 12,
+    color: '#CBD5E1',
+    fontWeight: '500',
+  },
+  chipTextActive: {
+    color: '#FFFFFF',
+    fontWeight: '700',
+  },
+  unitToggleRow: {
+    flexDirection: 'row',
+    backgroundColor: '#334155',
+    borderRadius: 10,
+    padding: 3,
+    height: 44,
+  },
+  unitBtn: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderRadius: 8,
+  },
+  unitBtnActive: {
+    backgroundColor: '#6366F1',
+  },
+  unitBtnText: {
+    fontSize: 13,
+    fontWeight: '600',
+    color: '#94A3B8',
+  },
+  unitBtnTextActive: {
+    color: '#FFFFFF',
   },
   inputWrapper: {
     flexDirection: 'row',

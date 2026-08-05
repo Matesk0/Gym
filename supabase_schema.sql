@@ -15,6 +15,11 @@ CREATE TABLE IF NOT EXISTS public.profiles (
   is_public_logs BOOLEAN DEFAULT false,
   gender TEXT DEFAULT 'male',
   bodyweight_kg NUMERIC(5,2) DEFAULT 75.0,
+  height_cm NUMERIC(5,2) DEFAULT 175.0,
+  fitness_goal TEXT DEFAULT 'Hypertrophy',
+  experience_level TEXT DEFAULT 'Intermediate',
+  preferred_unit TEXT DEFAULT 'kg',
+  default_rest_seconds INT DEFAULT 90,
   overall_rank TEXT DEFAULT 'Bronze',
   created_at TIMESTAMPTZ DEFAULT NOW(),
   updated_at TIMESTAMPTZ DEFAULT NOW()
@@ -107,14 +112,32 @@ CREATE POLICY "View set logs for public workouts"
 CREATE OR REPLACE FUNCTION public.handle_new_user()
 RETURNS TRIGGER AS $$
 BEGIN
-  INSERT INTO public.profiles (id, username, avatar_url, is_online, is_public_logs, bodyweight_kg, overall_rank)
+  INSERT INTO public.profiles (
+    id,
+    username,
+    avatar_url,
+    is_online,
+    is_public_logs,
+    bodyweight_kg,
+    height_cm,
+    fitness_goal,
+    experience_level,
+    preferred_unit,
+    default_rest_seconds,
+    overall_rank
+  )
   VALUES (
     new.id,
     COALESCE(new.raw_user_meta_data->>'username', split_part(new.email, '@', 1)),
     COALESCE(new.raw_user_meta_data->>'avatar_url', 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150'),
     true,
-    false,
-    75.0,
+    COALESCE((new.raw_user_meta_data->>'is_public_logs')::boolean, false),
+    COALESCE((new.raw_user_meta_data->>'bodyweight_kg')::numeric, 75.0),
+    COALESCE((new.raw_user_meta_data->>'height_cm')::numeric, 175.0),
+    COALESCE(new.raw_user_meta_data->>'fitness_goal', 'Hypertrophy'),
+    COALESCE(new.raw_user_meta_data->>'experience_level', 'Intermediate'),
+    COALESCE(new.raw_user_meta_data->>'preferred_unit', 'kg'),
+    COALESCE((new.raw_user_meta_data->>'default_rest_seconds')::int, 90),
     'Bronze'
   );
   RETURN NEW;
