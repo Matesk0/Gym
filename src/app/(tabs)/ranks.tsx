@@ -375,7 +375,7 @@ const styles = StyleSheet.create({
     height: 80,
     borderRadius: 40,
     borderWidth: 2,
-    borderColor: '#30D158',
+    borderColor: '#38BDF8',
   },
   onlineDotHero: {
     position: 'absolute',
@@ -471,7 +471,7 @@ const styles = StyleSheet.create({
     color: '#94A3B8',
   },
   timeTabTextActive: {
-    color: '#30D158',
+    color: '#38BDF8',
     fontWeight: '700',
   },
   timeTabLine: {
@@ -480,7 +480,7 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     height: 3,
-    backgroundColor: '#30D158',
+    backgroundColor: '#38BDF8',
     borderRadius: 1.5,
   },
   leaderboardList: {
@@ -496,8 +496,8 @@ const styles = StyleSheet.create({
     borderColor: 'rgba(255, 255, 255, 0.08)',
   },
   playerRowMe: {
-    borderColor: '#30D158',
-    backgroundColor: 'rgba(48, 209, 88, 0.12)',
+    borderColor: '#38BDF8',
+    backgroundColor: 'rgba(56, 189, 248, 0.12)',
   },
   rankNumber: {
     width: 28,
@@ -574,7 +574,7 @@ const styles = StyleSheet.create({
   progressPctText: {
     fontSize: 12,
     fontWeight: '700',
-    color: '#30D158',
+    color: '#38BDF8',
   },
   progressBarTrack: {
     height: 8,
@@ -584,7 +584,7 @@ const styles = StyleSheet.create({
   },
   progressBarFill: {
     height: '100%',
-    backgroundColor: '#30D158',
+    backgroundColor: '#38BDF8',
     borderRadius: 4,
   },
   liftGrid: {
@@ -611,7 +611,7 @@ const styles = StyleSheet.create({
   },
   liftSub: {
     fontSize: 10,
-    color: '#30D158',
+    color: '#38BDF8',
     marginTop: 2,
   },
 });

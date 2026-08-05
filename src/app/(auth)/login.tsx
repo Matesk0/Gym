@@ -38,7 +38,7 @@ export default function LoginScreen() {
       <View style={styles.cardWrapper}>
         <View style={styles.headerContainer}>
           <View style={styles.logoBadge}>
-            <Dumbbell color="#30D158" size={36} />
+            <Dumbbell color="#38BDF8" size={36} />
           </View>
           <Text style={styles.appTitle}>GymPulse</Text>
           <Text style={styles.appSubtitle}>Scientific Muscle Recovery & Strength Ranks</Text>
@@ -46,7 +46,7 @@ export default function LoginScreen() {
 
         {isMockMode && (
           <View style={styles.mockBanner}>
-            <ShieldCheck color="#30D158" size={18} />
+            <ShieldCheck color="#38BDF8" size={18} />
             <Text style={styles.mockText}>Demo Preview Mode Active (Supabase ready)</Text>
           </View>
         )}
@@ -158,7 +158,7 @@ const styles = StyleSheet.create({
     gap: 8,
   },
   mockText: {
-    color: '#30D158',
+    color: '#38BDF8',
     fontSize: 13,
     fontWeight: '600',
   },
@@ -184,7 +184,7 @@ const styles = StyleSheet.create({
     fontSize: 15,
   },
   loginBtn: {
-    backgroundColor: '#30D158',
+    backgroundColor: '#38BDF8',
     height: 52,
     borderRadius: 12,
     alignItems: 'center',

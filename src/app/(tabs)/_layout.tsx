@@ -7,7 +7,7 @@ export default function TabLayout() {
     <Tabs
       screenOptions={{
         headerShown: false,
-        tabBarActiveTintColor: '#30D158', // Prestige Vivid Green Accent
+        tabBarActiveTintColor: '#38BDF8', // Light Cyan Accent
         tabBarInactiveTintColor: '#8E8E93', // System Gray
         tabBarStyle: {
           backgroundColor: '#000000', // OLED Pure Black

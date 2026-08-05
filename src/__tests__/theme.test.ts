@@ -16,7 +16,7 @@ describe('Design System Theme Tokens', () => {
     expect(Colors.dark.cardGlass).toBe('rgba(28, 28, 30, 0.85)');
     expect(Colors.dark.textPrimary).toBe('#FFFFFF');
     expect(Colors.dark.textSecondary).toBe('#8E8E93');
-    expect(Colors.dark.primaryAccent).toBe('#30D158');
+    expect(Colors.dark.primaryAccent).toBe('#38BDF8');
     expect(Colors.dark.secondaryAccent).toBe('#0A84FF');
   });
 

@@ -432,7 +432,7 @@ const styles = StyleSheet.create({
     height: 80,
     borderRadius: 40,
     borderWidth: 2,
-    borderColor: '#30D158',
+    borderColor: '#38BDF8',
   },
   onlineDot: {
     position: 'absolute',
@@ -601,7 +601,7 @@ const styles = StyleSheet.create({
     borderRadius: 18,
   },
   chipActive: {
-    backgroundColor: '#30D158',
+    backgroundColor: '#38BDF8',
   },
   chipText: {
     fontSize: 12,
@@ -626,7 +626,7 @@ const styles = StyleSheet.create({
     borderRadius: 8,
   },
   unitBtnActive: {
-    backgroundColor: '#30D158',
+    backgroundColor: '#38BDF8',
   },
   unitBtnText: {
     fontSize: 13,
@@ -685,7 +685,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     gap: 8,
-    backgroundColor: '#30D158',
+    backgroundColor: '#38BDF8',
     height: 50,
     borderRadius: 12,
   },
