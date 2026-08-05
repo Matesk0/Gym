@@ -428,7 +428,7 @@ const styles = StyleSheet.create({
   },
   goalFill: {
     height: '100%',
-    backgroundColor: '#38BDF8',
+    backgroundColor: '#30D158',
     borderRadius: 4,
   },
   subTabRow: {
@@ -449,7 +449,7 @@ const styles = StyleSheet.create({
     color: '#94A3B8',
   },
   subTabTextActive: {
-    color: '#38BDF8',
+    color: '#30D158',
     fontWeight: '700',
   },
   subTabLine: {
@@ -458,7 +458,7 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     height: 3,
-    backgroundColor: '#38BDF8',
+    backgroundColor: '#30D158',
     borderRadius: 1.5,
   },
   searchRow: {
@@ -507,7 +507,7 @@ const styles = StyleSheet.create({
   },
   seeAllText: {
     fontSize: 13,
-    color: '#38BDF8',
+    color: '#30D158',
     fontWeight: '600',
   },
   carouselScroll: {
@@ -604,7 +604,7 @@ const styles = StyleSheet.create({
     width: 44,
     height: 44,
     borderRadius: 12,
-    backgroundColor: '#38BDF8',
+    backgroundColor: '#30D158',
     alignItems: 'center',
     justifyContent: 'center',
   },

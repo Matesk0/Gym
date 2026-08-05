@@ -78,7 +78,7 @@ export default function SignupScreen() {
       <View style={styles.cardWrapper}>
         <View style={styles.headerContainer}>
           <View style={styles.logoBadge}>
-            <Dumbbell color="#38BDF8" size={36} />
+            <Dumbbell color="#30D158" size={36} />
           </View>
           <Text style={styles.appTitle}>Create Account</Text>
           <Text style={styles.appSubtitle}>Join GymPulse & track your strength percentile</Text>
@@ -231,7 +231,7 @@ export default function SignupScreen() {
                 <Switch
                   value={trackWorkoutTime}
                   onValueChange={setTrackWorkoutTime}
-                  trackColor={{ false: '#2C2C2E', true: '#38BDF8' }}
+                  trackColor={{ false: '#2C2C2E', true: '#30D158' }}
                   thumbColor="#FFFFFF"
                 />
               </View>
@@ -244,7 +244,7 @@ export default function SignupScreen() {
                 <Switch
                   value={perSetTimerEnabled}
                   onValueChange={setPerSetTimerEnabled}
-                  trackColor={{ false: '#2C2C2E', true: '#38BDF8' }}
+                  trackColor={{ false: '#2C2C2E', true: '#30D158' }}
                   thumbColor="#FFFFFF"
                 />
               </View>
@@ -257,7 +257,7 @@ export default function SignupScreen() {
                 <Switch
                   value={autoHypertrophyEnabled}
                   onValueChange={setAutoHypertrophyEnabled}
-                  trackColor={{ false: '#2C2C2E', true: '#38BDF8' }}
+                  trackColor={{ false: '#2C2C2E', true: '#30D158' }}
                   thumbColor="#FFFFFF"
                 />
               </View>
@@ -411,7 +411,7 @@ const styles = StyleSheet.create({
     borderRadius: 18,
   },
   chipActive: {
-    backgroundColor: '#38BDF8',
+    backgroundColor: '#30D158',
   },
   chipText: {
     fontSize: 12,
@@ -440,7 +440,7 @@ const styles = StyleSheet.create({
     borderRadius: 8,
   },
   unitBtnActive: {
-    backgroundColor: '#38BDF8',
+    backgroundColor: '#30D158',
   },
   unitBtnText: {
     fontSize: 13,
@@ -481,7 +481,7 @@ const styles = StyleSheet.create({
     color: '#8E8E93',
   },
   signupBtn: {
-    backgroundColor: '#38BDF8',
+    backgroundColor: '#30D158',
     height: 52,
     borderRadius: 12,
     alignItems: 'center',
@@ -503,7 +503,7 @@ const styles = StyleSheet.create({
     fontSize: 14,
   },
   linkText: {
-    color: '#38BDF8',
+    color: '#30D158',
     fontSize: 14,
     fontWeight: '700',
   },

@@ -398,8 +398,8 @@ const styles = StyleSheet.create({
     borderColor: 'rgba(255, 255, 255, 0.08)',
   },
   catPillBtnActive: {
-    backgroundColor: '#38BDF8',
-    borderColor: '#38BDF8',
+    backgroundColor: '#30D158',
+    borderColor: '#30D158',
   },
   catPillText: {
     color: '#94A3B8',

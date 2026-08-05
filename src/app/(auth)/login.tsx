@@ -38,7 +38,7 @@ export default function LoginScreen() {
       <View style={styles.cardWrapper}>
         <View style={styles.headerContainer}>
           <View style={styles.logoBadge}>
-            <Dumbbell color="#38BDF8" size={36} />
+            <Dumbbell color="#30D158" size={36} />
           </View>
           <Text style={styles.appTitle}>GymPulse</Text>
           <Text style={styles.appSubtitle}>Scientific Muscle Recovery & Strength Ranks</Text>
@@ -184,7 +184,7 @@ const styles = StyleSheet.create({
     fontSize: 15,
   },
   loginBtn: {
-    backgroundColor: '#38BDF8',
+    backgroundColor: '#30D158',
     height: 52,
     borderRadius: 12,
     alignItems: 'center',
