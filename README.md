@@ -49,7 +49,8 @@ Gym/
 │   ├── lib/                    # Supabase Client config (supabase.ts)
 │   ├── types/                  # TypeScript Data Models (database.ts)
 │   └── __tests__/              # Unit Test Suite (muscles.test.ts, ranks.test.ts)
-├── supabase_schema.sql         # SQL Script for Supabase PostgreSQL tables & RLS
+├── supabase_setup.sql          # Unified Master SQL Script for Supabase Database & Seed
+├── SUPABASE_DATABASE_PROMPT.md # Complete Supabase AI creation prompt & guide
 ├── jest.config.js              # Jest configuration
 └── AGENTS.md                   # Workspace rules & Git workflow guidelines
 ```
@@ -81,7 +82,7 @@ You can open the app in:
 
 To connect live Supabase cloud data:
 
-1. Copy the SQL script from [`supabase_schema.sql`](file:///workspaces/Gym/supabase_schema.sql) and execute it in your Supabase SQL Editor.
+1. Copy the SQL script from [`supabase_setup.sql`](file:///workspaces/Gym/supabase_setup.sql) or use the prompt from [`SUPABASE_DATABASE_PROMPT.md`](file:///workspaces/Gym/SUPABASE_DATABASE_PROMPT.md) and execute it in your Supabase SQL Editor or Supabase AI Assistant.
 2. Add your Supabase credentials to `.env`:
 
 ```env

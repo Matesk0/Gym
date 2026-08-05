@@ -2,10 +2,10 @@ import { describe, test, expect } from '@jest/globals';
 import * as fs from 'fs';
 import * as path from 'path';
 
-describe('Supabase Seed SQL Script Verification', () => {
-  const seedFilePath = path.join(__dirname, '../../supabase_seed_users.sql');
+describe('Supabase Setup SQL Script Verification', () => {
+  const seedFilePath = path.join(__dirname, '../../supabase_setup.sql');
 
-  test('supabase_seed_users.sql exists and contains valid SQL user provisioning commands', () => {
+  test('supabase_setup.sql exists and contains valid SQL user provisioning commands', () => {
     expect(fs.existsSync(seedFilePath)).toBe(true);
 
     const sqlContent = fs.readFileSync(seedFilePath, 'utf8');

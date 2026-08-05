@@ -45,7 +45,7 @@ This document contains the complete context, architectural patterns, design stan
 
 ---
 
-## 🗄️ Database & Security Rules (`supabase_schema.sql`)
+## 🗄️ Database & Security Rules (`supabase_setup.sql`)
 
 - **Row Level Security (RLS)** MUST be enabled on all tables (`profiles`, `exercises`, `workout_logs`, `set_logs`).
 - **Workout Log Privacy**: Workout logs are secret by default (`is_public = false`). RLS policies allow other members to view logs ONLY if `is_public = true`.
@@ -68,7 +68,8 @@ Gym/
 │   ├── lib/                    # Supabase Client with ssrSafeStorage (supabase.ts)
 │   ├── types/                  # TypeScript Data Models (database.ts)
 │   └── __tests__/              # Jest Test Suite (muscles, ranks, supabase_rls)
-├── supabase_schema.sql         # SQL Script for Supabase PostgreSQL tables & RLS
+├── supabase_setup.sql          # Unified Master SQL Script for Supabase Database & Seed
+├── SUPABASE_DATABASE_PROMPT.md # Complete Supabase AI creation prompt & guide
 ├── jest.config.js              # Jest configuration with babel-jest
 ├── README.md                   # Complete Project & Feature Documentation
 └── package.json
