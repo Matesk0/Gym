@@ -11,6 +11,10 @@ export interface OptionalSignUpOptions {
   preferred_unit?: Profile['preferred_unit'];
   default_rest_seconds?: number;
   is_public_logs?: boolean;
+  track_workout_time?: boolean;
+  per_set_timer_enabled?: boolean;
+  auto_hypertrophy_enabled?: boolean;
+  target_rep_range?: Profile['target_rep_range'];
 }
 
 interface AuthContextType {
@@ -42,6 +46,10 @@ const DEFAULT_PROFILE: Profile = {
   experience_level: 'Intermediate',
   preferred_unit: 'kg',
   default_rest_seconds: 90,
+  track_workout_time: true,
+  per_set_timer_enabled: true,
+  auto_hypertrophy_enabled: true,
+  target_rep_range: 'Hypertrophy (8-12)',
   overall_rank: 'Gold',
 };
 

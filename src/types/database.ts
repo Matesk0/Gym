@@ -4,6 +4,8 @@ export type FitnessGoal = 'Hypertrophy' | 'Strength' | 'Fat Loss' | 'Endurance' 
 export type ExperienceLevel = 'Beginner' | 'Intermediate' | 'Advanced' | 'Elite';
 export type PreferredUnit = 'kg' | 'lbs';
 
+export type TargetRepRange = 'Hypertrophy (8-12)' | 'Strength (3-5)' | 'Endurance (15-20)';
+
 export interface Profile {
   id: string;
   username: string;
@@ -17,6 +19,10 @@ export interface Profile {
   experience_level?: ExperienceLevel;
   preferred_unit?: PreferredUnit;
   default_rest_seconds?: number;
+  track_workout_time?: boolean;
+  per_set_timer_enabled?: boolean;
+  auto_hypertrophy_enabled?: boolean;
+  target_rep_range?: TargetRepRange;
   overall_rank: RankTier;
   created_at?: string;
 }
@@ -50,6 +56,7 @@ export interface SetLog {
   set_number: number;
   weight_kg: number;
   reps: number;
+  duration_seconds?: number;
   created_at?: string;
 }
 
