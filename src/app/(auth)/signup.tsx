@@ -31,64 +31,66 @@ export default function SignupScreen() {
 
   return (
     <View style={styles.container}>
-      <View style={styles.headerContainer}>
-        <View style={styles.logoBadge}>
-          <Dumbbell color="#10B981" size={36} />
-        </View>
-        <Text style={styles.appTitle}>Create Account</Text>
-        <Text style={styles.appSubtitle}>Join GymPulse & track your strength percentile</Text>
-      </View>
-
-      <View style={styles.formContainer}>
-        <View style={styles.inputWrapper}>
-          <User color="#94A3B8" size={20} style={styles.inputIcon} />
-          <TextInput
-            style={styles.input}
-            placeholder="Username (e.g. IronLifter99)"
-            placeholderTextColor="#64748B"
-            value={username}
-            onChangeText={setUsername}
-          />
+      <View style={styles.cardWrapper}>
+        <View style={styles.headerContainer}>
+          <View style={styles.logoBadge}>
+            <Dumbbell color="#6366F1" size={36} />
+          </View>
+          <Text style={styles.appTitle}>Create Account</Text>
+          <Text style={styles.appSubtitle}>Join GymPulse & track your strength percentile</Text>
         </View>
 
-        <View style={styles.inputWrapper}>
-          <Mail color="#94A3B8" size={20} style={styles.inputIcon} />
-          <TextInput
-            style={styles.input}
-            placeholder="Email Address"
-            placeholderTextColor="#64748B"
-            value={email}
-            onChangeText={setEmail}
-            autoCapitalize="none"
-            keyboardType="email-address"
-          />
-        </View>
+        <View style={styles.formContainer}>
+          <View style={styles.inputWrapper}>
+            <User color="#94A3B8" size={20} style={styles.inputIcon} />
+            <TextInput
+              style={styles.input}
+              placeholder="Username (e.g. IronLifter99)"
+              placeholderTextColor="#94A3B8"
+              value={username}
+              onChangeText={setUsername}
+            />
+          </View>
 
-        <View style={styles.inputWrapper}>
-          <Lock color="#94A3B8" size={20} style={styles.inputIcon} />
-          <TextInput
-            style={styles.input}
-            placeholder="Password (min 6 chars)"
-            placeholderTextColor="#64748B"
-            value={password}
-            onChangeText={setPassword}
-            secureTextEntry
-          />
-        </View>
+          <View style={styles.inputWrapper}>
+            <Mail color="#94A3B8" size={20} style={styles.inputIcon} />
+            <TextInput
+              style={styles.input}
+              placeholder="Email Address"
+              placeholderTextColor="#94A3B8"
+              value={email}
+              onChangeText={setEmail}
+              autoCapitalize="none"
+              keyboardType="email-address"
+            />
+          </View>
 
-        <TouchableOpacity style={styles.signupBtn} onPress={handleSignup} disabled={loading}>
-          {loading ? (
-            <ActivityIndicator color="#0F172A" />
-          ) : (
-            <Text style={styles.signupBtnText}>Register Now</Text>
-          )}
-        </TouchableOpacity>
+          <View style={styles.inputWrapper}>
+            <Lock color="#94A3B8" size={20} style={styles.inputIcon} />
+            <TextInput
+              style={styles.input}
+              placeholder="Password (min 6 chars)"
+              placeholderTextColor="#94A3B8"
+              value={password}
+              onChangeText={setPassword}
+              secureTextEntry
+            />
+          </View>
 
-        <View style={styles.footerRow}>
-          <Text style={styles.footerText}>Already have an account? </Text>
-          <TouchableOpacity onPress={() => router.push('/(auth)/login')}>
-            <Text style={styles.linkText}>Sign In</Text>
+          <TouchableOpacity style={styles.signupBtn} onPress={handleSignup} disabled={loading}>
+            {loading ? (
+              <ActivityIndicator color="#FFFFFF" />
+            ) : (
+              <Text style={styles.signupBtnText}>Register Now</Text>
+            )}
           </TouchableOpacity>
+
+          <View style={styles.footerRow}>
+            <Text style={styles.footerText}>Already have an account? </Text>
+            <TouchableOpacity onPress={() => router.push('/(auth)/login')}>
+              <Text style={styles.linkText}>Sign In</Text>
+            </TouchableOpacity>
+          </View>
         </View>
       </View>
     </View>
@@ -98,9 +100,19 @@ export default function SignupScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#0B0F17',
+    backgroundColor: '#0F172A',
     paddingHorizontal: 24,
     justifyContent: 'center',
+    alignItems: 'center',
+  },
+  cardWrapper: {
+    width: '100%',
+    maxWidth: 440,
+    backgroundColor: 'rgba(30, 41, 59, 0.7)',
+    borderRadius: 24,
+    padding: 28,
+    borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.08)',
   },
   headerContainer: {
     alignItems: 'center',
@@ -115,11 +127,11 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     marginBottom: 14,
     borderWidth: 1,
-    borderColor: '#334155',
+    borderColor: 'rgba(255, 255, 255, 0.1)',
   },
   appTitle: {
     fontSize: 28,
-    fontWeight: '800',
+    fontWeight: '700',
     color: '#F8FAFC',
   },
   appSubtitle: {
@@ -135,9 +147,9 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     backgroundColor: '#1E293B',
-    borderRadius: 14,
+    borderRadius: 12,
     borderWidth: 1,
-    borderColor: '#334155',
+    borderColor: 'rgba(255, 255, 255, 0.08)',
     paddingHorizontal: 16,
     height: 52,
   },
@@ -150,17 +162,17 @@ const styles = StyleSheet.create({
     fontSize: 15,
   },
   signupBtn: {
-    backgroundColor: '#10B981',
+    backgroundColor: '#6366F1',
     height: 52,
-    borderRadius: 14,
+    borderRadius: 12,
     alignItems: 'center',
     justifyContent: 'center',
     marginTop: 8,
   },
   signupBtnText: {
-    color: '#0B0F17',
+    color: '#FFFFFF',
     fontSize: 16,
-    fontWeight: '700',
+    fontWeight: '600',
   },
   footerRow: {
     flexDirection: 'row',
@@ -172,8 +184,8 @@ const styles = StyleSheet.create({
     fontSize: 14,
   },
   linkText: {
-    color: '#10B981',
+    color: '#6366F1',
     fontSize: 14,
-    fontWeight: '700',
+    fontWeight: '600',
   },
 });

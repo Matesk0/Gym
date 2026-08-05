@@ -7,11 +7,11 @@ export default function TabLayout() {
     <Tabs
       screenOptions={{
         headerShown: false,
-        tabBarActiveTintColor: '#FFFFFF', // Clean white active tab icon matching screenshots
-        tabBarInactiveTintColor: '#8C8885',
+        tabBarActiveTintColor: '#6366F1', // Primary Indigo accent from design-system.md
+        tabBarInactiveTintColor: '#94A3B8', // Slate 400
         tabBarStyle: {
-          backgroundColor: '#1D1B1B',
-          borderTopColor: '#292726',
+          backgroundColor: '#0F172A', // Slate 900
+          borderTopColor: '#1E293B',  // Slate 800
           height: 65,
           paddingBottom: 10,
           paddingTop: 8,
