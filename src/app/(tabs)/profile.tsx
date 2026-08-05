@@ -389,7 +389,7 @@ export default function ProfileScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#0F172A',
+    backgroundColor: '#000000',
   },
   content: {
     paddingHorizontal: 20,
@@ -432,7 +432,7 @@ const styles = StyleSheet.create({
     height: 80,
     borderRadius: 40,
     borderWidth: 2,
-    borderColor: '#6366F1',
+    borderColor: '#30D158',
   },
   onlineDot: {
     position: 'absolute',
@@ -601,7 +601,7 @@ const styles = StyleSheet.create({
     borderRadius: 18,
   },
   chipActive: {
-    backgroundColor: '#6366F1',
+    backgroundColor: '#30D158',
   },
   chipText: {
     fontSize: 12,
@@ -626,7 +626,7 @@ const styles = StyleSheet.create({
     borderRadius: 8,
   },
   unitBtnActive: {
-    backgroundColor: '#6366F1',
+    backgroundColor: '#30D158',
   },
   unitBtnText: {
     fontSize: 13,
@@ -685,7 +685,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     gap: 8,
-    backgroundColor: '#6366F1',
+    backgroundColor: '#30D158',
     height: 50,
     borderRadius: 12,
   },

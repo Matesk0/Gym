@@ -7,15 +7,17 @@ This document outlines the core design language for our web applications. Follow
 Our color system is designed to be modern, vibrant, and accessible. We prioritize a sleek dark mode aesthetic by default, with glassmorphism elements.
 
 ### Base Colors
-* **Background (Dark):** `#0F172A` (Slate 900) - A deep, rich background that feels more premium than pure black.
-* **Surface/Card:** `rgba(30, 41, 59, 0.7)` (Slate 800 with opacity) - Used for cards and modals, combined with background blur for a glass effect.
-* **Text Primary:** `#F8FAFC` (Slate 50) - For main headings and primary body text.
-* **Text Secondary:** `#94A3B8` (Slate 400) - For descriptions, placeholders, and less important text.
+* **Background (Dark):** `#000000` (OLED Pure Black) - Pure OLED black for maximum contrast and OLED battery efficiency.
+* **Surface/Card:** `#1C1C1E` (Dark Charcoal) / `rgba(28, 28, 30, 0.85)` - Prestige iOS dark secondary surface for cards and modals.
+* **Tertiary Card:** `#2C2C2E` - Used for input wrappers, chips, and nested sub-cards.
+* **Text Primary:** `#FFFFFF` (Pure White) - High-legibility headings and primary body text.
+* **Text Secondary:** `#8E8E93` (System Gray) - Subtitles, metadata, and placeholder text.
 
 ### Brand/Accent Colors
-* **Primary Accent:** `#6366F1` (Indigo 500) - Used for primary buttons, active states, and important links.
-* **Secondary Accent:** `#EC4899` (Pink 500) - Used sparingly for gradients, highlights, or badges to add a "wow" factor.
-* **Gradient:** `linear-gradient(135deg, #6366F1 0%, #EC4899 100%)` - Used for striking hero text, special buttons, or subtle borders.
+* **Primary Accent:** `#30D158` (Vivid Lime / Emerald Green) - Apple Fitness style vivid green for primary actions, active states, and highlights.
+* **Secondary Accent:** `#0A84FF` (Electric Blue) - Electric blue for secondary stats and badges.
+* **Amber Gold:** `#FF9F0C` - Used for leaderboard ranks and rewards.
+* **Coral Red:** `#FF453A` - Used for exhausted muscle fatigue stages and destructive actions.
 
 ## ✍️ 2. Typography
 

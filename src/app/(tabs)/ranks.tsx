@@ -336,7 +336,7 @@ export default function RanksScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#0F172A',
+    backgroundColor: '#000000',
   },
   content: {
     paddingHorizontal: 20,
@@ -375,7 +375,7 @@ const styles = StyleSheet.create({
     height: 80,
     borderRadius: 40,
     borderWidth: 2,
-    borderColor: '#6366F1',
+    borderColor: '#30D158',
   },
   onlineDotHero: {
     position: 'absolute',
@@ -471,7 +471,7 @@ const styles = StyleSheet.create({
     color: '#94A3B8',
   },
   timeTabTextActive: {
-    color: '#6366F1',
+    color: '#30D158',
     fontWeight: '700',
   },
   timeTabLine: {
@@ -480,7 +480,7 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     height: 3,
-    backgroundColor: '#6366F1',
+    backgroundColor: '#30D158',
     borderRadius: 1.5,
   },
   leaderboardList: {
@@ -489,15 +489,15 @@ const styles = StyleSheet.create({
   playerRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: 'rgba(30, 41, 59, 0.7)',
+    backgroundColor: '#1C1C1E',
     borderRadius: 18,
     padding: 14,
     borderWidth: 1,
     borderColor: 'rgba(255, 255, 255, 0.08)',
   },
   playerRowMe: {
-    borderColor: '#6366F1',
-    backgroundColor: 'rgba(99, 102, 241, 0.12)',
+    borderColor: '#30D158',
+    backgroundColor: 'rgba(48, 209, 88, 0.12)',
   },
   rankNumber: {
     width: 28,
@@ -574,17 +574,17 @@ const styles = StyleSheet.create({
   progressPctText: {
     fontSize: 12,
     fontWeight: '700',
-    color: '#6366F1',
+    color: '#30D158',
   },
   progressBarTrack: {
     height: 8,
-    backgroundColor: '#0F172A',
+    backgroundColor: '#2C2C2E',
     borderRadius: 4,
     overflow: 'hidden',
   },
   progressBarFill: {
     height: '100%',
-    backgroundColor: '#6366F1',
+    backgroundColor: '#30D158',
     borderRadius: 4,
   },
   liftGrid: {
@@ -611,7 +611,7 @@ const styles = StyleSheet.create({
   },
   liftSub: {
     fontSize: 10,
-    color: '#6366F1',
+    color: '#30D158',
     marginTop: 2,
   },
 });

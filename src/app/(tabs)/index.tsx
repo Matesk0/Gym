@@ -344,7 +344,7 @@ export default function HomeScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#0F172A',
+    backgroundColor: '#000000',
   },
   content: {
     paddingHorizontal: 20,
@@ -399,10 +399,10 @@ const styles = StyleSheet.create({
     width: 6,
     height: 6,
     borderRadius: 3,
-    backgroundColor: '#6366F1',
+    backgroundColor: '#30D158',
   },
   goalCard: {
-    backgroundColor: 'rgba(30, 41, 59, 0.7)',
+    backgroundColor: '#1C1C1E',
     borderRadius: 24,
     padding: 20,
     marginBottom: 20,
@@ -428,7 +428,7 @@ const styles = StyleSheet.create({
   },
   goalFill: {
     height: '100%',
-    backgroundColor: '#6366F1',
+    backgroundColor: '#30D158',
     borderRadius: 4,
   },
   subTabRow: {
@@ -449,7 +449,7 @@ const styles = StyleSheet.create({
     color: '#94A3B8',
   },
   subTabTextActive: {
-    color: '#6366F1',
+    color: '#30D158',
     fontWeight: '700',
   },
   subTabLine: {
@@ -458,7 +458,7 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     height: 3,
-    backgroundColor: '#6366F1',
+    backgroundColor: '#30D158',
     borderRadius: 1.5,
   },
   searchRow: {
@@ -507,7 +507,7 @@ const styles = StyleSheet.create({
   },
   seeAllText: {
     fontSize: 13,
-    color: '#6366F1',
+    color: '#30D158',
     fontWeight: '600',
   },
   carouselScroll: {
@@ -604,7 +604,7 @@ const styles = StyleSheet.create({
     width: 44,
     height: 44,
     borderRadius: 12,
-    backgroundColor: '#6366F1',
+    backgroundColor: '#30D158',
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -703,8 +703,8 @@ const styles = StyleSheet.create({
     borderWidth: 1,
   },
   privacyBadgePublic: {
-    backgroundColor: 'rgba(99, 102, 241, 0.12)',
-    borderColor: 'rgba(99, 102, 241, 0.3)',
+    backgroundColor: 'rgba(48, 209, 88, 0.12)',
+    borderColor: 'rgba(48, 209, 88, 0.3)',
   },
   privacyBadgePrivate: {
     backgroundColor: 'rgba(251, 191, 36, 0.12)',
@@ -716,12 +716,12 @@ const styles = StyleSheet.create({
   },
   historyCardBottom: {
     borderTopWidth: 1,
-    borderTopColor: '#334155',
+    borderTopColor: '#2C2C2E',
     paddingTop: 8,
   },
   historyMetaText: {
     fontSize: 12,
-    color: '#6366F1',
+    color: '#30D158',
     fontWeight: '600',
   },
 });

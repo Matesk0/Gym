@@ -38,7 +38,7 @@ export default function LoginScreen() {
       <View style={styles.cardWrapper}>
         <View style={styles.headerContainer}>
           <View style={styles.logoBadge}>
-            <Dumbbell color="#6366F1" size={36} />
+            <Dumbbell color="#30D158" size={36} />
           </View>
           <Text style={styles.appTitle}>GymPulse</Text>
           <Text style={styles.appSubtitle}>Scientific Muscle Recovery & Strength Ranks</Text>
@@ -46,18 +46,18 @@ export default function LoginScreen() {
 
         {isMockMode && (
           <View style={styles.mockBanner}>
-            <ShieldCheck color="#6366F1" size={18} />
+            <ShieldCheck color="#30D158" size={18} />
             <Text style={styles.mockText}>Demo Preview Mode Active (Supabase ready)</Text>
           </View>
         )}
 
         <View style={styles.formContainer}>
           <View style={styles.inputWrapper}>
-            <Mail color="#94A3B8" size={20} style={styles.inputIcon} />
+            <Mail color="#8E8E93" size={20} style={styles.inputIcon} />
             <TextInput
               style={styles.input}
               placeholder="Email Address"
-              placeholderTextColor="#94A3B8"
+              placeholderTextColor="#8E8E93"
               value={email}
               onChangeText={setEmail}
               autoCapitalize="none"
@@ -66,11 +66,11 @@ export default function LoginScreen() {
           </View>
 
           <View style={styles.inputWrapper}>
-            <Lock color="#94A3B8" size={20} style={styles.inputIcon} />
+            <Lock color="#8E8E93" size={20} style={styles.inputIcon} />
             <TextInput
               style={styles.input}
               placeholder="Password"
-              placeholderTextColor="#94A3B8"
+              placeholderTextColor="#8E8E93"
               value={password}
               onChangeText={setPassword}
               secureTextEntry
@@ -104,7 +104,7 @@ export default function LoginScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#0F172A',
+    backgroundColor: '#000000',
     paddingHorizontal: 24,
     justifyContent: 'center',
     alignItems: 'center',
@@ -112,11 +112,11 @@ const styles = StyleSheet.create({
   cardWrapper: {
     width: '100%',
     maxWidth: 440,
-    backgroundColor: 'rgba(30, 41, 59, 0.7)',
+    backgroundColor: '#1C1C1E',
     borderRadius: 24,
     padding: 28,
     borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.08)',
+    borderColor: 'rgba(255, 255, 255, 0.1)',
   },
   headerContainer: {
     alignItems: 'center',
@@ -126,7 +126,7 @@ const styles = StyleSheet.create({
     width: 72,
     height: 72,
     borderRadius: 24,
-    backgroundColor: '#1E293B',
+    backgroundColor: '#2C2C2E',
     alignItems: 'center',
     justifyContent: 'center',
     marginBottom: 16,
@@ -136,21 +136,21 @@ const styles = StyleSheet.create({
   appTitle: {
     fontSize: 32,
     fontWeight: '700',
-    color: '#F8FAFC',
+    color: '#FFFFFF',
     letterSpacing: 0.5,
   },
   appSubtitle: {
     fontSize: 14,
-    color: '#94A3B8',
+    color: '#8E8E93',
     marginTop: 6,
     textAlign: 'center',
   },
   mockBanner: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: 'rgba(99, 102, 241, 0.12)',
+    backgroundColor: 'rgba(48, 209, 88, 0.12)',
     borderWidth: 1,
-    borderColor: 'rgba(99, 102, 241, 0.3)',
+    borderColor: 'rgba(48, 209, 88, 0.3)',
     paddingHorizontal: 14,
     paddingVertical: 10,
     borderRadius: 12,
@@ -158,7 +158,7 @@ const styles = StyleSheet.create({
     gap: 8,
   },
   mockText: {
-    color: '#818CF8',
+    color: '#30D158',
     fontSize: 13,
     fontWeight: '600',
   },
@@ -168,7 +168,7 @@ const styles = StyleSheet.create({
   inputWrapper: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#1E293B',
+    backgroundColor: '#2C2C2E',
     borderRadius: 12,
     borderWidth: 1,
     borderColor: 'rgba(255, 255, 255, 0.08)',
@@ -180,11 +180,11 @@ const styles = StyleSheet.create({
   },
   input: {
     flex: 1,
-    color: '#F8FAFC',
+    color: '#FFFFFF',
     fontSize: 15,
   },
   loginBtn: {
-    backgroundColor: '#6366F1',
+    backgroundColor: '#30D158',
     height: 52,
     borderRadius: 12,
     alignItems: 'center',
@@ -194,7 +194,7 @@ const styles = StyleSheet.create({
   loginBtnText: {
     color: '#FFFFFF',
     fontSize: 16,
-    fontWeight: '600',
+    fontWeight: '700',
   },
   demoBtn: {
     backgroundColor: 'transparent',
@@ -203,10 +203,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.1)',
+    borderColor: 'rgba(255, 255, 255, 0.12)',
   },
   demoBtnText: {
-    color: '#F8FAFC',
+    color: '#FFFFFF',
     fontSize: 14,
     fontWeight: '600',
   },
@@ -216,12 +216,12 @@ const styles = StyleSheet.create({
     marginTop: 14,
   },
   footerText: {
-    color: '#94A3B8',
+    color: '#8E8E93',
     fontSize: 14,
   },
   linkText: {
-    color: '#6366F1',
+    color: '#30D158',
     fontSize: 14,
-    fontWeight: '600',
+    fontWeight: '700',
   },
 });

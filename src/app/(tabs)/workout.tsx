@@ -450,7 +450,7 @@ export default function WorkoutScreen() {
       {/* Optional Tracking Features Bar */}
       <View style={styles.optBarCard}>
         <View style={styles.optBarTitleRow}>
-          <Sliders color="#6366F1" size={16} />
+          <Sliders color="#30D158" size={16} />
           <Text style={styles.optBarTitle}>Workout Tracking Options</Text>
         </View>
 
@@ -572,7 +572,7 @@ export default function WorkoutScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#0F172A',
+    backgroundColor: '#000000',
   },
   content: {
     paddingHorizontal: 20,
@@ -660,7 +660,7 @@ const styles = StyleSheet.create({
   },
   heroProgressFill: {
     height: '100%',
-    backgroundColor: '#6366F1',
+    backgroundColor: '#30D158',
   },
   sectionLabel: {
     fontSize: 14,
@@ -721,7 +721,7 @@ const styles = StyleSheet.create({
   timerDisplay: {
     fontSize: 18,
     fontWeight: '700',
-    color: '#6366F1',
+    color: '#30D158',
     fontVariant: ['tabular-nums'],
   },
   timerBtnRow: {
@@ -731,13 +731,13 @@ const styles = StyleSheet.create({
   },
   presetChip: {
     flex: 1,
-    backgroundColor: '#334155',
+    backgroundColor: '#2C2C2E',
     paddingVertical: 8,
     borderRadius: 10,
     alignItems: 'center',
   },
   presetChipActive: {
-    backgroundColor: '#6366F1',
+    backgroundColor: '#30D158',
   },
   presetChipText: {
     color: '#F8FAFC',
@@ -794,12 +794,12 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    backgroundColor: '#334155',
+    backgroundColor: '#2C2C2E',
     borderRadius: 12,
     paddingHorizontal: 12,
     paddingVertical: 10,
     borderWidth: 1,
-    borderColor: '#6366F1',
+    borderColor: '#30D158',
   },
   bioPillTextActive: {
     fontSize: 16,
@@ -810,12 +810,12 @@ const styles = StyleSheet.create({
     width: 18,
     height: 18,
     borderRadius: 9,
-    backgroundColor: '#6366F1',
+    backgroundColor: '#30D158',
     alignItems: 'center',
     justifyContent: 'center',
   },
   bioPillVal: {
-    backgroundColor: '#334155',
+    backgroundColor: '#2C2C2E',
     borderRadius: 12,
     paddingHorizontal: 12,
     paddingVertical: 10,
@@ -830,7 +830,7 @@ const styles = StyleSheet.create({
     marginBottom: 12,
   },
   catChip: {
-    backgroundColor: '#1E293B',
+    backgroundColor: '#1C1C1E',
     paddingHorizontal: 16,
     paddingVertical: 10,
     borderRadius: 18,
@@ -839,8 +839,8 @@ const styles = StyleSheet.create({
     borderColor: 'rgba(255, 255, 255, 0.08)',
   },
   catChipActive: {
-    backgroundColor: '#6366F1',
-    borderColor: '#6366F1',
+    backgroundColor: '#30D158',
+    borderColor: '#30D158',
   },
   catChipText: {
     color: '#94A3B8',
@@ -912,7 +912,7 @@ const styles = StyleSheet.create({
   },
   exCardSub: {
     fontSize: 13,
-    color: '#6366F1',
+    color: '#30D158',
   },
   setTableHeader: {
     flexDirection: 'row',
@@ -934,7 +934,7 @@ const styles = StyleSheet.create({
     width: 32,
     height: 32,
     borderRadius: 8,
-    backgroundColor: '#334155',
+    backgroundColor: '#2C2C2E',
     color: '#F8FAFC',
     fontWeight: '700',
     textAlign: 'center',
@@ -942,9 +942,9 @@ const styles = StyleSheet.create({
   },
   setValInput: {
     flex: 1,
-    backgroundColor: '#1E293B',
+    backgroundColor: '#2C2C2E',
     borderRadius: 10,
-    color: '#6366F1',
+    color: '#30D158',
     fontWeight: '700',
     fontSize: 15,
     paddingHorizontal: 12,
@@ -963,12 +963,12 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     gap: 6,
     paddingVertical: 10,
-    backgroundColor: 'rgba(99, 102, 241, 0.12)',
+    backgroundColor: 'rgba(48, 209, 88, 0.12)',
     borderRadius: 12,
     marginTop: 8,
   },
   addSetBtnText: {
-    color: '#6366F1',
+    color: '#30D158',
     fontSize: 13,
     fontWeight: '700',
   },
@@ -977,7 +977,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     gap: 10,
-    backgroundColor: '#6366F1',
+    backgroundColor: '#30D158',
     paddingVertical: 16,
     borderRadius: 12,
     marginTop: 10,
@@ -1022,7 +1022,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
   },
   optToggleChipActive: {
-    backgroundColor: '#6366F1',
+    backgroundColor: '#30D158',
   },
   optToggleText: {
     fontSize: 11,

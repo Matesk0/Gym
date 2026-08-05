@@ -78,7 +78,7 @@ export default function SignupScreen() {
       <View style={styles.cardWrapper}>
         <View style={styles.headerContainer}>
           <View style={styles.logoBadge}>
-            <Dumbbell color="#6366F1" size={36} />
+            <Dumbbell color="#30D158" size={36} />
           </View>
           <Text style={styles.appTitle}>Create Account</Text>
           <Text style={styles.appSubtitle}>Join GymPulse & track your strength percentile</Text>
@@ -86,22 +86,22 @@ export default function SignupScreen() {
 
         <View style={styles.formContainer}>
           <View style={styles.inputWrapper}>
-            <User color="#94A3B8" size={20} style={styles.inputIcon} />
+            <User color="#8E8E93" size={20} style={styles.inputIcon} />
             <TextInput
               style={styles.input}
               placeholder="Username (e.g. IronLifter99)"
-              placeholderTextColor="#94A3B8"
+              placeholderTextColor="#8E8E93"
               value={username}
               onChangeText={setUsername}
             />
           </View>
 
           <View style={styles.inputWrapper}>
-            <Mail color="#94A3B8" size={20} style={styles.inputIcon} />
+            <Mail color="#8E8E93" size={20} style={styles.inputIcon} />
             <TextInput
               style={styles.input}
               placeholder="Email Address"
-              placeholderTextColor="#94A3B8"
+              placeholderTextColor="#8E8E93"
               value={email}
               onChangeText={setEmail}
               autoCapitalize="none"
@@ -110,11 +110,11 @@ export default function SignupScreen() {
           </View>
 
           <View style={styles.inputWrapper}>
-            <Lock color="#94A3B8" size={20} style={styles.inputIcon} />
+            <Lock color="#8E8E93" size={20} style={styles.inputIcon} />
             <TextInput
               style={styles.input}
               placeholder="Password (min 6 chars)"
-              placeholderTextColor="#94A3B8"
+              placeholderTextColor="#8E8E93"
               value={password}
               onChangeText={setPassword}
               secureTextEntry
@@ -128,10 +128,10 @@ export default function SignupScreen() {
             activeOpacity={0.8}
           >
             <View style={styles.optionalHeaderLeft}>
-              <Target color="#6366F1" size={18} />
+              <Target color="#30D158" size={18} />
               <Text style={styles.optionalHeaderText}>Optional Fitness Setup & Preferences</Text>
             </View>
-            {showOptional ? <ChevronUp color="#94A3B8" size={18} /> : <ChevronDown color="#94A3B8" size={18} />}
+            {showOptional ? <ChevronUp color="#8E8E93" size={18} /> : <ChevronDown color="#8E8E93" size={18} />}
           </TouchableOpacity>
 
           {showOptional && (
@@ -195,7 +195,7 @@ export default function SignupScreen() {
                 <View style={{ flex: 1 }}>
                   <Text style={styles.optLabel}>Bodyweight ({preferredUnit})</Text>
                   <View style={styles.optInputWrapper}>
-                    <Scale color="#94A3B8" size={16} />
+                    <Scale color="#8E8E93" size={16} />
                     <TextInput
                       style={styles.optInput}
                       value={bodyweight}
@@ -231,7 +231,7 @@ export default function SignupScreen() {
                 <Switch
                   value={trackWorkoutTime}
                   onValueChange={setTrackWorkoutTime}
-                  trackColor={{ false: '#334155', true: '#6366F1' }}
+                  trackColor={{ false: '#2C2C2E', true: '#30D158' }}
                   thumbColor="#FFFFFF"
                 />
               </View>
@@ -244,7 +244,7 @@ export default function SignupScreen() {
                 <Switch
                   value={perSetTimerEnabled}
                   onValueChange={setPerSetTimerEnabled}
-                  trackColor={{ false: '#334155', true: '#6366F1' }}
+                  trackColor={{ false: '#2C2C2E', true: '#30D158' }}
                   thumbColor="#FFFFFF"
                 />
               </View>
@@ -257,7 +257,7 @@ export default function SignupScreen() {
                 <Switch
                   value={autoHypertrophyEnabled}
                   onValueChange={setAutoHypertrophyEnabled}
-                  trackColor={{ false: '#334155', true: '#6366F1' }}
+                  trackColor={{ false: '#2C2C2E', true: '#30D158' }}
                   thumbColor="#FFFFFF"
                 />
               </View>
@@ -271,7 +271,7 @@ export default function SignupScreen() {
                 <Switch
                   value={isPublicLogs}
                   onValueChange={setIsPublicLogs}
-                  trackColor={{ false: '#334155', true: '#6366F1' }}
+                  trackColor={{ false: '#2C2C2E', true: '#30D158' }}
                   thumbColor="#FFFFFF"
                 />
               </View>
@@ -301,7 +301,7 @@ export default function SignupScreen() {
 const styles = StyleSheet.create({
   container: {
     flexGrow: 1,
-    backgroundColor: '#0F172A',
+    backgroundColor: '#000000',
     paddingHorizontal: 24,
     paddingVertical: 40,
     justifyContent: 'center',
@@ -310,11 +310,11 @@ const styles = StyleSheet.create({
   cardWrapper: {
     width: '100%',
     maxWidth: 440,
-    backgroundColor: 'rgba(30, 41, 59, 0.7)',
+    backgroundColor: '#1C1C1E',
     borderRadius: 24,
     padding: 28,
     borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.08)',
+    borderColor: 'rgba(255, 255, 255, 0.1)',
   },
   headerContainer: {
     alignItems: 'center',
@@ -324,7 +324,7 @@ const styles = StyleSheet.create({
     width: 68,
     height: 68,
     borderRadius: 22,
-    backgroundColor: '#1E293B',
+    backgroundColor: '#2C2C2E',
     alignItems: 'center',
     justifyContent: 'center',
     marginBottom: 14,
@@ -334,11 +334,11 @@ const styles = StyleSheet.create({
   appTitle: {
     fontSize: 28,
     fontWeight: '700',
-    color: '#F8FAFC',
+    color: '#FFFFFF',
   },
   appSubtitle: {
     fontSize: 14,
-    color: '#94A3B8',
+    color: '#8E8E93',
     marginTop: 4,
     textAlign: 'center',
   },
@@ -348,7 +348,7 @@ const styles = StyleSheet.create({
   inputWrapper: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#1E293B',
+    backgroundColor: '#2C2C2E',
     borderRadius: 12,
     borderWidth: 1,
     borderColor: 'rgba(255, 255, 255, 0.08)',
@@ -360,19 +360,19 @@ const styles = StyleSheet.create({
   },
   input: {
     flex: 1,
-    color: '#F8FAFC',
+    color: '#FFFFFF',
     fontSize: 15,
   },
   optionalHeader: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    backgroundColor: 'rgba(99, 102, 241, 0.1)',
+    backgroundColor: 'rgba(48, 209, 88, 0.1)',
     borderRadius: 12,
     paddingHorizontal: 14,
     paddingVertical: 12,
     borderWidth: 1,
-    borderColor: 'rgba(99, 102, 241, 0.25)',
+    borderColor: 'rgba(48, 209, 88, 0.25)',
     marginTop: 4,
   },
   optionalHeaderLeft: {
@@ -383,11 +383,11 @@ const styles = StyleSheet.create({
   optionalHeaderText: {
     fontSize: 13,
     fontWeight: '600',
-    color: '#818CF8',
+    color: '#30D158',
   },
   optionalContainer: {
     gap: 12,
-    backgroundColor: '#1E293B',
+    backgroundColor: '#2C2C2E',
     borderRadius: 16,
     padding: 14,
     borderWidth: 1,
@@ -396,7 +396,7 @@ const styles = StyleSheet.create({
   optLabel: {
     fontSize: 12,
     fontWeight: '600',
-    color: '#94A3B8',
+    color: '#8E8E93',
     marginBottom: 4,
   },
   chipRow: {
@@ -405,17 +405,17 @@ const styles = StyleSheet.create({
     gap: 6,
   },
   chip: {
-    backgroundColor: '#334155',
+    backgroundColor: '#3A3A3C',
     paddingHorizontal: 12,
     paddingVertical: 7,
     borderRadius: 18,
   },
   chipActive: {
-    backgroundColor: '#6366F1',
+    backgroundColor: '#30D158',
   },
   chipText: {
     fontSize: 12,
-    color: '#CBD5E1',
+    color: '#E5E5EA',
     fontWeight: '500',
   },
   chipTextActive: {
@@ -428,7 +428,7 @@ const styles = StyleSheet.create({
   },
   unitToggleRow: {
     flexDirection: 'row',
-    backgroundColor: '#334155',
+    backgroundColor: '#3A3A3C',
     borderRadius: 10,
     padding: 3,
     height: 42,
@@ -440,12 +440,12 @@ const styles = StyleSheet.create({
     borderRadius: 8,
   },
   unitBtnActive: {
-    backgroundColor: '#6366F1',
+    backgroundColor: '#30D158',
   },
   unitBtnText: {
     fontSize: 13,
     fontWeight: '600',
-    color: '#94A3B8',
+    color: '#8E8E93',
   },
   unitBtnTextActive: {
     color: '#FFFFFF',
@@ -453,7 +453,7 @@ const styles = StyleSheet.create({
   optInputWrapper: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#334155',
+    backgroundColor: '#3A3A3C',
     borderRadius: 10,
     paddingHorizontal: 10,
     height: 42,
@@ -461,7 +461,7 @@ const styles = StyleSheet.create({
   },
   optInput: {
     flex: 1,
-    color: '#F8FAFC',
+    color: '#FFFFFF',
     fontSize: 14,
     fontWeight: '600',
   },
@@ -474,14 +474,14 @@ const styles = StyleSheet.create({
   switchOptTitle: {
     fontSize: 13,
     fontWeight: '600',
-    color: '#F8FAFC',
+    color: '#FFFFFF',
   },
   switchOptSub: {
     fontSize: 11,
-    color: '#94A3B8',
+    color: '#8E8E93',
   },
   signupBtn: {
-    backgroundColor: '#6366F1',
+    backgroundColor: '#30D158',
     height: 52,
     borderRadius: 12,
     alignItems: 'center',
@@ -491,7 +491,7 @@ const styles = StyleSheet.create({
   signupBtnText: {
     color: '#FFFFFF',
     fontSize: 16,
-    fontWeight: '600',
+    fontWeight: '700',
   },
   footerRow: {
     flexDirection: 'row',
@@ -499,13 +499,13 @@ const styles = StyleSheet.create({
     marginTop: 14,
   },
   footerText: {
-    color: '#94A3B8',
+    color: '#8E8E93',
     fontSize: 14,
   },
   linkText: {
-    color: '#6366F1',
+    color: '#30D158',
     fontSize: 14,
-    fontWeight: '600',
+    fontWeight: '700',
   },
 });
 
