@@ -33,11 +33,15 @@ import {
   Dumbbell,
 } from 'lucide-react-native';
 
+import { Zap, Sparkles, Sliders } from 'lucide-react-native';
+
 interface LocalSet {
   id: string;
   setNumber: number;
   weightKg: string;
   reps: string;
+  durationSeconds?: number;
+  hypertrophyOverloadSuggested?: boolean;
 }
 
 interface LocalExerciseLog {
@@ -59,22 +63,28 @@ export default function WorkoutScreen() {
   const [searchQuery, setSearchQuery] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  // Active Player Timer State matching Screenshot 1 Screen 2 ("00:12")
+  // Optional Feature Toggles (Configurable during workout & settings)
+  const [trackWorkoutTime, setTrackWorkoutTime] = useState<boolean>(profile?.track_workout_time ?? true);
+  const [perSetTimerEnabled, setPerSetTimerEnabled] = useState<boolean>(profile?.per_set_timer_enabled ?? true);
+  const [autoHypertrophyEnabled, setAutoHypertrophyEnabled] = useState<boolean>(profile?.auto_hypertrophy_enabled ?? true);
+  const [targetRepRange, setTargetRepRange] = useState<string>(profile?.target_rep_range || 'Hypertrophy (8-12)');
+
+  // Active Player Timer State (Workout Duration Stopwatch)
   const [activeSeconds, setActiveSeconds] = useState<number>(12);
   const [isPlayerActive, setIsPlayerActive] = useState<boolean>(true);
 
   // Rest Timer State
   const [timerSeconds, setTimerSeconds] = useState<number>(0);
-  const [timerInitial, setTimerInitial] = useState<number>(60);
+  const [timerInitial, setTimerInitial] = useState<number>(profile?.default_rest_seconds || 60);
   const [isTimerActive, setIsTimerActive] = useState<boolean>(false);
 
-  // Height & Weight State matching Screenshot 2 Bottom-Left
-  const [heightCm, setHeightCm] = useState<number>(159);
-  const [weightKgVal, setWeightKgVal] = useState<number>(profile?.bodyweight_kg || 58);
+  // Height & Weight State
+  const [heightCm, setHeightCm] = useState<number>(profile?.height_cm || 175);
+  const [weightKgVal, setWeightKgVal] = useState<number>(profile?.bodyweight_kg || 75);
 
   useEffect(() => {
     let interval: any = null;
-    if (isPlayerActive) {
+    if (isPlayerActive && trackWorkoutTime) {
       interval = setInterval(() => {
         setActiveSeconds((prev) => prev + 1);
       }, 1000);
@@ -82,7 +92,7 @@ export default function WorkoutScreen() {
     return () => {
       if (interval) clearInterval(interval);
     };
-  }, [isPlayerActive]);
+  }, [isPlayerActive, trackWorkoutTime]);
 
   useEffect(() => {
     let interval: any = null;
@@ -116,9 +126,9 @@ export default function WorkoutScreen() {
       name: 'Incline Dumbbell Press',
       subCategory: 'Upper Chest (Clavicular Head)',
       sets: [
-        { id: 's1', setNumber: 1, weightKg: '30', reps: '12' },
-        { id: 's2', setNumber: 2, weightKg: '32.5', reps: '10' },
-        { id: 's3', setNumber: 3, weightKg: '34', reps: '8' },
+        { id: 's1', setNumber: 1, weightKg: '30', reps: '12', durationSeconds: 45 },
+        { id: 's2', setNumber: 2, weightKg: '32.5', reps: '10', durationSeconds: 42, hypertrophyOverloadSuggested: true },
+        { id: 's3', setNumber: 3, weightKg: '34', reps: '8', durationSeconds: 40 },
       ],
     },
   ]);
@@ -128,7 +138,7 @@ export default function WorkoutScreen() {
       exerciseId: Date.now().toString(),
       name,
       subCategory,
-      sets: [{ id: Date.now().toString() + '_1', setNumber: 1, weightKg: '20', reps: '10' }],
+      sets: [{ id: Date.now().toString() + '_1', setNumber: 1, weightKg: '20', reps: '10', durationSeconds: activeSeconds }],
     };
     setLoggedExercises([...loggedExercises, newEx]);
   };
@@ -139,14 +149,34 @@ export default function WorkoutScreen() {
     const nextSetNumber = targetEx.sets.length + 1;
     const lastSet = targetEx.sets[targetEx.sets.length - 1];
 
+    let nextWeight = lastSet ? parseFloat(lastSet.weightKg) || 20 : 20;
+    let nextReps = lastSet ? parseInt(lastSet.reps, 10) || 10 : 10;
+    let overloadSuggested = false;
+
+    // Automatic Hypertrophy Overload Calculation:
+    // If user hit target reps (e.g. >= 12 for Hypertrophy range), automatically increase weight by +2.5kg!
+    if (autoHypertrophyEnabled && lastSet) {
+      const lastRepsNum = parseInt(lastSet.reps, 10) || 0;
+      const targetMaxReps = targetRepRange.includes('Strength') ? 5 : targetRepRange.includes('Endurance') ? 20 : 12;
+      if (lastRepsNum >= targetMaxReps) {
+        nextWeight = nextWeight + 2.5;
+        overloadSuggested = true;
+      }
+    }
+
     targetEx.sets.push({
       id: Date.now().toString() + '_' + nextSetNumber,
       setNumber: nextSetNumber,
-      weightKg: lastSet ? lastSet.weightKg : '20',
-      reps: lastSet ? lastSet.reps : '10',
+      weightKg: nextWeight.toString(),
+      reps: nextReps.toString(),
+      durationSeconds: activeSeconds,
+      hypertrophyOverloadSuggested: overloadSuggested,
     });
     setLoggedExercises(updated);
-    startRestTimer(60);
+
+    if (perSetTimerEnabled) {
+      startRestTimer(timerInitial || profile?.default_rest_seconds || 60);
+    }
   };
 
   const handleUpdateSet = (
@@ -417,6 +447,46 @@ export default function WorkoutScreen() {
         ))}
       </View>
 
+      {/* Optional Tracking Features Bar */}
+      <View style={styles.optBarCard}>
+        <View style={styles.optBarTitleRow}>
+          <Sliders color="#6366F1" size={16} />
+          <Text style={styles.optBarTitle}>Workout Tracking Options</Text>
+        </View>
+
+        <View style={styles.optBarToggles}>
+          <TouchableOpacity
+            style={[styles.optToggleChip, trackWorkoutTime && styles.optToggleChipActive]}
+            onPress={() => setTrackWorkoutTime(!trackWorkoutTime)}
+          >
+            <Timer color={trackWorkoutTime ? '#FFFFFF' : '#94A3B8'} size={14} />
+            <Text style={[styles.optToggleText, trackWorkoutTime && styles.optToggleTextActive]}>
+              Session Timer
+            </Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            style={[styles.optToggleChip, perSetTimerEnabled && styles.optToggleChipActive]}
+            onPress={() => setPerSetTimerEnabled(!perSetTimerEnabled)}
+          >
+            <Zap color={perSetTimerEnabled ? '#FFFFFF' : '#94A3B8'} size={14} />
+            <Text style={[styles.optToggleText, perSetTimerEnabled && styles.optToggleTextActive]}>
+              Per-Set Rest Timer
+            </Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            style={[styles.optToggleChip, autoHypertrophyEnabled && styles.optToggleChipActive]}
+            onPress={() => setAutoHypertrophyEnabled(!autoHypertrophyEnabled)}
+          >
+            <Sparkles color={autoHypertrophyEnabled ? '#FFFFFF' : '#94A3B8'} size={14} />
+            <Text style={[styles.optToggleText, autoHypertrophyEnabled && styles.optToggleTextActive]}>
+              Auto Hypertrophy
+            </Text>
+          </TouchableOpacity>
+        </View>
+      </View>
+
       {/* Logged Exercise Sets Table */}
       <Text style={[styles.sectionLabel, { marginTop: 20 }]}>Logged Session Exercises</Text>
 
@@ -438,32 +508,45 @@ export default function WorkoutScreen() {
           </View>
 
           {ex.sets.map((st, setIndex) => (
-            <View key={st.id} style={styles.setRow}>
-              <Text style={styles.setNumBadge}>{st.setNumber}</Text>
-              <TextInput
-                style={styles.setValInput}
-                keyboardType="numeric"
-                value={st.weightKg}
-                onChangeText={(val) => handleUpdateSet(exIndex, setIndex, 'weightKg', val)}
-              />
-              <TextInput
-                style={styles.setValInput}
-                keyboardType="numeric"
-                value={st.reps}
-                onChangeText={(val) => handleUpdateSet(exIndex, setIndex, 'reps', val)}
-              />
-              <TouchableOpacity
-                style={styles.delBtn}
-                onPress={() => handleRemoveSet(exIndex, setIndex)}
-              >
-                <Trash2 color="#F87171" size={16} />
-              </TouchableOpacity>
+            <View key={st.id} style={{ marginBottom: 6 }}>
+              <View style={styles.setRow}>
+                <Text style={styles.setNumBadge}>{st.setNumber}</Text>
+                <TextInput
+                  style={styles.setValInput}
+                  keyboardType="numeric"
+                  value={st.weightKg}
+                  onChangeText={(val) => handleUpdateSet(exIndex, setIndex, 'weightKg', val)}
+                />
+                <TextInput
+                  style={styles.setValInput}
+                  keyboardType="numeric"
+                  value={st.reps}
+                  onChangeText={(val) => handleUpdateSet(exIndex, setIndex, 'reps', val)}
+                />
+                <TouchableOpacity
+                  style={styles.delBtn}
+                  onPress={() => handleRemoveSet(exIndex, setIndex)}
+                >
+                  <Trash2 color="#F87171" size={16} />
+                </TouchableOpacity>
+              </View>
+
+              {st.hypertrophyOverloadSuggested && (
+                <View style={styles.overloadBadge}>
+                  <Sparkles color="#A3E635" size={12} />
+                  <Text style={styles.overloadText}>
+                    Auto-Hypertrophy: Target rep ceiling hit! Weight automatically boosted by +2.5 kg.
+                  </Text>
+                </View>
+              )}
             </View>
           ))}
 
           <TouchableOpacity style={styles.addSetBtn} onPress={() => handleAddSet(exIndex)}>
             <Plus color="#38BDF8" size={16} />
-            <Text style={styles.addSetBtnText}>Add Set (Auto 60s Rest)</Text>
+            <Text style={styles.addSetBtnText}>
+              Add Set {perSetTimerEnabled ? '(Auto Rest Timer)' : ''}
+            </Text>
           </TouchableOpacity>
         </View>
       ))}
@@ -903,5 +986,69 @@ const styles = StyleSheet.create({
     color: '#FFFFFF',
     fontSize: 16,
     fontWeight: '700',
+  },
+  optBarCard: {
+    backgroundColor: 'rgba(30, 41, 59, 0.7)',
+    borderRadius: 20,
+    padding: 14,
+    marginBottom: 16,
+    borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.08)',
+    gap: 10,
+  },
+  optBarTitleRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+  },
+  optBarTitle: {
+    fontSize: 14,
+    fontWeight: '700',
+    color: '#F8FAFC',
+  },
+  optBarToggles: {
+    flexDirection: 'row',
+    gap: 8,
+  },
+  optToggleChip: {
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 6,
+    backgroundColor: '#334155',
+    paddingVertical: 8,
+    paddingHorizontal: 6,
+    borderRadius: 10,
+  },
+  optToggleChipActive: {
+    backgroundColor: '#6366F1',
+  },
+  optToggleText: {
+    fontSize: 11,
+    color: '#94A3B8',
+    fontWeight: '600',
+  },
+  optToggleTextActive: {
+    color: '#FFFFFF',
+    fontWeight: '700',
+  },
+  overloadBadge: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+    backgroundColor: 'rgba(163, 230, 53, 0.12)',
+    paddingHorizontal: 10,
+    paddingVertical: 4,
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: 'rgba(163, 230, 53, 0.3)',
+    marginTop: 2,
+    marginLeft: 42,
+  },
+  overloadText: {
+    fontSize: 11,
+    color: '#A3E635',
+    fontWeight: '600',
   },
 });

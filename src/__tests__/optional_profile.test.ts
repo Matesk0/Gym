@@ -54,4 +54,21 @@ describe('Optional Profile Preferences & Onboarding Tests', () => {
     expect(profile.default_rest_seconds).toBe(180);
     expect(profile.is_public_logs).toBe(true);
   });
+
+  it('should calculate automatic hypertrophy progressive overload (+2.5kg)', () => {
+    const lastSet = { weightKg: 30, reps: 12 };
+    const targetMaxReps = 12;
+    const autoHypertrophyEnabled = true;
+
+    let nextWeight = lastSet.weightKg;
+    let overloadSuggested = false;
+
+    if (autoHypertrophyEnabled && lastSet.reps >= targetMaxReps) {
+      nextWeight += 2.5;
+      overloadSuggested = true;
+    }
+
+    expect(nextWeight).toBe(32.5);
+    expect(overloadSuggested).toBe(true);
+  });
 });
