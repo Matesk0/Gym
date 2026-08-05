@@ -32,6 +32,9 @@ export default function SignupScreen() {
   const [heightCm, setHeightCm] = useState('175');
   const [defaultRestSeconds, setDefaultRestSeconds] = useState(90);
   const [isPublicLogs, setIsPublicLogs] = useState(false);
+  const [trackWorkoutTime, setTrackWorkoutTime] = useState(true);
+  const [perSetTimerEnabled, setPerSetTimerEnabled] = useState(true);
+  const [autoHypertrophyEnabled, setAutoHypertrophyEnabled] = useState(true);
 
   const handleSignup = async () => {
     if (!username || !email || !password) {
@@ -51,6 +54,9 @@ export default function SignupScreen() {
       height_cm: isNaN(parsedHt) ? 175 : parsedHt,
       default_rest_seconds: defaultRestSeconds,
       is_public_logs: isPublicLogs,
+      track_workout_time: trackWorkoutTime,
+      per_set_timer_enabled: perSetTimerEnabled,
+      auto_hypertrophy_enabled: autoHypertrophyEnabled,
     });
     setLoading(false);
 
@@ -214,6 +220,46 @@ export default function SignupScreen() {
                     </Text>
                   </TouchableOpacity>
                 ))}
+              </View>
+
+              {/* Workout Duration & Tracking Features */}
+              <View style={styles.switchOptRow}>
+                <View style={{ flex: 1 }}>
+                  <Text style={styles.switchOptTitle}>Track Workout & Set Duration</Text>
+                  <Text style={styles.switchOptSub}>Live stopwatch and set timestamp logging</Text>
+                </View>
+                <Switch
+                  value={trackWorkoutTime}
+                  onValueChange={setTrackWorkoutTime}
+                  trackColor={{ false: '#334155', true: '#6366F1' }}
+                  thumbColor="#FFFFFF"
+                />
+              </View>
+
+              <View style={styles.switchOptRow}>
+                <View style={{ flex: 1 }}>
+                  <Text style={styles.switchOptTitle}>Automatic Per-Set Rest Timer</Text>
+                  <Text style={styles.switchOptSub}>Countdown timer after completing each set</Text>
+                </View>
+                <Switch
+                  value={perSetTimerEnabled}
+                  onValueChange={setPerSetTimerEnabled}
+                  trackColor={{ false: '#334155', true: '#6366F1' }}
+                  thumbColor="#FFFFFF"
+                />
+              </View>
+
+              <View style={styles.switchOptRow}>
+                <View style={{ flex: 1 }}>
+                  <Text style={styles.switchOptTitle}>Automatic Hypertrophy Progression</Text>
+                  <Text style={styles.switchOptSub}>Calculates +2.5kg overload when hitting rep target</Text>
+                </View>
+                <Switch
+                  value={autoHypertrophyEnabled}
+                  onValueChange={setAutoHypertrophyEnabled}
+                  trackColor={{ false: '#334155', true: '#6366F1' }}
+                  thumbColor="#FFFFFF"
+                />
               </View>
 
               {/* Public Logs Switch */}

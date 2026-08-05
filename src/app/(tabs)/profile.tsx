@@ -27,6 +27,7 @@ import {
   Award,
   Timer,
   Ruler,
+  Sparkles,
 } from 'lucide-react-native';
 import { FitnessGoal, ExperienceLevel, PreferredUnit } from '../../types/database';
 
@@ -44,6 +45,10 @@ export default function ProfileScreen() {
   const [preferredUnit, setPreferredUnit] = useState<PreferredUnit>(profile?.preferred_unit || 'kg');
   const [defaultRestSeconds, setDefaultRestSeconds] = useState<number>(profile?.default_rest_seconds || 90);
   const [gender, setGender] = useState<'male' | 'female'>(profile?.gender || 'female');
+
+  const [trackWorkoutTime, setTrackWorkoutTime] = useState<boolean>(profile?.track_workout_time ?? true);
+  const [perSetTimerEnabled, setPerSetTimerEnabled] = useState<boolean>(profile?.per_set_timer_enabled ?? true);
+  const [autoHypertrophyEnabled, setAutoHypertrophyEnabled] = useState<boolean>(profile?.auto_hypertrophy_enabled ?? true);
 
   const fitnessGoals: FitnessGoal[] = ['Hypertrophy', 'Strength', 'Fat Loss', 'Endurance', 'General Fitness'];
   const experienceLevels: ExperienceLevel[] = ['Beginner', 'Intermediate', 'Advanced', 'Elite'];
@@ -68,6 +73,9 @@ export default function ProfileScreen() {
       preferred_unit: preferredUnit,
       default_rest_seconds: defaultRestSeconds,
       gender,
+      track_workout_time: trackWorkoutTime,
+      per_set_timer_enabled: perSetTimerEnabled,
+      auto_hypertrophy_enabled: autoHypertrophyEnabled,
     });
     Alert.alert('Settings Saved', 'Your fitness preferences and biometrics have been updated.');
   };
@@ -257,6 +265,59 @@ export default function ProfileScreen() {
               <Text style={[styles.unitBtnText, gender === 'female' && styles.unitBtnTextActive]}>Female Benchmark</Text>
             </TouchableOpacity>
           </View>
+        </View>
+      </View>
+
+      {/* Workout Tracking & Automation Preferences */}
+      <View style={styles.sectionCard}>
+        <Text style={styles.sectionHeaderTitle}>Workout Tracking & Automation</Text>
+
+        <View style={styles.switchRow}>
+          <View style={styles.switchLeft}>
+            <Timer color="#38BDF8" size={20} />
+            <View style={{ flex: 1 }}>
+              <Text style={styles.switchTitle}>Session Stopwatch & Timestamps</Text>
+              <Text style={styles.switchSub}>Track total elapsed workout duration & set timing</Text>
+            </View>
+          </View>
+          <Switch
+            value={trackWorkoutTime}
+            onValueChange={setTrackWorkoutTime}
+            trackColor={{ false: '#33302F', true: '#38BDF8' }}
+            thumbColor="#FFFFFF"
+          />
+        </View>
+
+        <View style={[styles.switchRow, { marginTop: 10 }]}>
+          <View style={styles.switchLeft}>
+            <Timer color="#C084FC" size={20} />
+            <View style={{ flex: 1 }}>
+              <Text style={styles.switchTitle}>Automatic Per-Set Rest Timer</Text>
+              <Text style={styles.switchSub}>Trigger rest countdown automatically after each set</Text>
+            </View>
+          </View>
+          <Switch
+            value={perSetTimerEnabled}
+            onValueChange={setPerSetTimerEnabled}
+            trackColor={{ false: '#33302F', true: '#38BDF8' }}
+            thumbColor="#FFFFFF"
+          />
+        </View>
+
+        <View style={[styles.switchRow, { marginTop: 10 }]}>
+          <View style={styles.switchLeft}>
+            <Sparkles color="#A3E635" size={20} />
+            <View style={{ flex: 1 }}>
+              <Text style={styles.switchTitle}>Automatic Hypertrophy Overload</Text>
+              <Text style={styles.switchSub}>Calculate +2.5kg progressive overload when hitting reps ceiling</Text>
+            </View>
+          </View>
+          <Switch
+            value={autoHypertrophyEnabled}
+            onValueChange={setAutoHypertrophyEnabled}
+            trackColor={{ false: '#33302F', true: '#38BDF8' }}
+            thumbColor="#FFFFFF"
+          />
         </View>
       </View>
 
