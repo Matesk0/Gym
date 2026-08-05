@@ -11,7 +11,7 @@ This document contains the complete context, architectural patterns, design stan
 - **Language**: TypeScript (Strict Mode)
 - **Backend & Auth**: Supabase (`@supabase/supabase-js`, PostgreSQL, Auth with RLS)
 - **Session Persistence**: `@react-native-async-storage/async-storage` wrapped in `ssrSafeStorage` (`src/lib/supabase.ts`) to prevent SSR `window is not defined` errors.
-- **Design Language**: **Prestige iOS OLED Dark Theme** (`#000000` background, `#1C1C1E` card secondary, `#2C2C2E` tertiary card, `#30D158` vivid green accent, `#FF9F0C` amber gold, `#0A84FF` electric blue, `#FF453A` coral red).
+- **Design Language**: **Prestige iOS OLED Dark Theme** (`#000000` background, `#1C1C1E` card secondary, `#2C2C2E` tertiary card, `#38BDF8` light cyan primary accent, `#FF9F0C` amber gold, `#0A84FF` electric blue, `#FF453A` coral red).
 
 ---
 

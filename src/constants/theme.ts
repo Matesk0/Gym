@@ -13,10 +13,10 @@ export const Colors = {
     textSecondary: '#8E8E93',      // System Gray subtitle & description
 
     // Prestige Brand & Accent Colors
-    primaryAccent: '#30D158',      // Vivid Green primary brand accent
-    secondaryAccent: '#38BDF8',    // Light Cyan accent
-    gradientStart: '#30D158',      // Vivid Green
-    gradientEnd: '#38BDF8',        // Light Cyan
+    primaryAccent: '#38BDF8',      // Light Cyan primary brand accent
+    secondaryAccent: '#0A84FF',    // Electric Blue accent
+    gradientStart: '#38BDF8',      // Light Cyan
+    gradientEnd: '#0A84FF',        // Electric Blue
 
     // Utility Accents
     accentLime: '#30D158',         // Vivid Green
@@ -29,7 +29,7 @@ export const Colors = {
     tabBarBg: '#000000',
     tabBarBorder: '#1C1C1E',
     tabBarInactive: '#8E8E93',
-    tabBarActive: '#30D158',       // Vivid Green accent
+    tabBarActive: '#38BDF8',       // Light Cyan accent
   },
 } as const;
 

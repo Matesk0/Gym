@@ -35,7 +35,7 @@ export const MuscleMapSvg: React.FC<MuscleMapSvgProps> = ({
       <Svg width={280} height={400} viewBox="0 0 280 400">
         <Defs>
           <LinearGradient id="glowGrad" x1="0" y1="0" x2="0" y2="1">
-            <Stop offset="0" stopColor="#30D158" stopOpacity="0.3" />
+            <Stop offset="0" stopColor="#38BDF8" stopOpacity="0.3" />
             <Stop offset="1" stopColor="#000000" stopOpacity="0" />
           </LinearGradient>
         </Defs>

@@ -737,7 +737,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   presetChipActive: {
-    backgroundColor: '#30D158',
+    backgroundColor: '#38BDF8',
   },
   presetChipText: {
     color: '#F8FAFC',
@@ -810,7 +810,7 @@ const styles = StyleSheet.create({
     width: 18,
     height: 18,
     borderRadius: 9,
-    backgroundColor: '#30D158',
+    backgroundColor: '#38BDF8',
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -839,8 +839,8 @@ const styles = StyleSheet.create({
     borderColor: 'rgba(255, 255, 255, 0.08)',
   },
   catChipActive: {
-    backgroundColor: '#30D158',
-    borderColor: '#30D158',
+    backgroundColor: '#38BDF8',
+    borderColor: '#38BDF8',
   },
   catChipText: {
     color: '#94A3B8',
@@ -912,7 +912,7 @@ const styles = StyleSheet.create({
   },
   exCardSub: {
     fontSize: 13,
-    color: '#30D158',
+    color: '#38BDF8',
   },
   setTableHeader: {
     flexDirection: 'row',
@@ -944,7 +944,7 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#2C2C2E',
     borderRadius: 10,
-    color: '#30D158',
+    color: '#38BDF8',
     fontWeight: '700',
     fontSize: 15,
     paddingHorizontal: 12,
@@ -977,7 +977,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     gap: 10,
-    backgroundColor: '#30D158',
+    backgroundColor: '#38BDF8',
     paddingVertical: 16,
     borderRadius: 12,
     marginTop: 10,
@@ -1022,7 +1022,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
   },
   optToggleChipActive: {
-    backgroundColor: '#30D158',
+    backgroundColor: '#38BDF8',
   },
   optToggleText: {
     fontSize: 11,

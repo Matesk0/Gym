@@ -283,7 +283,7 @@ export default function ProfileScreen() {
           <Switch
             value={trackWorkoutTime}
             onValueChange={setTrackWorkoutTime}
-            trackColor={{ false: '#33302F', true: '#30D158' }}
+            trackColor={{ false: '#33302F', true: '#38BDF8' }}
             thumbColor="#FFFFFF"
           />
         </View>
@@ -299,7 +299,7 @@ export default function ProfileScreen() {
           <Switch
             value={perSetTimerEnabled}
             onValueChange={setPerSetTimerEnabled}
-            trackColor={{ false: '#33302F', true: '#30D158' }}
+            trackColor={{ false: '#33302F', true: '#38BDF8' }}
             thumbColor="#FFFFFF"
           />
         </View>
@@ -315,7 +315,7 @@ export default function ProfileScreen() {
           <Switch
             value={autoHypertrophyEnabled}
             onValueChange={setAutoHypertrophyEnabled}
-            trackColor={{ false: '#33302F', true: '#30D158' }}
+            trackColor={{ false: '#33302F', true: '#38BDF8' }}
             thumbColor="#FFFFFF"
           />
         </View>
@@ -351,7 +351,7 @@ export default function ProfileScreen() {
           <Switch
             value={isPublicLogs}
             onValueChange={setIsPublicLogs}
-            trackColor={{ false: '#33302F', true: '#30D158' }}
+            trackColor={{ false: '#33302F', true: '#38BDF8' }}
             thumbColor="#FFFFFF"
           />
         </View>
@@ -367,7 +367,7 @@ export default function ProfileScreen() {
           <Switch
             value={isOnlineStatus}
             onValueChange={setIsOnlineStatus}
-            trackColor={{ false: '#33302F', true: '#30D158' }}
+            trackColor={{ false: '#33302F', true: '#38BDF8' }}
             thumbColor="#FFFFFF"
           />
         </View>
@@ -601,7 +601,7 @@ const styles = StyleSheet.create({
     borderRadius: 18,
   },
   chipActive: {
-    backgroundColor: '#30D158',
+    backgroundColor: '#38BDF8',
   },
   chipText: {
     fontSize: 12,
@@ -626,7 +626,7 @@ const styles = StyleSheet.create({
     borderRadius: 8,
   },
   unitBtnActive: {
-    backgroundColor: '#30D158',
+    backgroundColor: '#38BDF8',
   },
   unitBtnText: {
     fontSize: 13,
@@ -685,7 +685,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     gap: 8,
-    backgroundColor: '#30D158',
+    backgroundColor: '#38BDF8',
     height: 50,
     borderRadius: 12,
   },

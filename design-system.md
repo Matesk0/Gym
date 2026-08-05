@@ -14,9 +14,8 @@ Our color system is designed to be modern, vibrant, and accessible. We prioritiz
 * **Text Secondary:** `#8E8E93` (System Gray) - Subtitles, metadata, and placeholder text.
 
 ### Brand/Accent Colors
-* **Primary Accent:** `#30D158` (Vivid Green) - Vivid green for primary actions, active tab states, and core brand highlights.
-* **Secondary Accent:** `#38BDF8` (Light Cyan) - Light cyan for secondary stats, active chips, and cyan highlights.
-* **Electric Blue:** `#0A84FF` - Used for secondary stats and badges.
+* **Primary Accent:** `#38BDF8` (Light Cyan) - Light cyan for primary actions, active tab states, and core brand highlights.
+* **Secondary Accent:** `#0A84FF` (Electric Blue) - Electric blue for secondary stats and badges.
 * **Amber Gold:** `#FF9F0C` - Used for leaderboard ranks and rewards.
 * **Coral Red:** `#FF453A` - Used for exhausted muscle fatigue stages and destructive actions.
 
